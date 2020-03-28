@@ -1,14 +1,14 @@
-name: CS631 Labs
+name: CS631 Labs, Spring 2020
 output_dir: '.'
 navbar:
-  title: CS631 Labs
+  title: CS631 Labs, Spring 2020
   left:
   - text: Slides & Reading
     href: slides.html
   - text: Resources
     href: data-vis-resources.html
   - text: Sakai
-    href: https://sakai.ohsu.edu/portal/site/CS-631-1-32176-Sp18
+    href: https://sakai.ohsu.edu/portal/site/CS-631-1-31934-Sp20
   right:
   - text: About
     href: about.html

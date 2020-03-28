@@ -9,20 +9,15 @@ htmltools::tagList(rmarkdown::html_dependency_font_awesome())
 
 
 This is an [R Markdown website](http://rmarkdown.rstudio.com/rmarkdown_websites.html). 
-The source can be found [on GitHub <i class="fa fa-github"></i>](https://github.com/apreshill/data-vis-labs-2018).
+The source can be found [on GitHub <i class="fa fa-github"></i>](https://github.com/stevenbedrick/data-vis-labs-2020).
 
-The link to all the labs is here:
+These labs are based entirely on [Alison Hill's](https://alison.rbind.io) labs from [the 2018 course](https://apreshill.github.io/data-vis-labs-2018/). I have made some minor updates, modifications, and additions, but the authorship is hers.
 
-<https://apreshill.github.io/data-vis-labs-2018/>
+The link to this year's labs is here:
 
-Who am I?
+<https://stevenbedrick.github.io/data-vis-labs-2020/>
 
-  * Alison Hill
-  * <a href = "https://github.com/apreshill/"><i class="fa fa-github"> GitHub</i></a>
-  * <a href = "https://twitter.com/apreshill"><i class="fa fa-twitter"> Twitter</i></a>
-  * <a href = "https://alison.rbind.io"><i class="fa fa-home"> Personal Website</i></a>
+The full course syllabus is available here: [CS631: Principles & Practice of Data Visualization (Spring 2020)](http://cslu.ohsu.edu/~bedricks/courses/cs631/).
 
-Materials initially created for [CS631: Principles & Practice of Data Visualization (Spring 2018)](http://cslu.ohsu.edu/~bedricks/courses/cs631/).
-
-Course Directors: Drs. Steven Bedrick, Jackie Wirz, and Alison Hill.
+Course Director: Dr. Steven Bedrick
 
