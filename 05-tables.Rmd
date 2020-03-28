@@ -2,6 +2,7 @@
 title: 'Lab 05: Fonts & Tables'
 author: "Alison Hill"
 subtitle: CS631
+always_allow_html: true
 output:
   html_document:
     number_sections: yes
@@ -370,20 +371,22 @@ glimpse(all_but_year)
 
 `dplyr::select` comes with several other helper functions...
 
+
 ```{r dplyr-select-helpers}
-depart <- flights %>% 
+depart <- flights %>%
   select(starts_with("dep_"))
 glimpse(depart)
 
-times <- flights %>% 
+times <- flights %>%
   select(contains("time"))
 glimpse(times)
 
-# here I am not creating a new dataframe
+# note that we are not actually saving the new dataframe here
 flights %>%
-  select(-contains("time"))
+  select(-contains("time")) %>% head()
 
-delays <- flights %>% 
+
+delays <- flights %>%
   select(ends_with("delay"))
 glimpse(delays)
 ```
@@ -476,11 +479,11 @@ range(delay_bwn$dep_delay, na.rm = TRUE)
 ```{r}
 # default is ascending order
 flights %>% 
-  arrange(year, month, day)
+  arrange(year, month, day) %>% head(n=20)
 
 # descending order
 flights %>% 
-  arrange(desc(year), desc(month), desc(day))
+  arrange(desc(year), desc(month), desc(day)) %>% head(n=20)
 ```
 
 
@@ -491,7 +494,7 @@ flights %>%
 # all unique origin-dest combinations
 flights %>% 
   select(origin, dest) %>% 
-  distinct
+  distinct %>% head(n=100)
 
 # all unique destinations from PDX (there are 49)
 from_pdx <- flights %>% 
@@ -509,7 +512,8 @@ head(from_pdx)
 # add total delay variable
 flights %>%
   mutate(tot_delay = dep_delay + arr_delay) %>%
-  select(origin, dest, ends_with("delay"), everything())
+  select(origin, dest, ends_with("delay"), everything()) %>% 
+  head(n=100)
 
 # flights that were delayed at departure had on time or early arrivals?
 arrivals <- flights %>%
@@ -544,17 +548,17 @@ But this can get tedious with multiple summaries...
 flights %>%
   filter(!is.na(dep_delay)) %>%
   select(dep_delay) %>%
-  summarise_each(funs(mean, sd, median))
+  summarise_each(lst(mean, sd, median))
 
 # same thing
 flights %>%
   filter(!is.na(dep_delay)) %>%
-  summarise_each(funs(mean, sd, median), dep_delay)
+  summarise_each(lst(mean, sd, median), dep_delay)
 
 # combine with gather, change names too
 flights %>%
   filter(!is.na(dep_delay)) %>%
-  summarise_each(funs(mean, stdev = sd, median), dep_delay) %>%
+  summarise_each(lst(mean, stdev = sd, median), dep_delay) %>%
   gather(delay_stat, value)
 ```
 

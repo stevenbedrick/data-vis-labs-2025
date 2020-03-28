@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Alison Hill" />
@@ -14,6 +14,7 @@
 
 <title>Lab 02: MoMA Museum Tour</title>
 
+<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -74,9 +75,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -90,13 +89,18 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
@@ -112,7 +116,6 @@ body {
   padding-top: 65px;
   margin-top: -65px;
 }
-
 .section h2 {
   padding-top: 65px;
   margin-top: -65px;
@@ -132,6 +135,43 @@ body {
 .section h6 {
   padding-top: 65px;
   margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -153,55 +193,69 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 <style type="text/css">
 .code-folding-btn { margin-bottom: 4px; }
 </style>
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -215,6 +269,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -250,8 +310,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -260,6 +318,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -317,14 +385,14 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Lab 02: MoMA Museum Tour</h1>
-<h3 class="subtitle"><em>CS631</em></h3>
-<h4 class="author"><em>Alison Hill</em></h4>
+<h3 class="subtitle">CS631</h3>
+<h4 class="author">Alison Hill</h4>
 
 </div>
 
 
-<div id="goals-for-lab-02" class="section level1">
-<h1><span class="header-section-number">1</span> Goals for Lab 02</h1>
+<div id="goals-for-lab-02" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Goals for Lab 02</h1>
 <ul>
 <li>Review <code>dplyr</code> functions learned in last lab and DataCamp course</li>
 <li>Practice using <code>dplyr</code> functions to get to know a new dataset</li>
@@ -332,14 +400,14 @@ div.tocify {
 <li>Create facetted plots with <code>ggplot2</code></li>
 </ul>
 </div>
-<div id="slides-for-today" class="section level1">
-<h1><span class="header-section-number">2</span> Slides for today</h1>
+<div id="slides-for-today" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Slides for today</h1>
 <pre class="r"><code>knitr::include_url(&quot;slides/02-slides.html&quot;)</code></pre>
 <iframe src="slides/02-slides.html" width="672" height="400px">
 </iframe>
 </div>
-<div id="inspiration-data" class="section level1">
-<h1><span class="header-section-number">3</span> Inspiration + data</h1>
+<div id="inspiration-data" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Inspiration + data</h1>
 <p>We’ll use data from the Museum of Modern Art (MoMA)</p>
 <ul>
 <li>Publicly available on <a href="https://github.com/MuseumofModernArt/collection">GitHub</a></li>
@@ -347,25 +415,28 @@ div.tocify {
 <li>And by <a href="https://medium.com/@foe/here-s-a-roundup-of-how-people-have-used-our-data-so-far-80862e4ce220">others</a></li>
 </ul>
 </div>
-<div id="packages-needed" class="section level1">
-<h1><span class="header-section-number">4</span> Packages needed</h1>
-<pre class="r"><code>library(here) # to set file path if working from local file
-library(tidyverse) # readr, ggplot2, dplyr</code></pre>
+<div id="packages-needed" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Packages needed</h1>
+<pre class="r"><code>library(here) # to set file path if working from local file</code></pre>
+<pre><code>Error in library(here): there is no package called &#39;here&#39;</code></pre>
+<pre class="r"><code>library(tidyverse) # readr, ggplot2, dplyr</code></pre>
 </div>
-<div id="read-in-the-data" class="section level1">
-<h1><span class="header-section-number">5</span> Read in the data</h1>
+<div id="read-in-the-data" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Read in the data</h1>
 <p>Note! This is not the original data- I did a lot of cleaning and decision-making in the pre-processing. The below contains only paintings and drawings in the MoMA collection.</p>
-<p>Use this code chunk to read in the data available at <a href="http://bit.ly/cs631-moma" class="uri">http://bit.ly/cs631-moma</a>:</p>
+<p>Use this code chunk to read in the data available at <a href="http://bit.ly/cs631-moma">http://bit.ly/cs631-moma</a>:</p>
 <pre class="r"><code>library(readr)
 moma &lt;- read_csv(&quot;http://bit.ly/cs631-moma&quot;)</code></pre>
 <p>I called my cleaned data <code>artworks-cleaned.csv</code>, and stored it in a folder called <code>data</code>. You can use this code if you want to read in the local CSV file.</p>
-<pre class="r"><code>library(here)
-library(readr)
+<pre class="r"><code>library(here)</code></pre>
+<pre><code>Error in library(here): there is no package called &#39;here&#39;</code></pre>
+<pre class="r"><code>library(readr)
 library(dplyr)
 moma &lt;- read_csv(here::here(&quot;data&quot;, &quot;artworks-cleaned.csv&quot;))</code></pre>
+<pre><code>Error in loadNamespace(name): there is no package called &#39;here&#39;</code></pre>
 </div>
-<div id="know-your-data" class="section level1">
-<h1><span class="header-section-number">6</span> Know your data</h1>
+<div id="know-your-data" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> Know your data</h1>
 <div class="panel panel-success">
 <div class="panel-heading">
 Challenge #1:
@@ -388,8 +459,8 @@ Challenge #1:
 </div></li>
 </ol>
 </div>
-<div id="how-many-paintings" class="section level2">
-<h2><span class="header-section-number">6.1</span> How many paintings?</h2>
+<div id="how-many-paintings" class="section level2" number="6.1">
+<h2 number="6.1"><span class="header-section-number">6.1</span> How many paintings?</h2>
 <ul>
 <li>How many rows/observations are in <code>moma</code>?</li>
 <li>How many variables are in <code>moma</code>?</li>
@@ -399,55 +470,56 @@ Challenge #1:
 </p>
 <pre class="r"><code>library(dplyr)
 moma</code></pre>
-<pre><code># A tibble: 2,253 x 23
-   title  artist  artist_bio artist_birth_ye… artist_death_ye… num_artists
-   &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;                 &lt;dbl&gt;            &lt;dbl&gt;       &lt;dbl&gt;
- 1 Rope … Joan M… (Spanish,…            1893.            1983.          1.
- 2 Fire … Paul K… (German, …            1879.            1940.          1.
- 3 Portr… Paul K… (German, …            1879.            1940.          1.
- 4 Guitar Pablo … (Spanish,…            1881.            1973.          1.
- 5 Grand… Arthur… (American…            1880.            1946.          1.
- 6 &quot;\&quot;M&#39;… Franci… (French, …            1879.            1953.          1.
- 7 Untit… Blinky… (German, …            1943.            1977.          1.
- 8 Dayli… Pierre… (French, …            1880.            1950.          1.
- 9 The B… Paul C… (French, …            1839.            1906.          1.
-10 Synth… Enrico… (Italian,…            1894.            1956.          1.
-# ... with 2,243 more rows, and 17 more variables: n_female_artists &lt;dbl&gt;,
+<pre><code># A tibble: 2,253 x 24
+   title artist artist_bio artist_birth_ye… artist_death_ye… num_artists
+   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;                 &lt;dbl&gt;            &lt;dbl&gt;       &lt;dbl&gt;
+ 1 &quot;Rop… Joan … (Spanish,…             1893             1983           1
+ 2 &quot;Fir… Paul … (German, …             1879             1940           1
+ 3 &quot;Por… Paul … (German, …             1879             1940           1
+ 4 &quot;Gui… Pablo… (Spanish,…             1881             1973           1
+ 5 &quot;Gra… Arthu… (American…             1880             1946           1
+ 6 &quot;\&quot;M… Franc… (French, …             1879             1953           1
+ 7 &quot;Unt… Blink… (German, …             1943             1977           1
+ 8 &quot;Day… Pierr… (French, …             1880             1950           1
+ 9 &quot;The… Paul … (French, …             1839             1906           1
+10 &quot;Syn… Enric… (Italian,…             1894             1956           1
+# … with 2,243 more rows, and 18 more variables: n_female_artists &lt;dbl&gt;,
 #   n_male_artists &lt;dbl&gt;, artist_gender &lt;chr&gt;, year_acquired &lt;dbl&gt;,
 #   year_created &lt;dbl&gt;, circumference_cm &lt;lgl&gt;, depth_cm &lt;dbl&gt;,
 #   diameter_cm &lt;lgl&gt;, height_cm &lt;dbl&gt;, length_cm &lt;lgl&gt;, width_cm &lt;dbl&gt;,
 #   seat_height_cm &lt;lgl&gt;, purchase &lt;lgl&gt;, gift &lt;lgl&gt;, exchange &lt;lgl&gt;,
-#   classification &lt;chr&gt;, department &lt;chr&gt;</code></pre>
+#   classification &lt;chr&gt;, department &lt;chr&gt;, top_to_color &lt;chr&gt;</code></pre>
 <pre class="r"><code>glimpse(moma)</code></pre>
 <pre><code>Observations: 2,253
-Variables: 23
-$ title             &lt;chr&gt; &quot;Rope and People, I&quot;, &quot;Fire in the Evening&quot;,...
-$ artist            &lt;chr&gt; &quot;Joan Miró&quot;, &quot;Paul Klee&quot;, &quot;Paul Klee&quot;, &quot;Pabl...
-$ artist_bio        &lt;chr&gt; &quot;(Spanish, 1893–1983)&quot;, &quot;(German, born Switz...
-$ artist_birth_year &lt;dbl&gt; 1893, 1879, 1879, 1881, 1880, 1879, 1943, 18...
-$ artist_death_year &lt;dbl&gt; 1983, 1940, 1940, 1973, 1946, 1953, 1977, 19...
-$ num_artists       &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...
-$ n_female_artists  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...
-$ n_male_artists    &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...
-$ artist_gender     &lt;chr&gt; &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Mal...
-$ year_acquired     &lt;dbl&gt; 1936, 1970, 1966, 1955, 1939, 1968, 1997, 19...
-$ year_created      &lt;dbl&gt; 1935, 1929, 1927, 1919, 1925, 1919, 1970, 19...
-$ circumference_cm  &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
-$ depth_cm          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
-$ diameter_cm       &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
-$ height_cm         &lt;dbl&gt; 104.8, 33.8, 60.3, 215.9, 50.8, 129.2, 200.0...
-$ length_cm         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
-$ width_cm          &lt;dbl&gt; 74.6, 33.3, 36.8, 78.7, 54.0, 89.9, 200.0, 3...
-$ seat_height_cm    &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
-$ purchase          &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FA...
-$ gift              &lt;lgl&gt; TRUE, FALSE, FALSE, TRUE, TRUE, FALSE, TRUE,...
-$ exchange          &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FAL...
-$ classification    &lt;chr&gt; &quot;Painting&quot;, &quot;Painting&quot;, &quot;Painting&quot;, &quot;Paintin...
-$ department        &lt;chr&gt; &quot;Painting &amp; Sculpture&quot;, &quot;Painting &amp; Sculptur...</code></pre>
+Variables: 24
+$ title             &lt;chr&gt; &quot;Rope and People, I&quot;, &quot;Fire in the Evening&quot;, &quot;Portr…
+$ artist            &lt;chr&gt; &quot;Joan Miró&quot;, &quot;Paul Klee&quot;, &quot;Paul Klee&quot;, &quot;Pablo Picas…
+$ artist_bio        &lt;chr&gt; &quot;(Spanish, 1893–1983)&quot;, &quot;(German, born Switzerland.…
+$ artist_birth_year &lt;dbl&gt; 1893, 1879, 1879, 1881, 1880, 1879, 1943, 1880, 183…
+$ artist_death_year &lt;dbl&gt; 1983, 1940, 1940, 1973, 1946, 1953, 1977, 1950, 190…
+$ num_artists       &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+$ n_female_artists  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ n_male_artists    &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+$ artist_gender     &lt;chr&gt; &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Ma…
+$ year_acquired     &lt;dbl&gt; 1936, 1970, 1966, 1955, 1939, 1968, 1997, 1931, 193…
+$ year_created      &lt;dbl&gt; 1935, 1929, 1927, 1919, 1925, 1919, 1970, 1929, 188…
+$ circumference_cm  &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
+$ depth_cm          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
+$ diameter_cm       &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
+$ height_cm         &lt;dbl&gt; 104.8, 33.8, 60.3, 215.9, 50.8, 129.2, 200.0, 54.6,…
+$ length_cm         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
+$ width_cm          &lt;dbl&gt; 74.6, 33.3, 36.8, 78.7, 54.0, 89.9, 200.0, 38.1, 96…
+$ seat_height_cm    &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
+$ purchase          &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FA…
+$ gift              &lt;lgl&gt; TRUE, FALSE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE, …
+$ exchange          &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FAL…
+$ classification    &lt;chr&gt; &quot;Painting&quot;, &quot;Painting&quot;, &quot;Painting&quot;, &quot;Painting&quot;, &quot;Pa…
+$ department        &lt;chr&gt; &quot;Painting &amp; Sculpture&quot;, &quot;Painting &amp; Sculpture&quot;, &quot;Pa…
+$ top_to_color      &lt;chr&gt; NA, NA, NA, &quot;Picasso&quot;, NA, NA, NA, NA, NA, NA, NA, …</code></pre>
 <p>There are 2253 paintings in <code>moma</code>.</p>
 </div>
-<div id="what-is-the-first-painting-acquired" class="section level2">
-<h2><span class="header-section-number">6.2</span> What is the first painting acquired?</h2>
+<div id="what-is-the-first-painting-acquired" class="section level2" number="6.2">
+<h2 number="6.2"><span class="header-section-number">6.2</span> What is the first painting acquired?</h2>
 <ul>
 <li>What is the first painting acquired by MoMA (since they started tracking)?</li>
 <li>What year was it acquired?</li>
@@ -461,22 +533,22 @@ $ department        &lt;chr&gt; &quot;Painting &amp; Sculpture&quot;, &quot;Pain
   select(artist, title, year_acquired) %&gt;% 
   arrange(year_acquired)</code></pre>
 <pre><code># A tibble: 2,253 x 3
-   artist            title                                   year_acquired
-   &lt;chr&gt;             &lt;chr&gt;                                           &lt;dbl&gt;
- 1 Edward Hopper     House by the Railroad                           1930.
- 2 Bernard Karfiol   Seated Nude                                     1930.
- 3 Pierre Roy        Daylight Savings Time                           1931.
- 4 Preston Dickinson Plums on a Plate                                1931.
- 5 Otto Dix          Dr. Mayer-Hermann                               1932.
- 6 Paul Cézanne      The Bather                                      1934.
- 7 Paul Cézanne      Pines and Rocks (Fontainebleau?)                1934.
- 8 Paul Cézanne      Still Life with Ginger Jar, Sugar Bowl…         1934.
- 9 Paul Cézanne      Still Life with Apples                          1934.
-10 Arthur B. Davies  Italian Landscape                               1934.
-# ... with 2,243 more rows</code></pre>
+   artist           title                                          year_acquired
+   &lt;chr&gt;            &lt;chr&gt;                                                  &lt;dbl&gt;
+ 1 Edward Hopper    House by the Railroad                                   1930
+ 2 Bernard Karfiol  Seated Nude                                             1930
+ 3 Pierre Roy       Daylight Savings Time                                   1931
+ 4 Preston Dickins… Plums on a Plate                                        1931
+ 5 Otto Dix         Dr. Mayer-Hermann                                       1932
+ 6 Paul Cézanne     The Bather                                              1934
+ 7 Paul Cézanne     Pines and Rocks (Fontainebleau?)                        1934
+ 8 Paul Cézanne     Still Life with Ginger Jar, Sugar Bowl, and O…          1934
+ 9 Paul Cézanne     Still Life with Apples                                  1934
+10 Arthur B. Davies Italian Landscape                                       1934
+# … with 2,243 more rows</code></pre>
 </div>
-<div id="what-is-the-oldest-painting-in-the-moma-collection" class="section level2">
-<h2><span class="header-section-number">6.3</span> What is the oldest painting in the MoMA collection?</h2>
+<div id="what-is-the-oldest-painting-in-the-moma-collection" class="section level2" number="6.3">
+<h2 number="6.3"><span class="header-section-number">6.3</span> What is the oldest painting in the MoMA collection?</h2>
 <ul>
 <li>What is the oldest painting in the MoMA collection historically (since they started tracking)?</li>
 <li>What year was it created?</li>
@@ -492,21 +564,21 @@ $ department        &lt;chr&gt; &quot;Painting &amp; Sculpture&quot;, &quot;Pain
 <pre><code># A tibble: 2,253 x 3
    artist       title                                    year_created
    &lt;chr&gt;        &lt;chr&gt;                                           &lt;dbl&gt;
- 1 Odilon Redon Landscape at Daybreak                           1872.
- 2 Odilon Redon Apache (Man on Horseback)                       1875.
- 3 Odilon Redon Apache (Man on Horseback II)                    1875.
- 4 Odilon Redon Fishing Boat                                    1875.
- 5 Odilon Redon Rocky Peak                                      1875.
- 6 Odilon Redon The Rocky Slope                                 1875.
- 7 Odilon Redon Landscape with Rocks, near Royan                1875.
- 8 Paul Cézanne Still Life with Fruit Dish                      1879.
- 9 Paul Cézanne L&#39;Estaque                                       1879.
-10 Claude Monet On the Cliff at Pourville, Clear Weather        1882.
-# ... with 2,243 more rows</code></pre>
+ 1 Odilon Redon Landscape at Daybreak                            1872
+ 2 Odilon Redon Apache (Man on Horseback)                        1875
+ 3 Odilon Redon Apache (Man on Horseback II)                     1875
+ 4 Odilon Redon Fishing Boat                                     1875
+ 5 Odilon Redon Rocky Peak                                       1875
+ 6 Odilon Redon The Rocky Slope                                  1875
+ 7 Odilon Redon Landscape with Rocks, near Royan                 1875
+ 8 Paul Cézanne Still Life with Fruit Dish                       1879
+ 9 Paul Cézanne L&#39;Estaque                                        1879
+10 Claude Monet On the Cliff at Pourville, Clear Weather         1882
+# … with 2,243 more rows</code></pre>
 <p>To do inline comments, I could say that the oldest painting is Landscape at Daybreak, painted by Odilon Redon in 1872.</p>
 </div>
-<div id="how-many-artists" class="section level2">
-<h2><span class="header-section-number">6.4</span> How many artists?</h2>
+<div id="how-many-artists" class="section level2" number="6.4">
+<h2 number="6.4"><span class="header-section-number">6.4</span> How many artists?</h2>
 <ul>
 <li>How many distinct artists are there?</li>
 </ul>
@@ -528,7 +600,7 @@ $ department        &lt;chr&gt; &quot;Painting &amp; Sculpture&quot;, &quot;Pain
  8 Paul Cézanne     
  9 Enrico Prampolini
 10 Jankel Adler     
-# ... with 979 more rows</code></pre>
+# … with 979 more rows</code></pre>
 <p>You could add a <code>tally()</code> too to get just the number of rows. You can also then use <code>pull()</code> to get that single number out of the tibble:</p>
 <pre class="r"><code>num_artists &lt;- moma %&gt;% 
   distinct(artist) %&gt;% 
@@ -538,8 +610,8 @@ num_artists</code></pre>
 <pre><code>[1] 989</code></pre>
 <p>Then I can refer to this number in inline comments like: there are 989 total.</p>
 </div>
-<div id="which-artist-has-the-most-paintings" class="section level2">
-<h2><span class="header-section-number">6.5</span> Which artist has the most paintings?</h2>
+<div id="which-artist-has-the-most-paintings" class="section level2" number="6.5">
+<h2 number="6.5"><span class="header-section-number">6.5</span> Which artist has the most paintings?</h2>
 <ul>
 <li>Which artist has the most paintings ever owned by <code>moma</code>?</li>
 <li>How many paintings in the MoMA collection by that artist?</li>
@@ -562,18 +634,18 @@ num_artists</code></pre>
  8 Ben Vautier         24
  9 Frank Stella        23
 10 Philip Guston       23
-# ... with 979 more rows</code></pre>
+# … with 979 more rows</code></pre>
 <p>In the <code>?count</code> documentation, it says: “<code>count</code> and <code>tally</code> are designed so that you can call them repeatedly, each time rolling up a level of detail.” Try running <code>count()</code> again (leave parentheses empty) on your last code chunk.</p>
 <pre class="r"><code>moma %&gt;% 
   count(artist, sort = TRUE) %&gt;% 
   count()</code></pre>
 <pre><code># A tibble: 1 x 1
-     nn
+      n
   &lt;int&gt;
 1   989</code></pre>
 </div>
-<div id="how-many-paintings-by-male-vs-female-artists" class="section level2">
-<h2><span class="header-section-number">6.6</span> How many paintings by male vs female artists?</h2>
+<div id="how-many-paintings-by-male-vs-female-artists" class="section level2" number="6.6">
+<h2 number="6.6"><span class="header-section-number">6.6</span> How many paintings by male vs female artists?</h2>
 <pre class="r"><code>moma %&gt;% 
   count(artist_gender)</code></pre>
 <pre><code># A tibble: 3 x 2
@@ -598,7 +670,7 @@ num_artists</code></pre>
  8 Male          Ben Vautier         24
  9 Male          Frank Stella        23
 10 Male          Philip Guston       23
-# ... with 979 more rows</code></pre>
+# … with 979 more rows</code></pre>
 <p>This output is not superhelpful as we already know that Pablo Picasso has 55 paintings in the MoMA collection. But how can we find out which female artist has the most paintings? We have a few options. Let’s first add a <code>filter</code> for females.</p>
 <pre class="r"><code>moma %&gt;% 
   count(artist_gender, artist, sort = TRUE) %&gt;% 
@@ -616,7 +688,7 @@ num_artists</code></pre>
  8 Female        Helen Frankenthaler       5
  9 Female        Georgia O&#39;Keeffe          4
 10 Female        Lynette Yiadom-Boakye     4
-# ... with 133 more rows</code></pre>
+# … with 133 more rows</code></pre>
 <p>Another option is to use another <code>dplyr</code> function called <code>top_n()</code>. Use <code>?top_n</code> to see how it works. How it won’t work in this context:</p>
 <pre class="r"><code>moma %&gt;% 
   count(artist_gender, artist, sort = TRUE) %&gt;% 
@@ -641,23 +713,23 @@ num_artists</code></pre>
 3 &lt;NA&gt;          Gilbert &amp; George, Gilbert Proesch, George Passmore     2</code></pre>
 <p>Now we can see that Sherrie Levine has 12 paintings. This is a pretty far cry from the 55 paintings by Pablo Picasso.</p>
 </div>
-<div id="how-many-artists-of-each-gender-are-there" class="section level2">
-<h2><span class="header-section-number">6.7</span> How many artists of each gender are there?</h2>
+<div id="how-many-artists-of-each-gender-are-there" class="section level2" number="6.7">
+<h2 number="6.7"><span class="header-section-number">6.7</span> How many artists of each gender are there?</h2>
 <p>This is a harder question to answer than you think! This is because the level of observation in our current <code>moma</code> dataset is <em>unique paintings</em>. We have multiple paintings done by the same artists though, so counting just the number of unique paintings is different than counting the number of unique artists.</p>
 <p>Remember how <code>count</code> can be used back-to-back to roll up a level of detail? Try running <code>count(artist_gender)</code> again on your last code chunk.</p>
 <pre class="r"><code>moma %&gt;% 
   count(artist_gender, artist) %&gt;% 
   count(artist_gender)</code></pre>
 <pre><code># A tibble: 3 x 2
-  artist_gender    nn
+  artist_gender     n
   &lt;chr&gt;         &lt;int&gt;
 1 Female          143
 2 Male            837
 3 &lt;NA&gt;              9</code></pre>
 <p>This output takes the previous table (made with <code>count(artist_gender, artist)</code>), and essentially ignores the <code>n</code> column. So we no longer care about how <em>many</em> paintings each individual artist created. Instead, we want to <code>count</code> the rows in this <em>new</em> table where each row is a unique artist. By counting by <code>artist_gender</code> in the last line, we are grouping by levels of that variable (so Female/Male/<code>NA</code>) and <code>nn</code> is the number of unique artists for each gender category recorded.</p>
 </div>
-<div id="when-were-the-most-paintings-in-the-collection-acquired" class="section level2">
-<h2><span class="header-section-number">6.8</span> When were the most paintings in the collection acquired?</h2>
+<div id="when-were-the-most-paintings-in-the-collection-acquired" class="section level2" number="6.8">
+<h2 number="6.8"><span class="header-section-number">6.8</span> When were the most paintings in the collection acquired?</h2>
 <p class="text-info">
 <strong>Hint:</strong> Try <code>dplyr::count</code>. Use <code>?count</code> to figure out how to sort the output.
 </p>
@@ -666,20 +738,20 @@ num_artists</code></pre>
 <pre><code># A tibble: 88 x 2
    year_acquired     n
            &lt;dbl&gt; &lt;int&gt;
- 1         1985.    86
- 2         1942.    71
- 3         1979.    71
- 4         1991.    67
- 5         2005.    67
- 6         1967.    65
- 7         2008.    55
- 8         1961.    45
- 9         1969.    45
-10         1956.    42
-# ... with 78 more rows</code></pre>
+ 1          1985    86
+ 2          1942    71
+ 3          1979    71
+ 4          1991    67
+ 5          2005    67
+ 6          1967    65
+ 7          2008    55
+ 8          1961    45
+ 9          1969    45
+10          1956    42
+# … with 78 more rows</code></pre>
 </div>
-<div id="when-were-the-most-paintings-in-the-collection-created" class="section level2">
-<h2><span class="header-section-number">6.9</span> When were the most paintings in the collection created?</h2>
+<div id="when-were-the-most-paintings-in-the-collection-created" class="section level2" number="6.9">
+<h2 number="6.9"><span class="header-section-number">6.9</span> When were the most paintings in the collection created?</h2>
 <p class="text-info">
 <strong>Hint:</strong> Try <code>dplyr::count</code>. Use <code>?count</code> to figure out how to sort the output.
 </p>
@@ -688,20 +760,20 @@ num_artists</code></pre>
 <pre><code># A tibble: 139 x 2
    year_created     n
           &lt;dbl&gt; &lt;int&gt;
- 1        1977.    57
- 2        1940.    56
- 3        1964.    56
- 4        1961.    50
- 5        1962.    49
- 6        1963.    44
- 7        1959.    42
- 8        1968.    40
- 9        1960.    39
-10        1914.    37
-# ... with 129 more rows</code></pre>
+ 1         1977    57
+ 2         1940    56
+ 3         1964    56
+ 4         1961    50
+ 5         1962    49
+ 6         1963    44
+ 7         1959    42
+ 8         1968    40
+ 9         1960    39
+10         1914    37
+# … with 129 more rows</code></pre>
 </div>
-<div id="what-about-the-first-painting-by-a-solo-female-artist" class="section level2">
-<h2><span class="header-section-number">6.10</span> What about the first painting by a solo female artist?</h2>
+<div id="what-about-the-first-painting-by-a-solo-female-artist" class="section level2" number="6.10">
+<h2 number="6.10"><span class="header-section-number">6.10</span> What about the first painting by a solo female artist?</h2>
 <p class="text-info">
 <strong>Hint:</strong> Try combining three <code>dplyr</code> functions: <code>filter</code>, <code>select</code>, and <code>arrange</code>.
 </p>
@@ -711,38 +783,38 @@ num_artists</code></pre>
   select(title, artist, year_acquired, year_created) %&gt;% 
   arrange(year_acquired)</code></pre>
 <pre><code># A tibble: 252 x 4
-   title                           artist       year_acquired year_created
-   &lt;chr&gt;                           &lt;chr&gt;                &lt;dbl&gt;        &lt;dbl&gt;
- 1 Landscape, 47                   Natalia Gon…         1937.        1912.
- 2 Shack                           Loren MacIv…         1938.        1934.
- 3 Hopscotch                       Loren MacIv…         1940.        1940.
- 4 Shadows with Painting           Irene Rice …         1941.        1940.
- 5 Figure                          Varvara Ste…         1941.        1921.
- 6 Still Life in Red               Amelia Pelá…         1942.        1938.
- 7 White Lines                     Irene Rice …         1942.        1942.
- 8 Musical Squash                  Maud Morgan          1942.        1942.
- 9 Desolation                      Raquel Forn…         1942.        1942.
-10 Self-Portrait with Cropped Hair Frida Kahlo          1943.        1940.
-# ... with 242 more rows</code></pre>
+   title                        artist                year_acquired year_created
+   &lt;chr&gt;                        &lt;chr&gt;                         &lt;dbl&gt;        &lt;dbl&gt;
+ 1 Landscape, 47                Natalia Goncharova             1937         1912
+ 2 Shack                        Loren MacIver                  1938         1934
+ 3 Hopscotch                    Loren MacIver                  1940         1940
+ 4 Shadows with Painting        Irene Rice Pereira             1941         1940
+ 5 Figure                       Varvara Stepanova              1941         1921
+ 6 Still Life in Red            Amelia Peláez Del Ca…          1942         1938
+ 7 White Lines                  Irene Rice Pereira             1942         1942
+ 8 Musical Squash               Maud Morgan                    1942         1942
+ 9 Desolation                   Raquel Forner                  1942         1942
+10 Self-Portrait with Cropped … Frida Kahlo                    1943         1940
+# … with 242 more rows</code></pre>
 <p>What is the oldest painting by a solo female artist, and when was it created?</p>
 <pre class="r"><code>moma %&gt;% 
   filter(num_artists == 1 &amp; n_female_artists == 1) %&gt;% 
   select(title, artist, year_acquired, year_created) %&gt;% 
   arrange(year_created)</code></pre>
 <pre><code># A tibble: 252 x 4
-   title                          artist        year_acquired year_created
-   &lt;chr&gt;                          &lt;chr&gt;                 &lt;dbl&gt;        &lt;dbl&gt;
- 1 Self-Portrait with Two Flower… Paula Moders…         2017.        1907.
- 2 Girl with Bare Shoulders       Gwen John             1958.        1909.
- 3 Girl Reading at a Window       Gwen John             1971.        1911.
- 4 Landscape, 47                  Natalia Gonc…         1937.        1912.
- 5 Cubist Nude                    Alexandra Ex…         1991.        1912.
- 6 Rayonism, Blue-Green Forest    Natalia Gonc…         1985.        1913.
- 7 The Factory and the Bridge     Olga Rozanova         1985.        1913.
- 8 Subject from a Dyer&#39;s Shop     Lyubov Popova         1985.        1914.
- 9 Portuguese Market              Sonia Delaun…         1955.        1915.
-10 Girl with a Blue Scarf         Gwen John             1963.        1915.
-# ... with 242 more rows</code></pre>
+   title                              artist          year_acquired year_created
+   &lt;chr&gt;                              &lt;chr&gt;                   &lt;dbl&gt;        &lt;dbl&gt;
+ 1 Self-Portrait with Two Flowers in… Paula Modersoh…          2017         1907
+ 2 Girl with Bare Shoulders           Gwen John                1958         1909
+ 3 Girl Reading at a Window           Gwen John                1971         1911
+ 4 Landscape, 47                      Natalia Goncha…          1937         1912
+ 5 Cubist Nude                        Alexandra Exter          1991         1912
+ 6 Rayonism, Blue-Green Forest        Natalia Goncha…          1985         1913
+ 7 The Factory and the Bridge         Olga Rozanova            1985         1913
+ 8 Subject from a Dyer&#39;s Shop         Lyubov Popova            1985         1914
+ 9 Portuguese Market                  Sonia Delaunay…          1955         1915
+10 Girl with a Blue Scarf             Gwen John                1963         1915
+# … with 242 more rows</code></pre>
 <pre class="r"><code># or, because artist_gender is missing when num_artists &gt; 1
 moma %&gt;% 
   filter(artist_gender == &quot;Female&quot;) %&gt;% 
@@ -750,8 +822,8 @@ moma %&gt;%
   arrange(year_acquired)</code></pre>
 </div>
 </div>
-<div id="basics-of-ggplot2" class="section level1">
-<h1><span class="header-section-number">7</span> Basics of <code>ggplot2</code></h1>
+<div id="basics-of-ggplot2" class="section level1" number="7">
+<h1 number="7"><span class="header-section-number">7</span> Basics of <code>ggplot2</code></h1>
 <div class="panel panel-success">
 <div class="panel-heading">
 Challenge #2:
@@ -761,29 +833,26 @@ We’ll do this together <em>(nothing to turn in)</em>: see <a href="https://apr
 </div>
 </div>
 </div>
-<div id="plot-your-data" class="section level1">
-<h1><span class="header-section-number">8</span> Plot your data</h1>
-<div id="plot-year-painted-vs-year-acquired" class="section level2">
-<h2><span class="header-section-number">8.1</span> Plot year painted vs year acquired</h2>
+<div id="plot-your-data" class="section level1" number="8">
+<h1 number="8"><span class="header-section-number">8</span> Plot your data</h1>
+<div id="plot-year-painted-vs-year-acquired" class="section level2" number="8.1">
+<h2 number="8.1"><span class="header-section-number">8.1</span> Plot year painted vs year acquired</h2>
 <div class="panel panel-success">
 <div class="panel-heading">
 Challenge #3:
 </div>
 <div class="panel-body">
 <p>Let’s recreate this plot from <a href="https://fivethirtyeight.com/features/a-nerds-guide-to-the-2229-paintings-at-moma/">fivethirtyeight</a> (mostly)!</p>
-<div class="figure">
-<img src="https://espnfivethirtyeight.files.wordpress.com/2015/08/roeder-feature-moma-1.png?w=1150&amp;quality=90&amp;strip=info" />
-
-</div>
+<p><img src="https://espnfivethirtyeight.files.wordpress.com/2015/08/roeder-feature-moma-1.png?w=1150&amp;quality=90&amp;strip=info" /></p>
 <p>Things to consider:</p>
 <ul>
 <li>You’ll want to play around with setting an <code>alpha</code> value here- keep in mind that <code>0</code> is totally transparent and <code>1</code> is opaque.</li>
-<li>Try using <code>geom_abline()</code> to add the line in red (use the default intercept value of 0). The actual red line is difficult to recreate- here is what the authors say: “The red regression line shows the “modernizing” of MoMA’s collection — how quickly the museum has moved toward acquiring recent paintings.”</li>
+<li>Try using <code>geom_abline()</code> to add the line in red (use the default intercept value of 0). The actual red line is difficult to recreate- here is what the authors say: “The red regression line shows the “modernizing” of MoMA’s collection — how quickly the museum has moved toward acquiring recent paintings."</li>
 <li>Go back to <a href="https://apreshill.github.io/data-vis-labs-2018/01-eda_hot_dogs.html">Lab 01</a> to review how to do the following:
 <ul>
-<li>Change the x- and y-axis labels and the plot title to match the plot above
+<li>Change the x- and y-axis labels and the plot title to match the plot above</li>
+</ul>
 </div></li>
-</ul></li>
 </ul>
 </div>
 <pre class="r"><code>ggplot(moma, aes(year_created, year_acquired)) +
@@ -793,8 +862,8 @@ Challenge #3:
   ggtitle(&quot;MoMA Keeps Its Collection Current&quot;) </code></pre>
 <p><img src="02-moma_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
 </div>
-<div id="facet-by-artist-gender" class="section level2">
-<h2><span class="header-section-number">8.2</span> Facet by artist gender</h2>
+<div id="facet-by-artist-gender" class="section level2" number="8.2">
+<h2 number="8.2"><span class="header-section-number">8.2</span> Facet by artist gender</h2>
 <p>Can you make the same plot above, but facet by artist gender?</p>
 <p class="text-info">
 <strong>Hint:</strong> For this to make sense, you probably want to do some filtering to select only those paintings where there was one “solo” artist.
@@ -810,18 +879,15 @@ ggplot(moma_solo, aes(year_created, year_acquired)) +
 <p><img src="02-moma_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 </div>
 </div>
-<div id="plot-painting-dimensions" class="section level1">
-<h1><span class="header-section-number">9</span> Plot painting dimensions</h1>
+<div id="plot-painting-dimensions" class="section level1" number="9">
+<h1 number="9"><span class="header-section-number">9</span> Plot painting dimensions</h1>
 <div class="panel panel-success">
 <div class="panel-heading">
 Challenge #4:
 </div>
 <div class="panel-body">
 <p>Let’s (somewhat) try to recreate this scatterplot from <a href="https://fivethirtyeight.com/features/a-nerds-guide-to-the-2229-paintings-at-moma/">fivethirtyeight</a>.</p>
-<div class="figure">
-<img src="https://espnfivethirtyeight.files.wordpress.com/2015/08/roeder-feature-moma-3.png?w=1150&amp;quality=90&amp;strip=info" />
-
-</div>
+<p><img src="https://espnfivethirtyeight.files.wordpress.com/2015/08/roeder-feature-moma-3.png?w=1150&amp;quality=90&amp;strip=info" /></p>
 <p>To recreate, some things to consider:</p>
 <ul>
 <li>Try filtering all paintings with height less than 600 cm and width less than 760 cm.</li>
@@ -879,8 +945,8 @@ ggplot(moma_dim, aes(x = width_cm, y = height_cm, colour = hw_cat)) +
              size = 5, family = &quot;Lato&quot;, hjust = 0, fontface = 2)</code></pre>
 <p><img src="02-moma_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
 </div>
-<div id="plot-something-new-different" class="section level1">
-<h1><span class="header-section-number">10</span> Plot something new &amp; different!</h1>
+<div id="plot-something-new-different" class="section level1" number="10">
+<h1 number="10"><span class="header-section-number">10</span> Plot something new &amp; different!</h1>
 <div class="panel panel-success">
 <div class="panel-heading">
 Challenge #5:
@@ -918,6 +984,54 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

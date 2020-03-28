@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Alison Hill" />
@@ -14,6 +14,7 @@
 
 <title>Lab 04: Exploratory Data Analysis</title>
 
+<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -70,9 +71,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -86,13 +85,18 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
@@ -108,7 +112,6 @@ body {
   padding-top: 65px;
   margin-top: -65px;
 }
-
 .section h2 {
   padding-top: 65px;
   margin-top: -65px;
@@ -128,6 +131,43 @@ body {
 .section h6 {
   padding-top: 65px;
   margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -149,19 +189,74 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -202,14 +297,14 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Lab 04: Exploratory Data Analysis</h1>
-<h3 class="subtitle"><em>CS631</em></h3>
-<h4 class="author"><em>Alison Hill</em></h4>
+<h3 class="subtitle">CS631</h3>
+<h4 class="author">Alison Hill</h4>
 
 </div>
 
 
-<div id="overview" class="section level1">
-<h1><span class="header-section-number">1</span> Overview</h1>
+<div id="overview" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Overview</h1>
 <p>Both challenges are due by noon via Sakai on Wednesday May 2. For the first tidy challenge, you’ll want to refer back to our <a href="slides/04-slides.html">slides</a>. For the second challenge, you’ll want to refer to the <a href="04-distributions.html">reference lab</a>.</p>
 <ol style="list-style-type: decimal">
 <li><p>Tidy challenge: Tidy the “Lord of the Rings” data <em>(Advice: read in each csv file using <code>read_csv()</code>, then use <code>dplyr::bind_rows</code> to stack them together pre-tidying.)</em></p>
@@ -232,8 +327,8 @@ library(gapminder)
 </ul>
 <p>Make observations about what your tables/figures show and about the process. If you want to do something comparable but different, i.e. swap one quantitative variable for another- go for it!</p>
 <p>You do not have to use <code>tidyr</code> or otherwise worry about reshaping your tables. Many of your tables may not be formatted perfectly in the report. Simply printing <code>dplyr</code> tabular output is fine. For all things, graphical and tabular, if you’re dissatisfied with a result, discuss the problem, what you tried to do to fix it, and move on.</p>
-<div id="task-menu" class="section level3">
-<h3><span class="header-section-number">1.0.1</span> Task menu</h3>
+<div id="task-menu" class="section level3" number="1.0.1">
+<h3 number="1.0.1"><span class="header-section-number">1.0.1</span> Task menu</h3>
 <ul>
 <li><p>Get the maximum and minimum of GDP per capita for all continents.</p></li>
 <li><p>Look at the spread of GDP per capita across countries within the continents.</p></li>
@@ -242,13 +337,13 @@ library(gapminder)
 <li><p>Make up your own!</p></li>
 </ul>
 </div>
-<div id="companion-graphs" class="section level3">
-<h3><span class="header-section-number">1.0.2</span> Companion graphs</h3>
+<div id="companion-graphs" class="section level3" number="1.0.2">
+<h3 number="1.0.2"><span class="header-section-number">1.0.2</span> Companion graphs</h3>
 <p>For each table, make sure to include a relevant figure. One tip for starting is to draw out on paper what you want your x- and y-axis to be first and what your <code>geom</code> is; that is, start by drawing the plot you want <code>ggplot</code> to give you. Your figure does not have to depict every single number present in the table. Use your judgement. It just needs to complement the table, add context, and allow for some sanity checking.</p>
 <p>Notice which figures are easy/hard to make, and whether the visualization adds clarity, detracts from, or is completely redundant (and therefore probably unnecessary) with respect to the tabular display.</p>
 </div>
-<div id="report-your-process" class="section level2">
-<h2><span class="header-section-number">1.1</span> Report your process</h2>
+<div id="report-your-process" class="section level2" number="1.1">
+<h2 number="1.1"><span class="header-section-number">1.1</span> Report your process</h2>
 <p>You’re encouraged to reflect on what was hard/easy, problems you solved, helpful tutorials you read, etc.</p>
 <div class="jumbotron">
 <p>Gapminder EDA ideas from <a href="http://stat545.com/hw03_dplyr-and-more-ggplot2.html">Jenny Bryan</a>, author and creator of the <a href="https://cran.r-project.org/web/packages/gapminder/index.html">Gapminder package</a>.</p>
@@ -277,6 +372,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

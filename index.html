@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
 
 <title>Principles &amp; Practice of Data Visualization</title>
 
+<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -69,9 +70,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -85,7 +84,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -95,6 +93,9 @@ img {
 }
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
@@ -110,7 +111,6 @@ body {
   padding-top: 65px;
   margin-top: -65px;
 }
-
 .section h2 {
   padding-top: 65px;
   margin-top: -65px;
@@ -130,6 +130,43 @@ body {
 .section h6 {
   padding-top: 65px;
   margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -151,19 +188,74 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -214,22 +306,22 @@ $(document).ready(function () {
 <li><a href="01-eda_hot_dogs.html">Lab 01: Nathan’s Hot Dog Eating Context</a>
 <ul>
 <li><a href="slides/01-slides.html">Slides</a></li>
-<li>Dataset 1: <a href="http://bit.ly/cs631-hotdog" class="uri">http://bit.ly/cs631-hotdog</a></li>
-<li>Dataset 2: <a href="http://bit.ly/cs631-hotdog-affiliated" class="uri">http://bit.ly/cs631-hotdog-affiliated</a></li>
-<li>Addendum: <a href="01-addendum.html" class="uri">01-addendum.html</a></li>
+<li>Dataset 1: <a href="http://bit.ly/cs631-hotdog">http://bit.ly/cs631-hotdog</a></li>
+<li>Dataset 2: <a href="http://bit.ly/cs631-hotdog-affiliated">http://bit.ly/cs631-hotdog-affiliated</a></li>
+<li>Addendum: <a href="01-addendum.html">01-addendum.html</a></li>
 </ul></li>
 <li><a href="02-moma.html">Lab 02: MoMA Museum Tour</a>
 <ul>
 <li><a href="slides/02-slides.html">Slides</a></li>
-<li>Dataset: <a href="http://bit.ly/cs631-moma" class="uri">http://bit.ly/cs631-moma</a></li>
-<li>Dataset Cleaning <em>(optional)</em>: <a href="02a-moma-cleaning.html" class="uri">02a-moma-cleaning.html</a></li>
-<li>Addendum: <a href="02-addendum.html" class="uri">02-addendum.html</a></li>
+<li>Dataset: <a href="http://bit.ly/cs631-moma">http://bit.ly/cs631-moma</a></li>
+<li>Dataset Cleaning <em>(optional)</em>: <a href="02a-moma-cleaning.html">02a-moma-cleaning.html</a></li>
+<li>Addendum: <a href="02-addendum.html">02-addendum.html</a></li>
 </ul></li>
 <li><a href="03-colors.html">Lab 03: Colors with Animal Sounds</a>
 <ul>
 <li><a href="slides/03-slides.html">Slides</a></li>
-<li>Dataset: <a href="http://bit.ly/cs631-meow" class="uri">http://bit.ly/cs631-meow</a></li>
-<li>Dataset Cleaning <em>(optional)</em>: <a href="03a-meow-cleaning.html" class="uri">03a-meow-cleaning.html</a></li>
+<li>Dataset: <a href="http://bit.ly/cs631-meow">http://bit.ly/cs631-meow</a></li>
+<li>Dataset Cleaning <em>(optional)</em>: <a href="03a-meow-cleaning.html">03a-meow-cleaning.html</a></li>
 </ul></li>
 <li><a href="04-challenge.html">Lab 04: Tidy Data + Distributions</a>
 <ul>
@@ -281,6 +373,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

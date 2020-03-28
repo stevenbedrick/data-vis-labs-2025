@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Alison Hill" />
@@ -14,6 +14,7 @@
 
 <title>Lab 03a: Animal Word Cleaning</title>
 
+<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -70,9 +71,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -86,13 +85,18 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
@@ -108,7 +112,6 @@ body {
   padding-top: 65px;
   margin-top: -65px;
 }
-
 .section h2 {
   padding-top: 65px;
   margin-top: -65px;
@@ -128,6 +131,43 @@ body {
 .section h6 {
   padding-top: 65px;
   margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -149,19 +189,74 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -202,8 +297,8 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Lab 03a: Animal Word Cleaning</h1>
-<h3 class="subtitle"><em>CS631</em></h3>
-<h4 class="author"><em>Alison Hill</em></h4>
+<h3 class="subtitle">CS631</h3>
+<h4 class="author">Alison Hill</h4>
 
 </div>
 
@@ -215,16 +310,18 @@ $(document).ready(function () {
 <div id="packages" class="section level1">
 <h1>Packages</h1>
 <pre class="r"><code>library(tidyverse)
-library(wordbankr)
-library(here)</code></pre>
+library(wordbankr)</code></pre>
+<pre><code>Error in library(wordbankr): there is no package called &#39;wordbankr&#39;</code></pre>
+<pre class="r"><code>library(here)</code></pre>
+<pre><code>Error in library(here): there is no package called &#39;here&#39;</code></pre>
 <pre class="r"><code>my_sounds &lt;- c(&quot;meow&quot;, &quot;woof woof&quot;, &quot;cockadoodledoo&quot;)
 
 # first get the items in the animal category
 sounds &lt;- get_item_data(language = &quot;English (American)&quot;, 
                          form = &quot;WG&quot;) %&gt;%
-  filter(definition %in% my_sounds) 
-
-# then get instrument data for those items
+  filter(definition %in% my_sounds) </code></pre>
+<pre><code>Error in get_item_data(language = &quot;English (American)&quot;, form = &quot;WG&quot;): could not find function &quot;get_item_data&quot;</code></pre>
+<pre class="r"><code># then get instrument data for those items
 sounds_data &lt;- get_instrument_data(
   language = &quot;English (American)&quot;,
   form = &quot;WG&quot;,
@@ -238,9 +335,9 @@ sounds_data &lt;- get_instrument_data(
            TRUE ~ FALSE
          )) %&gt;% 
   drop_na(produces) %&gt;% 
-  rename(sound = uni_lemma)
-
-# what proportion of kids at each age understand/produce each word?
+  rename(sound = uni_lemma)</code></pre>
+<pre><code>Error in get_instrument_data(language = &quot;English (American)&quot;, form = &quot;WG&quot;, : could not find function &quot;get_instrument_data&quot;</code></pre>
+<pre class="r"><code># what proportion of kids at each age understand/produce each word?
 sounds_summary &lt;- sounds_data %&gt;% 
   group_by(age, sound) %&gt;%
   summarise(kids_produce = sum(produces, na.rm = TRUE),
@@ -248,11 +345,14 @@ sounds_summary &lt;- sounds_data %&gt;%
             kids_respond = n_distinct(data_id),
             prop_produce = kids_produce / kids_respond,
             prop_understand = kids_understand / kids_respond)</code></pre>
+<pre><code>Error in eval(lhs, parent, parent): object &#39;sounds_data&#39; not found</code></pre>
 <p>Now let’s export both data frames for the lab.</p>
 <pre class="r"><code>write_csv(sounds_data, here::here(&quot;data&quot;,
-                                       &quot;animal_sounds_data.csv&quot;))
-write_csv(sounds_summary, here::here(&quot;data&quot;,
+                                       &quot;animal_sounds_data.csv&quot;))</code></pre>
+<pre><code>Error in is.data.frame(x): object &#39;sounds_data&#39; not found</code></pre>
+<pre class="r"><code>write_csv(sounds_summary, here::here(&quot;data&quot;,
                                         &quot;animal_sounds_summary.csv&quot;))</code></pre>
+<pre><code>Error in is.data.frame(x): object &#39;sounds_summary&#39; not found</code></pre>
 </div>
 
 <p>
@@ -276,6 +376,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Alison Hill" />
@@ -14,6 +14,7 @@
 
 <title>Lab 01: Nathan’s Hot-Dog Eating Contest</title>
 
+<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -74,9 +75,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -90,13 +89,18 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
@@ -112,7 +116,6 @@ body {
   padding-top: 65px;
   margin-top: -65px;
 }
-
 .section h2 {
   padding-top: 65px;
   margin-top: -65px;
@@ -132,6 +135,43 @@ body {
 .section h6 {
   padding-top: 65px;
   margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -153,55 +193,69 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 <style type="text/css">
 .code-folding-btn { margin-bottom: 4px; }
 </style>
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -215,6 +269,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -250,8 +310,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -260,6 +318,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -317,14 +385,14 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Lab 01: Nathan’s Hot-Dog Eating Contest</h1>
-<h3 class="subtitle"><em>CS631</em></h3>
-<h4 class="author"><em>Alison Hill</em></h4>
+<h3 class="subtitle">CS631</h3>
+<h4 class="author">Alison Hill</h4>
 
 </div>
 
 
-<div id="goals-for-lab-01" class="section level1">
-<h1><span class="header-section-number">1</span> Goals for Lab 01</h1>
+<div id="goals-for-lab-01" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Goals for Lab 01</h1>
 <ul>
 <li>Get your feet wet!</li>
 <li>Innoculate you against <code>ggplot2</code> errors- we all get them!</li>
@@ -339,20 +407,17 @@ div.tocify {
 </ul>
 <p>These are important questions, and I want you to develop (well-informed) opinions on these matters! <img src="images/theme-team-tweets.png" /></p>
 </div>
-<div id="nathans-hot-dog-eating-contest" class="section level1">
-<h1><span class="header-section-number">2</span> Nathan’s Hot Dog Eating Contest</h1>
-<div class="figure">
-<img src="https://i0.wp.com/flowingdata.com/wp-content/uploads/2009/06/hot-dogs1.gif?zoom=2&amp;fit=900%2C423" />
-
-</div>
+<div id="nathans-hot-dog-eating-contest" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Nathan’s Hot Dog Eating Contest</h1>
+<p><img src="https://i0.wp.com/flowingdata.com/wp-content/uploads/2009/06/hot-dogs1.gif?zoom=2&amp;fit=900%2C423" /></p>
 <p>This includes a reconstruction of <a href="http://flowingdata.com/2009/07/02/whos-going-to-win-nathans-hot-dog-eating-contest/hot-dogs-2/">Nathan Yau’s hot dog contest example</a>, as interpreted by Jackie Wirz, ported into R and <code>ggplot2</code> by Steven Bedrick for a workshop for the <a href="https://ohsulibrary-datascienceinstitute.github.io">OHSU Data Science Institute</a>, and finally adapted by Alison Hill for all you intrepid Data-Viz-onauts!</p>
 <p>First, we load our packages:</p>
 <pre class="r"><code>library(tidyverse)
 library(extrafont)
 library(here)</code></pre>
 </div>
-<div id="read-in-and-wrangle-data" class="section level1">
-<h1><span class="header-section-number">3</span> Read in and wrangle data</h1>
+<div id="read-in-and-wrangle-data" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Read in and wrangle data</h1>
 <p>Next, we load some data. You can use the following chunk to load it in from a link:</p>
 <pre class="r"><code>hot_dogs &lt;- read_csv(&quot;http://bit.ly/cs631-hotdog&quot;, 
     col_types = cols(
@@ -406,24 +471,24 @@ hot_dogs</code></pre>
 10 2008. male   Joey Chestnut        59. TRUE      
 # ... with 27 more rows</code></pre>
 </div>
-<div id="plot-the-data" class="section level1">
-<h1><span class="header-section-number">4</span> Plot The Data</h1>
+<div id="plot-the-data" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Plot The Data</h1>
 <p>Now let’s try making a first crack at a sketchy plot:</p>
 <pre class="r"><code>ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col()</code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>Note that our data is already in “counted” form, so we’re using <code>geom_col()</code> instead of <code>geom_bar()</code>.</p>
 </div>
-<div id="add-axis-labels-and-title" class="section level1">
-<h1><span class="header-section-number">5</span> Add Axis Labels And Title</h1>
+<div id="add-axis-labels-and-title" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Add Axis Labels And Title</h1>
 <pre class="r"><code>ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col() +
   labs(x = &quot;Year&quot;, y = &quot;Hot Dogs and Buns Consumed&quot;) +
   ggtitle(&quot;Nathan&#39;s Hot Dog Eating Contest Results, 1981-2017&quot;)</code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 </div>
-<div id="play-with-colors" class="section level1">
-<h1><span class="header-section-number">6</span> Play With Colors</h1>
+<div id="play-with-colors" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> Play With Colors</h1>
 <div class="panel panel-success">
 <div class="panel-heading">
 Challenge #1:
@@ -431,9 +496,9 @@ Challenge #1:
 <div class="panel-body">
 <p>Make 3 versions of the last plot we just made:</p>
 <ul>
-<li><strong>In the first,</strong> make all the columns outlined in “white”.</li>
-<li><strong>In the second,</strong> make all the columns outlined in “white” and filled in “navyblue”.</li>
-<li><strong>In the third,</strong> make all the columns outlined in “white” and filled in according to whether or not <code>post_ifoce</code> is TRUE or FALSE (use default colors for now).
+<li><p><strong>In the first,</strong> make all the columns outlined in “white”.</p></li>
+<li><p><strong>In the second,</strong> make all the columns outlined in “white” and filled in “navyblue”.</p></li>
+<li><p><strong>In the third,</strong> make all the columns outlined in “white” and filled in according to whether or not <code>post_ifoce</code> is TRUE or FALSE (use default colors for now).</p>
 </div></li>
 </ul>
 </div>
@@ -459,8 +524,8 @@ Challenge #2:
 <div class="panel-body">
 <p>What if you want to change the legend in the last plot you made? Use google to figure out how to do the following:</p>
 <ul>
-<li>Delete the legend title</li>
-<li>Make the legend text either “Post-IFOCE” or “Pre-IFOCE”.
+<li><p>Delete the legend title</p></li>
+<li><p>Make the legend text either “Post-IFOCE” or “Pre-IFOCE”.</p>
 </div></li>
 </ul>
 </div>
@@ -472,9 +537,9 @@ Challenge #2:
                       labels=c(&quot;Pre-IFOCE&quot;, &quot;Post-IFOCE&quot;))</code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
-<div id="change-the-dataset" class="section level1">
-<h1><span class="header-section-number">7</span> Change The Dataset</h1>
-<p>Now, let’s change the question a little bit. This looks at the <em>creation</em> of the IFOCE. What about the <em>affiliation</em> of the contestants? We’ll need some different data for this. Through the <em>Magic Of Data Science™</em>, we have dug that information up and put it into an expanded version of our CSV file available at <a href="http://bit.ly/cs631-hotdog-affiliated" class="uri">http://bit.ly/cs631-hotdog-affiliated</a>.</p>
+<div id="change-the-dataset" class="section level1" number="7">
+<h1 number="7"><span class="header-section-number">7</span> Change The Dataset</h1>
+<p>Now, let’s change the question a little bit. This looks at the <em>creation</em> of the IFOCE. What about the <em>affiliation</em> of the contestants? We’ll need some different data for this. Through the <em>Magic Of Data Science™</em>, we have dug that information up and put it into an expanded version of our CSV file available at <a href="http://bit.ly/cs631-hotdog-affiliated">http://bit.ly/cs631-hotdog-affiliated</a>.</p>
 <div class="panel panel-success">
 <div class="panel-heading">
 Challenge #3:
@@ -482,9 +547,9 @@ Challenge #3:
 <div class="panel-body">
 <p>Let’s work with this new dataset! Do the following:</p>
 <ul>
-<li>Read in the “hot_dog_contest_with_affiliation.csv” data file, using <code>col_types</code> to read in <code>affiliated</code> and <code>gender</code> as factors.</li>
-<li>Within a <code>mutate</code>, create a new variable called <code>post_ifoce</code> that is TRUE if <code>year</code> is greater than or equal to 1997.</li>
-<li>Also <code>filter</code> the new data for only years 1981 and after, and only for male competitors.
+<li><p>Read in the “hot_dog_contest_with_affiliation.csv” data file, using <code>col_types</code> to read in <code>affiliated</code> and <code>gender</code> as factors.</p></li>
+<li><p>Within a <code>mutate</code>, create a new variable called <code>post_ifoce</code> that is TRUE if <code>year</code> is greater than or equal to 1997.</p></li>
+<li><p>Also <code>filter</code> the new data for only years 1981 and after, and only for male competitors.</p>
 </div></li>
 </ul>
 </div>
@@ -518,8 +583,8 @@ Challenge #4:
 <div class="panel-body">
 <p>Let’s do some basic EDA with this new dataset! Do the following:</p>
 <ul>
-<li>Use <code>dplyr::distinct</code> to figure out how many unique values there are of <code>affiliated</code>.</li>
-<li>Use <code>dplyr::count</code> to count the number of rows for each unique value of <code>affiliated</code>; use <code>?count</code> to figure out how to sort the counts in descending order.
+<li><p>Use <code>dplyr::distinct</code> to figure out how many unique values there are of <code>affiliated</code>.</p></li>
+<li><p>Use <code>dplyr::count</code> to count the number of rows for each unique value of <code>affiliated</code>; use <code>?count</code> to figure out how to sort the counts in descending order.</p>
 </div></li>
 </ul>
 </div>
@@ -552,9 +617,9 @@ Challenge #5:
 <div class="panel-body">
 <p>Do the following updates to the last plot we just made:</p>
 <ul>
-<li>Update the colors using hex colors: <code>c('#E9602B','#2277A0','#CCB683')</code>.</li>
-<li>Change the legend title to “IFOCE-affiliation”.</li>
-<li>Save this plot object as “affil_plot”.
+<li><p>Update the colors using hex colors: <code>c('#E9602B','#2277A0','#CCB683')</code>.</p></li>
+<li><p>Change the legend title to “IFOCE-affiliation”.</p></li>
+<li><p>Save this plot object as “affil_plot”.</p>
 </div></li>
 </ul>
 </div>
@@ -567,8 +632,8 @@ Challenge #5:
 affil_plot</code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 </div>
-<div id="play-with-scales-coordinates" class="section level1">
-<h1><span class="header-section-number">8</span> Play With Scales &amp; Coordinates</h1>
+<div id="play-with-scales-coordinates" class="section level1" number="8">
+<h1 number="8"><span class="header-section-number">8</span> Play With Scales &amp; Coordinates</h1>
 <p>The spacing’s a little funky down near the origin of the plot. The <a href="http://ggplot2.tidyverse.org/reference/scale_continuous.html">documentation</a> tells us that the defaults are <code>c(0.05, 0)</code> for continuous variables. The first number is multiplicative and the second is additive.</p>
 <p>The default was that 1.8 ((2017-1981)*.05+0) was added to the right and left sides of the x-axis as padding, so the effective default limits were <code>c(1979, 2019)</code>.</p>
 <p>Let’s tighten that up with the <code>expand</code> property for the <code>scale_y_continuous</code> (we’ll also change the breaks for y-axis tick marks here) and <code>scale_x_continuous</code> settings:</p>
@@ -579,10 +644,7 @@ affil_plot</code></pre>
 affil_plot</code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <p>But now the plot looks like it is wearing tight pants.</p>
-<div class="figure">
-<img src="https://media.giphy.com/media/xT1XH07no2wZSq4mnm/giphy.gif" />
-
-</div>
+<p><img src="https://media.giphy.com/media/xT1XH07no2wZSq4mnm/giphy.gif" /></p>
 <p>Let’s loosen things up a bit by updating the plot coordinates.</p>
 <div class="panel panel-success">
 <div class="panel-heading">
@@ -591,8 +653,8 @@ Challenge #6:
 <div class="panel-body">
 <p>Use <code>coord_cartesian</code> to:</p>
 <ul>
-<li>Set the x-axis range to 1980-2018</li>
-<li>Set the y-axis range to 0-80
+<li><p>Set the x-axis range to 1980-2018</p></li>
+<li><p>Set the y-axis range to 0-80</p>
 </div></li>
 </ul>
 </div>
@@ -610,8 +672,8 @@ Don’t change <code>limits</code> unless you really know what you are doing! Mo
 affil_plot</code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 </div>
-<div id="play-with-theme-settings" class="section level1">
-<h1><span class="header-section-number">9</span> Play With Theme Settings</h1>
+<div id="play-with-theme-settings" class="section level1" number="9">
+<h1 number="9"><span class="header-section-number">9</span> Play With Theme Settings</h1>
 <p>Let’s change some key theme settings:</p>
 <pre class="r"><code>affil_plot +
   theme(plot.title = element_text(hjust = 0.5)) +
@@ -666,13 +728,10 @@ years_to_label</code></pre>
 will replace the existing scale.</code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 </div>
-<div id="final-final-final-version" class="section level1">
-<h1><span class="header-section-number">10</span> Final (final, final) version</h1>
+<div id="final-final-final-version" class="section level1" number="10">
+<h1 number="10"><span class="header-section-number">10</span> Final (final, final) version</h1>
 <p>Don’t name your files “final” :)</p>
-<div class="figure">
-<img src="http://www.phdcomics.com/comics/archive/phd101212s.gif" />
-
-</div>
+<p><img src="http://www.phdcomics.com/comics/archive/phd101212s.gif" /></p>
 <p>All together in one chunk, here is our final (for now) plot! I’m also adding some additional elements here to show you options:</p>
 <pre class="r"><code>nathan_plot &lt;- ggplot(hdm_affil, aes(x = year, y = num_eaten)) + 
   geom_col(aes(fill = affiliated)) + 
@@ -773,6 +832,54 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
