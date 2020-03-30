@@ -394,11 +394,9 @@ install.packages(&quot;ggridges&quot;)</code></pre>
 <p>To load:</p>
 <pre class="r"><code>library(tidyverse)
 library(ggbeeswarm)
-library(skimr)</code></pre>
-<pre><code>Error in library(skimr): there is no package called &#39;skimr&#39;</code></pre>
-<pre class="r"><code>library(janitor)
+library(skimr)
+library(janitor)
 library(ggridges)</code></pre>
-<pre><code>Error in library(ggridges): there is no package called &#39;ggridges&#39;</code></pre>
 </div>
 <div id="make-the-data" class="section level1" number="3">
 <h1 number="3"><span class="header-section-number">3</span> Make the data</h1>
@@ -450,7 +448,7 @@ mm &lt;- rnorm(100, rep(c(-1, 1), each = 50) * sqrt(0.9), sqrt(0.1))</code></pre
 <pre><code>Error in glimpse(four): object &#39;four&#39; not found</code></pre>
 <p>Let’s see what our descriptive statistics look like:</p>
 <pre class="r"><code>skim(four)</code></pre>
-<pre><code>Error in skim(four): could not find function &quot;skim&quot;</code></pre>
+<pre><code>Error in is.data.frame(data): object &#39;four&#39; not found</code></pre>
 <pre class="r"><code>four %&gt;% 
   group_by(dist) %&gt;% 
   skim()</code></pre>

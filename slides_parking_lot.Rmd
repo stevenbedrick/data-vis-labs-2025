@@ -1,0 +1,93 @@
+---
+title: "Slides - Parking Lot"
+author: "Steven Bedrick"
+date: "3/30/2020"
+output: html_document
+---
+
+This file is meant to store links to slides until we're ready for them on the main page.
+
+```{r setup, include = FALSE, cache = FALSE}
+knitr::opts_chunk$set(error = TRUE, comment = NA, warnings = FALSE, errors = FALSE, messages = FALSE, tidy = FALSE, echo = FALSE)
+```
+
+The following are all *free* books, available to read online:
+
+- Modern Dive: http://moderndive.com
+- R for Data Science: http://r4ds.had.co.nz
+- Fundamentals of Data Visualization: http://serialmentor.com/dataviz/
+- Data Visualization: A Practical Introduction: http://socviz.co
+
+## Slide Decks & Reading {.tabset}
+
+### 01: Working in R
+
+```{r}
+knitr::include_url("slides/01-slides.html")
+```
+
+- R for Data Science, Workflow: Basics Chapter: http://r4ds.had.co.nz/workflow-basics.html
+
+- Modern Dive, Getting Started Chapter: http://moderndive.com/2-getting-started.html
+
+- R & RStudio Basics: https://bookdown.org/chesterismay/rbasics/3-rstudiobasics.html
+
+- RStudio IDE Cheatsheet: https://github.com/rstudio/cheatsheets/blob/master/rstudio-ide.pdf
+
+
+### 02: Working in the Tidyverse
+
+```{r}
+knitr::include_url("slides/02-slides.html")
+```
+
+- R for Data Science, Data Visualization Chapter: http://r4ds.had.co.nz/data-visualisation.html
+
+- Modern Dive, Data Visualization Chapter: http://moderndive.com/3-viz.html
+
+- RStudio `ggplot2` Cheatsheet: https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf
+
+### 03: Working with Data
+
+```{r}
+knitr::include_url("slides/03-slides.html")
+```
+
+### 04: Working with Tidy Data
+
+```{r}
+knitr::include_url("slides/04-slides.html")
+```
+
+### 06: Slides
+
+```{r}
+knitr::include_url("slides/06-slides_xaringan.html")
+```
+
+### 06+07: Blogdown
+
+```{r}
+knitr::include_url("slides/06-slides_blogdown.html")
+```
+
+```{r}
+knitr::include_url("slides/07-prework-slides_blogdown.html")
+```
+
+```{r}
+knitr::include_url("slides/07-slides_blogdown.html")
+```
+
+### 11: 11 ways
+
+```{r}
+knitr::include_url("slides/11-slides.html")
+```
+
+### 12: Wrap-up
+
+```{r}
+knitr::include_url("slides/12-slides.html")
+```
+

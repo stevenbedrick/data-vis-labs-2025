@@ -305,9 +305,8 @@ $(document).ready(function () {
 
 <div id="load-the-moma-data" class="section level1">
 <h1>Load the MOMA data</h1>
-<pre class="r"><code>library(here)</code></pre>
-<pre><code>Error in library(here): there is no package called &#39;here&#39;</code></pre>
-<pre class="r"><code>library(readr)
+<pre class="r"><code>library(here)
+library(readr)
 library(janitor)
 library(dplyr)
 moma &lt;- read_csv(here::here(&quot;data&quot;, &quot;artworks.csv&quot;),
@@ -319,11 +318,19 @@ moma &lt;- read_csv(here::here(&quot;data&quot;, &quot;artworks.csv&quot;),
                    `Duration (sec.)` = col_number(),
                    `Diameter (cm)` = col_number()
                  )) %&gt;% 
-  clean_names()</code></pre>
-<pre><code>Error in loadNamespace(name): there is no package called &#39;here&#39;</code></pre>
-<pre class="r"><code>problems(moma)</code></pre>
-<pre><code>[1] row      col      expected actual  
-&lt;0 rows&gt; (or 0-length row.names)</code></pre>
+  clean_names()
+problems(moma)</code></pre>
+<pre><code># A tibble: 8 x 5
+     row col       expected    actual file                                      
+   &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;       &lt;chr&gt;  &lt;chr&gt;                                     
+1 103824 DateAcqu… &quot;date like… 1998-… &#39;/Users/bedricks/Dropbox/Work/Teaching/Sp…
+2 128673 DateAcqu… &quot;date like… 1977-… &#39;/Users/bedricks/Dropbox/Work/Teaching/Sp…
+3 131406 DateAcqu… &quot;date like… 1998-… &#39;/Users/bedricks/Dropbox/Work/Teaching/Sp…
+4 131785 DateAcqu… &quot;date like… 1975-… &#39;/Users/bedricks/Dropbox/Work/Teaching/Sp…
+5 132165 DateAcqu… &quot;date like… 1998-… &#39;/Users/bedricks/Dropbox/Work/Teaching/Sp…
+6 132166 DateAcqu… &quot;date like… 1998-… &#39;/Users/bedricks/Dropbox/Work/Teaching/Sp…
+7 132167 DateAcqu… &quot;date like… 1995   &#39;/Users/bedricks/Dropbox/Work/Teaching/Sp…
+8 132169 DateAcqu… &quot;date like… 1998-… &#39;/Users/bedricks/Dropbox/Work/Teaching/Sp…</code></pre>
 <p>Basic cleaning with <code>stringr</code> of <code>gender</code> variable, which refers to the gender of the artist (a <code>()</code> is used a placeholder for “various artists”)</p>
 <pre class="r"><code>library(stringr)
 moma &lt;- moma %&gt;% 
@@ -339,13 +346,11 @@ moma &lt;- moma %&gt;%
            num_artists == 1 &amp; n_female_artists == 1 ~ &quot;Female&quot;,
            num_artists == 1 &amp; n_male_artists == 1 ~ &quot;Male&quot;
          ))</code></pre>
-<pre><code>Error in stri_replace_all_fixed(string, pattern, replacement, vectorize_all = vec, : object &#39;gender&#39; not found</code></pre>
 <p>Let’s also do some detecting of strings in the <code>credit_line</code> variable.</p>
 <pre class="r"><code>moma &lt;- moma %&gt;% 
   mutate(purchase = str_detect(credit_line, fixed(&quot;purchase&quot;, ignore_case = TRUE)),
          gift = str_detect(credit_line, fixed(&quot;gift&quot;, ignore_case = TRUE)),
          exchange = str_detect(credit_line, fixed(&quot;exchange&quot;, ignore_case = TRUE)))</code></pre>
-<pre><code>Error in stri_detect_fixed(string, pattern, negate = negate, opts_fixed = opts(pattern)): object &#39;credit_line&#39; not found</code></pre>
 <p>According to <a href="https://www.moma.org/momaorg/shared/pdfs/docs/explore/CollectionsMgmtPolicyMoMA_Oct10.pdf">MOMA</a>: Acquisitions to the Collection may be made by purchase, gift, fractional interest gift, bequest, or exchange.</p>
 <p>Let’s clean up some dates:</p>
 <ul>
@@ -360,15 +365,44 @@ moma &lt;- moma %&gt;%
   mutate(year_created = str_extract(date, &quot;\\d{4}&quot;),
          artist_birth_year = na_if(artist_birth_year, 0),
          artist_death_year = na_if(artist_death_year, 0))</code></pre>
-<pre><code>Error in year(date_acquired): object &#39;date_acquired&#39; not found</code></pre>
 <p>What different kinds of art classifications are available?</p>
 <pre class="r"><code>moma %&gt;% 
   distinct(classification) %&gt;% 
   print(n = Inf)</code></pre>
-<pre><code># A tibble: 1 x 1
-  classification
-  &lt;chr&gt;         
-1 Painting      </code></pre>
+<pre><code># A tibble: 31 x 1
+   classification                
+   &lt;chr&gt;                         
+ 1 Architecture                  
+ 2 Mies van der Rohe Archive     
+ 3 Design                        
+ 4 Illustrated Book              
+ 5 Print                         
+ 6 Drawing                       
+ 7 Film                          
+ 8 Multiple                      
+ 9 Periodical                    
+10 Photograph                    
+11 Painting                      
+12 (not assigned)                
+13 Architectural Model           
+14 Product Design                
+15 Video                         
+16 Media                         
+17 Performance                   
+18 Sculpture                     
+19 Photography Research/Reference
+20 Software                      
+21 Installation                  
+22 Work on Paper                 
+23 Audio                         
+24 Textile                       
+25 Ephemera                      
+26 Collage                       
+27 Film (object)                 
+28 Frank Lloyd Wright Archive    
+29 Poster                        
+30 Graphic Design                
+31 Furniture and Interiors       </code></pre>
 <p>We want to focus on standard rectangular paintings:</p>
 <ul>
 <li>Filter based on classification</li>
@@ -385,7 +419,6 @@ moma &lt;- moma %&gt;%
          purchase, gift, exchange, classification, department)</code></pre>
 <p>Now let’s export this data frame for the lab.</p>
 <pre class="r"><code>write_csv(moma, here::here(&quot;data&quot;, &quot;artworks-cleaned.csv&quot;))</code></pre>
-<pre><code>Error in loadNamespace(name): there is no package called &#39;here&#39;</code></pre>
 </div>
 
 <p>

@@ -417,9 +417,8 @@ div.tocify {
 </div>
 <div id="packages-needed" class="section level1" number="4">
 <h1 number="4"><span class="header-section-number">4</span> Packages needed</h1>
-<pre class="r"><code>library(here) # to set file path if working from local file</code></pre>
-<pre><code>Error in library(here): there is no package called &#39;here&#39;</code></pre>
-<pre class="r"><code>library(tidyverse) # readr, ggplot2, dplyr</code></pre>
+<pre class="r"><code>library(here) # to set file path if working from local file
+library(tidyverse) # readr, ggplot2, dplyr</code></pre>
 </div>
 <div id="read-in-the-data" class="section level1" number="5">
 <h1 number="5"><span class="header-section-number">5</span> Read in the data</h1>
@@ -428,12 +427,10 @@ div.tocify {
 <pre class="r"><code>library(readr)
 moma &lt;- read_csv(&quot;http://bit.ly/cs631-moma&quot;)</code></pre>
 <p>I called my cleaned data <code>artworks-cleaned.csv</code>, and stored it in a folder called <code>data</code>. You can use this code if you want to read in the local CSV file.</p>
-<pre class="r"><code>library(here)</code></pre>
-<pre><code>Error in library(here): there is no package called &#39;here&#39;</code></pre>
-<pre class="r"><code>library(readr)
+<pre class="r"><code>library(here)
+library(readr)
 library(dplyr)
 moma &lt;- read_csv(here::here(&quot;data&quot;, &quot;artworks-cleaned.csv&quot;))</code></pre>
-<pre><code>Error in loadNamespace(name): there is no package called &#39;here&#39;</code></pre>
 </div>
 <div id="know-your-data" class="section level1" number="6">
 <h1 number="6"><span class="header-section-number">6</span> Know your data</h1>
@@ -470,7 +467,7 @@ Challenge #1:
 </p>
 <pre class="r"><code>library(dplyr)
 moma</code></pre>
-<pre><code># A tibble: 2,253 x 24
+<pre><code># A tibble: 2,253 x 23
    title artist artist_bio artist_birth_ye… artist_death_ye… num_artists
    &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;                 &lt;dbl&gt;            &lt;dbl&gt;       &lt;dbl&gt;
  1 &quot;Rop… Joan … (Spanish,…             1893             1983           1
@@ -483,15 +480,15 @@ moma</code></pre>
  8 &quot;Day… Pierr… (French, …             1880             1950           1
  9 &quot;The… Paul … (French, …             1839             1906           1
 10 &quot;Syn… Enric… (Italian,…             1894             1956           1
-# … with 2,243 more rows, and 18 more variables: n_female_artists &lt;dbl&gt;,
+# … with 2,243 more rows, and 17 more variables: n_female_artists &lt;dbl&gt;,
 #   n_male_artists &lt;dbl&gt;, artist_gender &lt;chr&gt;, year_acquired &lt;dbl&gt;,
 #   year_created &lt;dbl&gt;, circumference_cm &lt;lgl&gt;, depth_cm &lt;dbl&gt;,
 #   diameter_cm &lt;lgl&gt;, height_cm &lt;dbl&gt;, length_cm &lt;lgl&gt;, width_cm &lt;dbl&gt;,
 #   seat_height_cm &lt;lgl&gt;, purchase &lt;lgl&gt;, gift &lt;lgl&gt;, exchange &lt;lgl&gt;,
-#   classification &lt;chr&gt;, department &lt;chr&gt;, top_to_color &lt;chr&gt;</code></pre>
+#   classification &lt;chr&gt;, department &lt;chr&gt;</code></pre>
 <pre class="r"><code>glimpse(moma)</code></pre>
 <pre><code>Observations: 2,253
-Variables: 24
+Variables: 23
 $ title             &lt;chr&gt; &quot;Rope and People, I&quot;, &quot;Fire in the Evening&quot;, &quot;Portr…
 $ artist            &lt;chr&gt; &quot;Joan Miró&quot;, &quot;Paul Klee&quot;, &quot;Paul Klee&quot;, &quot;Pablo Picas…
 $ artist_bio        &lt;chr&gt; &quot;(Spanish, 1893–1983)&quot;, &quot;(German, born Switzerland.…
@@ -514,8 +511,7 @@ $ purchase          &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,
 $ gift              &lt;lgl&gt; TRUE, FALSE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE, …
 $ exchange          &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FAL…
 $ classification    &lt;chr&gt; &quot;Painting&quot;, &quot;Painting&quot;, &quot;Painting&quot;, &quot;Painting&quot;, &quot;Pa…
-$ department        &lt;chr&gt; &quot;Painting &amp; Sculpture&quot;, &quot;Painting &amp; Sculpture&quot;, &quot;Pa…
-$ top_to_color      &lt;chr&gt; NA, NA, NA, &quot;Picasso&quot;, NA, NA, NA, NA, NA, NA, NA, …</code></pre>
+$ department        &lt;chr&gt; &quot;Painting &amp; Sculpture&quot;, &quot;Painting &amp; Sculpture&quot;, &quot;Pa…</code></pre>
 <p>There are 2253 paintings in <code>moma</code>.</p>
 </div>
 <div id="what-is-the-first-painting-acquired" class="section level2" number="6.2">

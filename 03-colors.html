@@ -412,7 +412,6 @@ div.tocify {
 <pre class="r"><code>sounds &lt;- read_csv(&quot;http://bit.ly/cs631-meow&quot;)</code></pre>
 <p>Or store it locally:</p>
 <pre class="r"><code>sounds &lt;- read_csv(here::here(&quot;data&quot;, &quot;animal_sounds_summary.csv&quot;))</code></pre>
-<pre><code>Error in loadNamespace(name): there is no package called &#39;here&#39;</code></pre>
 </div>
 <div id="colour-vs-fill-aesthetic" class="section level1" number="5">
 <h1 number="5"><span class="header-section-number">5</span> Colour vs fill aesthetic</h1>
@@ -1000,9 +999,9 @@ sound_traj +
 </div>
 <div id="repel-labels" class="section level2" number="9.8">
 <h2 number="9.8"><span class="header-section-number">9.8</span> Repel labels</h2>
-<pre class="r"><code>library(ggrepel)</code></pre>
-<pre><code>Error in library(ggrepel): there is no package called &#39;ggrepel&#39;</code></pre>
-<pre class="r"><code>sounds &lt;- sounds %&gt;%
+<pre class="r"><code>library(ggrepel)
+
+sounds &lt;- sounds %&gt;%
   mutate(label = case_when(
     age == max(age) ~ sound))
 
@@ -1018,7 +1017,7 @@ ggplot(sounds, aes(x = age,
                   direction = &quot;y&quot;,
                   na.rm = TRUE) +
   guides(color = FALSE)</code></pre>
-<pre><code>Error in geom_text_repel(aes(label = label), nudge_x = 1, direction = &quot;y&quot;, : could not find function &quot;geom_text_repel&quot;</code></pre>
+<p><img src="03-colors_files/figure-html/unnamed-chunk-58-1.png" width="672" /></p>
 </div>
 </div>
 <div id="continuous-colors" class="section level1" number="10">

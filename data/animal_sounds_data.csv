@@ -83,7 +83,7 @@ data_id,value,num_item_id,age,comprehension,production,language,form,birth_order
 145995,,36,18,285,158,English (American),WG,First,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,FALSE
 145996,understands,36,17,332,78,English (American),WG,Second,Hispanic,Female,NA,TRUE,Some Graduate,FALSE,Marchman (Norming),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,TRUE
 145997,,36,18,140,17,English (American),WG,First,White,Female,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,FALSE
-146e3,,36,17,228,68,English (American),WG,Third,White,Male,NA,TRUE,Graduate,FALSE,Marchman (Norming),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,FALSE
+146000,,36,17,228,68,English (American),WG,Third,White,Male,NA,TRUE,Graduate,FALSE,Marchman (Norming),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,FALSE
 146002,produces,36,18,361,327,English (American),WG,Third,White,Female,NA,TRUE,College,FALSE,Marchman (Norming),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,TRUE,TRUE
 146003,understands,36,18,330,152,English (American),WG,First,Hispanic,Female,NA,TRUE,Some College,FALSE,Marchman (Norming),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,TRUE
 146004,produces,36,18,296,117,English (American),WG,Sixth,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,TRUE,TRUE
@@ -1068,7 +1068,7 @@ data_id,value,num_item_id,age,comprehension,production,language,form,birth_order
 146997,,36,9,12,0,English (American),WG,Second,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,FALSE
 146998,,36,13,74,0,English (American),WG,First,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,FALSE
 146999,,36,13,79,7,English (American),WG,First,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,FALSE
-147e3,,36,13,12,6,English (American),WG,Fourth,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,FALSE
+147000,,36,13,12,6,English (American),WG,Fourth,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,FALSE
 147001,,36,17,330,123,English (American),WG,First,Black,Female,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,FALSE
 147007,understands,36,15,299,59,English (American),WG,NA,NA,NA,NA,FALSE,NA,FALSE,Byers,CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,TRUE
 147028,understands,36,15,342,59,English (American),WG,NA,NA,NA,NA,FALSE,NA,FALSE,Byers,CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,TRUE
@@ -2032,7 +2032,7 @@ data_id,value,num_item_id,age,comprehension,production,language,form,birth_order
 147997,understands,36,16,239,115,English (American),WG,NA,NA,Male,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,TRUE
 147998,understands,36,16,366,25,English (American),WG,NA,NA,Female,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,TRUE
 147999,,36,16,88,35,English (American),WG,NA,NA,Female,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,FALSE
-148e3,,36,16,245,73,English (American),WG,NA,NA,Female,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,FALSE
+148000,,36,16,245,73,English (American),WG,NA,NA,Female,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,FALSE
 148001,,36,16,222,18,English (American),WG,NA,NA,Male,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,FALSE
 148002,produces,36,16,372,229,English (American),WG,NA,NA,Male,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,TRUE,TRUE
 148003,understands,36,16,311,5,English (American),WG,NA,NA,Male,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_36,cockadoodledoo,word,sounds,other,other,cockadoodledoo,,FALSE,TRUE
@@ -2482,7 +2482,7 @@ data_id,value,num_item_id,age,comprehension,production,language,form,birth_order
 145995,produces,38,18,285,158,English (American),WG,First,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_38,meow,word,sounds,other,other,meow,,TRUE,TRUE
 145996,produces,38,17,332,78,English (American),WG,Second,Hispanic,Female,NA,TRUE,Some Graduate,FALSE,Marchman (Norming),CC-BY,item_38,meow,word,sounds,other,other,meow,,TRUE,TRUE
 145997,understands,38,18,140,17,English (American),WG,First,White,Female,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_38,meow,word,sounds,other,other,meow,,FALSE,TRUE
-146e3,,38,17,228,68,English (American),WG,Third,White,Male,NA,TRUE,Graduate,FALSE,Marchman (Norming),CC-BY,item_38,meow,word,sounds,other,other,meow,,FALSE,FALSE
+146000,,38,17,228,68,English (American),WG,Third,White,Male,NA,TRUE,Graduate,FALSE,Marchman (Norming),CC-BY,item_38,meow,word,sounds,other,other,meow,,FALSE,FALSE
 146002,produces,38,18,361,327,English (American),WG,Third,White,Female,NA,TRUE,College,FALSE,Marchman (Norming),CC-BY,item_38,meow,word,sounds,other,other,meow,,TRUE,TRUE
 146003,produces,38,18,330,152,English (American),WG,First,Hispanic,Female,NA,TRUE,Some College,FALSE,Marchman (Norming),CC-BY,item_38,meow,word,sounds,other,other,meow,,TRUE,TRUE
 146004,produces,38,18,296,117,English (American),WG,Sixth,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_38,meow,word,sounds,other,other,meow,,TRUE,TRUE
@@ -3467,7 +3467,7 @@ data_id,value,num_item_id,age,comprehension,production,language,form,birth_order
 146997,,38,9,12,0,English (American),WG,Second,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_38,meow,word,sounds,other,other,meow,,FALSE,FALSE
 146998,understands,38,13,74,0,English (American),WG,First,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_38,meow,word,sounds,other,other,meow,,FALSE,TRUE
 146999,,38,13,79,7,English (American),WG,First,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_38,meow,word,sounds,other,other,meow,,FALSE,FALSE
-147e3,,38,13,12,6,English (American),WG,Fourth,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_38,meow,word,sounds,other,other,meow,,FALSE,FALSE
+147000,,38,13,12,6,English (American),WG,Fourth,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_38,meow,word,sounds,other,other,meow,,FALSE,FALSE
 147001,produces,38,17,330,123,English (American),WG,First,Black,Female,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_38,meow,word,sounds,other,other,meow,,TRUE,TRUE
 147002,understands,38,9,144,0,English (American),WG,NA,NA,NA,NA,FALSE,NA,FALSE,Byers,CC-BY,item_38,meow,word,sounds,other,other,meow,,FALSE,TRUE
 147007,produces,38,15,299,59,English (American),WG,NA,NA,NA,NA,FALSE,NA,FALSE,Byers,CC-BY,item_38,meow,word,sounds,other,other,meow,,TRUE,TRUE
@@ -4445,7 +4445,7 @@ data_id,value,num_item_id,age,comprehension,production,language,form,birth_order
 147997,produces,38,16,239,115,English (American),WG,NA,NA,Male,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_38,meow,word,sounds,other,other,meow,,TRUE,TRUE
 147998,understands,38,16,366,25,English (American),WG,NA,NA,Female,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_38,meow,word,sounds,other,other,meow,,FALSE,TRUE
 147999,produces,38,16,88,35,English (American),WG,NA,NA,Female,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_38,meow,word,sounds,other,other,meow,,TRUE,TRUE
-148e3,produces,38,16,245,73,English (American),WG,NA,NA,Female,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_38,meow,word,sounds,other,other,meow,,TRUE,TRUE
+148000,produces,38,16,245,73,English (American),WG,NA,NA,Female,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_38,meow,word,sounds,other,other,meow,,TRUE,TRUE
 148001,understands,38,16,222,18,English (American),WG,NA,NA,Male,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_38,meow,word,sounds,other,other,meow,,FALSE,TRUE
 148002,produces,38,16,372,229,English (American),WG,NA,NA,Male,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_38,meow,word,sounds,other,other,meow,,TRUE,TRUE
 148003,understands,38,16,311,5,English (American),WG,NA,NA,Male,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_38,meow,word,sounds,other,other,meow,,FALSE,TRUE
@@ -4895,7 +4895,7 @@ data_id,value,num_item_id,age,comprehension,production,language,form,birth_order
 145995,produces,44,18,285,158,English (American),WG,First,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,TRUE,TRUE
 145996,produces,44,17,332,78,English (American),WG,Second,Hispanic,Female,NA,TRUE,Some Graduate,FALSE,Marchman (Norming),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,TRUE,TRUE
 145997,,44,18,140,17,English (American),WG,First,White,Female,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,FALSE,FALSE
-146e3,,44,17,228,68,English (American),WG,Third,White,Male,NA,TRUE,Graduate,FALSE,Marchman (Norming),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,FALSE,FALSE
+146000,,44,17,228,68,English (American),WG,Third,White,Male,NA,TRUE,Graduate,FALSE,Marchman (Norming),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,FALSE,FALSE
 146002,produces,44,18,361,327,English (American),WG,Third,White,Female,NA,TRUE,College,FALSE,Marchman (Norming),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,TRUE,TRUE
 146003,produces,44,18,330,152,English (American),WG,First,Hispanic,Female,NA,TRUE,Some College,FALSE,Marchman (Norming),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,TRUE,TRUE
 146004,produces,44,18,296,117,English (American),WG,Sixth,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,TRUE,TRUE
@@ -5880,7 +5880,7 @@ data_id,value,num_item_id,age,comprehension,production,language,form,birth_order
 146997,,44,9,12,0,English (American),WG,Second,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,FALSE,FALSE
 146998,,44,13,74,0,English (American),WG,First,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,FALSE,FALSE
 146999,understands,44,13,79,7,English (American),WG,First,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,FALSE,TRUE
-147e3,,44,13,12,6,English (American),WG,Fourth,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,FALSE,FALSE
+147000,,44,13,12,6,English (American),WG,Fourth,White,Male,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,FALSE,FALSE
 147001,produces,44,17,330,123,English (American),WG,First,Black,Female,NA,TRUE,Secondary,FALSE,Marchman (Norming),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,TRUE,TRUE
 147002,understands,44,9,144,0,English (American),WG,NA,NA,NA,NA,FALSE,NA,FALSE,Byers,CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,FALSE,TRUE
 147007,produces,44,15,299,59,English (American),WG,NA,NA,NA,NA,FALSE,NA,FALSE,Byers,CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,TRUE,TRUE
@@ -6859,7 +6859,7 @@ data_id,value,num_item_id,age,comprehension,production,language,form,birth_order
 147997,produces,44,16,239,115,English (American),WG,NA,NA,Male,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,TRUE,TRUE
 147998,produces,44,16,366,25,English (American),WG,NA,NA,Female,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,TRUE,TRUE
 147999,produces,44,16,88,35,English (American),WG,NA,NA,Female,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,TRUE,TRUE
-148e3,produces,44,16,245,73,English (American),WG,NA,NA,Female,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,TRUE,TRUE
+148000,produces,44,16,245,73,English (American),WG,NA,NA,Female,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,TRUE,TRUE
 148001,produces,44,16,222,18,English (American),WG,NA,NA,Male,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,TRUE,TRUE
 148002,produces,44,16,372,229,English (American),WG,NA,NA,Male,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,TRUE,TRUE
 148003,understands,44,16,311,5,English (American),WG,NA,NA,Male,NA,FALSE,NA,TRUE,Thal (16),CC-BY,item_44,woof woof,word,sounds,other,other,woof woof,,FALSE,TRUE
