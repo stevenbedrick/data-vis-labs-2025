@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.12.26)  29 MAR 2020 11:26
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.12.26)  29 MAR 2020 22:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1415,7 +1415,7 @@ m/lmr12.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmr17.pfb
 al/texlive/2018/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></usr/local/texlive
 /2018/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2018/texm
 f-dist/fonts/type1/public/lm/lmtti10.pfb>
-Output written on 05-tables.pdf (46 pages, 340769 bytes).
+Output written on 05-tables.pdf (46 pages, 340767 bytes).
 PDF statistics:
  552 PDF objects out of 1000 (max. 8388607)
  490 compressed objects within 5 object streams

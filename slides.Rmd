@@ -30,6 +30,7 @@ knitr::include_url("slides/01-slides.html")
 
 - RStudio IDE Cheatsheet: https://github.com/rstudio/cheatsheets/blob/master/rstudio-ide.pdf
 
+
 ### 02: Working in the Tidyverse
 
 ```{r}
