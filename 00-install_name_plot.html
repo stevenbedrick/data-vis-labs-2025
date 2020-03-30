@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Alison Hill" />
+<meta name="author" content="Steven Bedrick and Alison Hill" />
 
 
 <title>Introduce Yourself</title>
@@ -373,7 +373,7 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Introduce Yourself</h1>
-<h4 class="author">Alison Hill</h4>
+<h4 class="author">Steven Bedrick and Alison Hill</h4>
 
 </div>
 
@@ -383,7 +383,7 @@ div.tocify {
 </blockquote>
 <div id="overview" class="section level1" number="1">
 <h1 number="1"><span class="header-section-number">1</span> Overview</h1>
-<p>This guide will lead you through the steps to install and use <a href="https://www.r-project.org">R, a free and open-source software environment for statistical computing and graphics.</a></p>
+<p>In this class, we will be working primarily with <a href="https://www.r-project.org">R, a free and open-source software environment for statistical computing and graphics.</a></p>
 <p>What is R?</p>
 <ul>
 <li><strong>R</strong> is the name of the programming language itself, based off of S from Bell Labs, which users access through a command-line interpreter (<code>&gt;</code>)</li>
@@ -392,46 +392,42 @@ div.tocify {
 <ul>
 <li><strong>RStudio</strong> is a powerful and convenient user interface that allows you to access the R programming language along with a lot of other bells and whistles that enhance functionality (and sanity).</li>
 </ul>
+<p>What is RStudio Cloud?</p>
+<ul>
+<li><strong>RStudio Cloud</strong> is web-based version of RStudio. Think Google Docs, but for R. Pretty much anything that you can do in RStudio, you can do in RStudio Cloud, but without having to install anything locally. For this class, you are certainly free to install RStudio on your local computer, but we will be using several features of RStudio Cloud to help manage assignments and save everybody time.</li>
+</ul>
+<div id="our-goal-for-today" class="section level3" number="1.0.1">
+<h3 number="1.0.1"><span class="header-section-number">1.0.1</span> Our Goal for Today</h3>
 <p>Our end goal is to get you looking at a screen like this:</p>
 <p><img src="images/00_final-screenshot.png" /></p>
 </div>
-<div id="install-r" class="section level1" number="2">
-<h1 number="2"><span class="header-section-number">2</span> Install R</h1>
-<p>Install R from <a href="https://cran.rstudio.com">CRAN, the Comprehensive R Archive Network</a>. Please choose a <strong>precompiled binary distribution</strong> for your operating system.</p>
-<ul>
-<li>If you need more help, check out one of the following videos (courtesy of Roger Peng at Johns Hopkins Biostatistics):
-<ul>
-<li><a href="https://www.youtube.com/watch?v=Icawuhf0Yqo&amp;feature=youtu.be">Installing R on a mac</a></li>
-<li><a href="https://www.youtube.com/watch?v=mfGFv-iB724&amp;feature=youtu.be">Installing R on windows</a></li>
-</ul></li>
-<li>If you need even more help, read this <a href="https://beckmw.files.wordpress.com/2014/09/r_install_guide.pdf">step-by-step guide</a>, including screenshots.</li>
-</ul>
+</div>
+<div id="sign-up-for-rstudio-cloud" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Sign up for RStudio Cloud</h1>
+<p>Go to <a href="https://rstudio.cloud" class="uri">https://rstudio.cloud</a> and sign up for an account.</p>
+<p><img src="images/lab_00/01_landing_page.png" /></p>
+<p><img src="images/lab_00/02_signup_form.png" /></p>
+<p>Once you’re signed in, you should be looking at something like this:</p>
+<p><img src="images/lab_00/03_blank_screen.png" /></p>
+<p>At this point, you are ready to join the <em>class workspace</em>, which is where you will find all of the labs for this term, and in which you will do all of the assignments. To join the workspace, look on Sakai for the sharing link. When you click the link, you should be prompted to join the class workspace:</p>
+<p><img src="images/lab_00/04_join_workspace.png" /> <img src="images/lab_00/05_workspace_landing.png" /> Click the “Projects” tab at the top to see the various labs and assignments (right now, there should just be one):</p>
+<p><img src="images/lab_00/06_project_list.png" /></p>
+<p>You can create your own projects from scratch in the class workspace, or you can start with one of the template projects. For labs and some assignments, I will have put together templates for you to start from. When you click “start” next to a template project, RStudio Cloud makes you a personal copy of that project, and then all of your changes and work are specific to your copy.</p>
+<p>Begin by clicking the “Start” button next to the first project (“Lab 0”). After a few moments, your screen should look something like this:</p>
+<p><img src="images/lab_00/07_project_window.png" /></p>
 <div id="check-in" class="section level2" number="2.1">
 <h2 number="2.1"><span class="header-section-number">2.1</span> Check in</h2>
-<p>Launch R. You should see one console with a command line interpreter (<code>&gt;</code>). Close R.</p>
-</div>
-</div>
-<div id="install-rstudio" class="section level1" number="3">
-<h1 number="3"><span class="header-section-number">3</span> Install RStudio</h1>
-<p>Install the free, open-source edition of RStudio: <a href="http://www.rstudio.com/products/rstudio/download/" class="uri">http://www.rstudio.com/products/rstudio/download/</a></p>
-<p>RStudio provides a powerful user interface for R, called an <em>integrated development environment</em>. RStudio includes:</p>
-<ul>
-<li>a console (the standard command line interface: <code>&gt;</code>),</li>
-<li>a syntax-highlighting editor that supports direct code execution, and</li>
-<li>tools for plotting, history, debugging and workspace management.</li>
-</ul>
-<div id="check-in-1" class="section level2" number="3.1">
-<h2 number="3.1"><span class="header-section-number">3.1</span> Check in</h2>
-<p>Launch RStudio. You should get a window similar to the screenshot you see <a href="https://www.rstudio.com/wp-content/uploads/2014/04/rstudio-workbench.png">here</a>, but yours will be empty. Look at the bottom left pane: this is the same console window you saw when you opened R in step 1.15.</p>
 <ul>
 <li>Place your cursor where you see <code>&gt;</code> and type <code>x &lt;- 2 + 2</code>, hit enter or return, then type <code>x</code>, and hit enter/return again.</li>
-<li>If <code>[1] 4</code> prints to the screen, you have successfully installed R and RStudio, and you can move onto installing packages.</li>
+<li>If <code>[1] 4</code> prints to the screen, you’re all set!</li>
 </ul>
+<p>There’s a lot going on, here. If you’re familiar with the desktop version of RStudio, this should look very familiar; if not, don’t worry! You’ll find your way around very quickly.</p>
+<p>Also, note that on the left-hand side of the screen there is a set of links labeled “Learn”. RStudio has done a great job of providing tutorials and documentation about how to use their tools, and I encourage you to take a look at the various resources under that tab to familiarize yourself with the RStudio environment.</p>
 </div>
 </div>
-<div id="install-packages" class="section level1" number="4">
-<h1 number="4"><span class="header-section-number">4</span> Install packages</h1>
-<p>The version of R that you just downloaded is considered base R, which provides you with good but basic statistical computing and graphics powers. For analytical and graphical super-powers, you’ll need to install add-on packages, which are user-written, to extend/expand your R capabilities. Packages can live in one of two places:</p>
+<div id="install-packages" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Install packages</h1>
+<p>One of the best things about R is its rich ecosystem of add-on packages and tools. “Out of the box”, R comes with good but basic statistical computing and graphics powers. For analytical and graphical super-powers, you’ll need to install add-on packages, which are user-written, to extend/expand your R capabilities. Packages can live in one of two places:</p>
 <ul>
 <li>They may be carefully curated by CRAN (which involves a thorough submission and review process), and thus are easy install using <code>install.packages("name_of_package", dependencies = TRUE)</code>.</li>
 <li>Alternatively, they may be available via GitHub. To download these packages, you first need to install the <code>devtools</code> package.</li>
@@ -439,22 +435,9 @@ div.tocify {
 <pre class="r"><code>install.packages(&quot;devtools&quot;)
 library(devtools)
 install_github(&quot;name_of_package&quot;)</code></pre>
-<p>Place your cursor in the console again (where you last typed <code>x</code> and <code>[4]</code> printed on the screen). You can use the first method to install the following packages directly from CRAN, all of which we will use:</p>
-<ul>
-<li><a href="http://dplyr.tidyverse.org"><code>dplyr</code>,</a></li>
-<li><a href="http://ggplot2.tidyverse.org"><code>ggplot2</code>,</a></li>
-<li><a href="https://github.com/hadley/babynames"><code>babynames</code></a></li>
-</ul>
-<p>You can download all of these at once, too:</p>
-<pre class="r"><code>install.packages(c(&quot;dplyr&quot;, &quot;ggplot2&quot;, &quot;babynames&quot;), 
-                 dependencies = TRUE)</code></pre>
-<p class="text-info">
-<strong>Heads up:</strong> We should formally introduce the combine command, <a href="http://stat.ethz.ch/R-manual/R-patched/library/base/html/c.html"><code>c()</code></a>, used above. You will use this often- any time you want to combine things into a vector.
-</p>
-<pre class="r"><code>c(&quot;hello&quot;, &quot;my&quot;, &quot;name&quot;, &quot;is&quot;, &quot;alison&quot;)</code></pre>
-<pre><code>[1] &quot;hello&quot;  &quot;my&quot;     &quot;name&quot;   &quot;is&quot;     &quot;alison&quot;</code></pre>
-<pre class="r"><code>c(1:3, 20, 50)</code></pre>
-<pre><code>[1]  1  2  3 20 50</code></pre>
+<p>One nice thing about using RStudio Cloud is that a workspace project (like the one you’ve just opened up) can come pre-loaded with the necessary libraries, which is a real time-saver in a classroom environment. For example, the project you’re using right now already has the <code>devtools</code> package installed. But for the next part of the lab, you’ll need to install one additional package.</p>
+<p>Place your cursor in the console again (where you last typed <code>x</code> and <code>[4]</code> printed on the screen). You can use the first method that we described above (<code>install.packages()</code>) to install the <a href="https://github.com/hadley/babynames"><code>babynames</code></a> package from CRAN:</p>
+<pre class="r"><code>install.packages(&quot;babynames&quot;)</code></pre>
 <p>Mind your use of quotes carefully with packages.</p>
 <ul>
 <li>To <em>install</em> a package, you put the name of the package in quotes as in <code>install.packages("name_of_package")</code>.</li>
@@ -462,8 +445,7 @@ install_github(&quot;name_of_package&quot;)</code></pre>
 <li>If you want <em>help</em>, no quotes are needed: <code>help(name_of_package)</code> or <code>?name_of_package</code>.</li>
 <li>If you want the <em>citation</em> for a package (and you should give credit where credit is due), ask R as in <code>citation("name_of_package")</code>.</li>
 </ul>
-<pre class="r"><code>install.packages(&quot;dplyr&quot;, dependencies = TRUE)
-library(dplyr)
+<pre class="r"><code>library(dplyr)
 help(&quot;dplyr&quot;)</code></pre>
 <pre class="r"><code>citation(&quot;ggplot2&quot;)</code></pre>
 <pre><code>
@@ -486,13 +468,16 @@ A BibTeX entry for LaTeX users is
 <strong>Heads up:</strong> R is <strong>case-sensitive</strong>, so <code>?dplyr</code> works but <code>?Dplyr</code> will not. Likewise, a variable called <code>A</code> is different from <code>a</code>.
 </p>
 </div>
-<div id="make-a-name-plot" class="section level1" number="5">
-<h1 number="5"><span class="header-section-number">5</span> Make a name plot</h1>
-<p>Open a new R script in RStudio by going to <code>File --&gt; New File --&gt; R Script</code>. For this first foray into R, I’ll give you the code, so sit back and relax and feel free to copy and paste my code with some small tweaks.</p>
+<div id="make-a-name-plot" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Make a name plot</h1>
+<p>We can do everything we need to directly from the console, but it is often a lot easier to work in a more traditional editing environment. Open a new R script in RStudio by going to <code>File --&gt; New File --&gt; R Script</code>. For this first foray into R, I’ll give you the code, so sit back and relax and feel free to copy and paste my code with some small tweaks. Don’t worry if you’re not familiar with the commands and functions that we are using; as the course goes on, you will learn more about all of these.</p>
 <p>First load the packages:</p>
 <pre class="r"><code>library(babynames) # contains the actual data
 library(dplyr) # for manipulating data
 library(ggplot2) # for plotting data</code></pre>
+<p>In an RStudio editor window, you <em>run</em> code by either clicking the buton marked “Run”, or (more frequently) by using the “run line/selection” keyboard shortcut. On a Mac, this is “command+enter”, on Windows or Linux it’s “control+enter”. If no text is selected, this will run the current line; if you’ve selected more than one line, your entire selection will be run. Depending on how your screen is laid out, you may see your selection (or line) be copied automatically down into the Console tab.</p>
+<p>Begin by executing the three <code>library()</code> calls:</p>
+<p><img src="images/lab_00/08_library_calls.png" /></p>
 <p>Next, we’ll follow <a href="https://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf">best practices for inspecting a freshly read dataset</a>. Also, see <a href="http://simplystatistics.org/2014/06/13/what-i-do-when-i-get-a-new-data-set-as-told-through-tweets/">“What I do when I get a new data set as told through tweets”</a> for more ideas about exploring a new dataset. Here are some critical commands to obtain a high-level overview (HLO) of your freshly read dataset in R. We’ll call it saying hello to your dataset:</p>
 <pre class="r"><code>glimpse(babynames) # dplyr</code></pre>
 <pre><code>Observations: 1,924,665
@@ -533,6 +518,8 @@ $ prop &lt;dbl&gt; 0.07238359, 0.02667896, 0.02052149, 0.01986579, 0.01788843, 0
 <li><p>The second bit <code>filters</code> our <code>babynames</code> to only keep rows where the <code>name</code> is either Alison or Allison (read <code>|</code> as <em>“or”</em>.)</p></li>
 <li><p>The third bit applies another <code>filter</code> to keep only those where sex is female.</p></li>
 </ul>
+<p>When you ran that command, you may have noticed a new entry appear on the right-hand side of the screen, in the “environment” tab. This tab lists all of the variables that your current environment has loaded.</p>
+<p><img src="images/lab_00/09_environment_tab.png" /></p>
 <p>Let’s check out the data.</p>
 <pre class="r"><code>alison</code></pre>
 <pre><code># A tibble: 218 x 5
@@ -563,23 +550,24 @@ $ prop &lt;dbl&gt; 2.259e-05, 1.482e-05, 1.692e-05, 1.192e-05, 1.192e-05, 2.037e
                            group = name, 
                            color = name)) + 
   geom_line()  </code></pre>
-<p>Now if you did this right, you will not see your plot! Because we saved the <code>ggplot</code> with a name (<code>plot</code>), R just saved the object for you. But check out the top right pane in RStudio again: under <code>Values</code> you should see <code>plot</code>, so it is there, you just have to ask for it. Here’s how:</p>
+<p>Now if you did this right, you will not see your plot! Because we saved the <code>ggplot</code> with a name (<code>plot</code>), R just saved the object for you. But check out the top right pane in RStudio again: under <code>Data</code> you should see <code>plot</code>, so it is there, you just have to ask for it. Here’s how:</p>
 <pre class="r"><code>plot </code></pre>
 <p><img src="00-install_name_plot_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 </div>
-<div id="make-a-new-name-plot" class="section level1" number="6">
-<h1 number="6"><span class="header-section-number">6</span> Make a new name plot</h1>
+<div id="make-a-new-name-plot" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Make a new name plot</h1>
 <p>Edit my code above to create a new dataset. Pick 2 names to compare how popular they each are (these could be different spellings of your own name, like I did, but you can choose any 2 names that are present in the dataset). Make the new plot, changing the name of the first argument <code>alison</code> in <code>ggplot()</code> to the name of your new dataset.</p>
-<div id="save-and-share" class="section level2" number="6.1">
-<h2 number="6.1"><span class="header-section-number">6.1</span> Save and share</h2>
+<div id="save-and-share" class="section level2" number="5.1">
+<h2 number="5.1"><span class="header-section-number">5.1</span> Save and share</h2>
 <p>Save your work so you can share your favorite plot with us. You will not like the looks of your plot if you mouse over to <code>Export</code> and save it. Instead, use <code>ggplot2</code>’s command for saving a plot with sensible defaults:</p>
 <pre class="r"><code>help(ggsave)</code></pre>
 <pre class="r"><code>ggsave(&quot;alison_hill.pdf&quot;, plot) # please make the filename unique!</code></pre>
 <p>Upload this exported plot to Sakai before Wednesday at noon.</p>
+<p>(Note that <em>your</em> plot, the one that you turn in, should not be called <code>alison_hill.pdf</code>- it should be named something else).</p>
 </div>
 </div>
-<div id="other-cool-babynames-projects" class="section level1" number="7">
-<h1 number="7"><span class="header-section-number">7</span> Other cool <code>babynames</code> projects</h1>
+<div id="other-cool-babynames-projects" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> Other cool <code>babynames</code> projects</h1>
 <ul>
 <li>Julia Silge <em>‘My Baby Boomer Name Might Have Been “Debbie”’</em>: <a href="https://juliasilge.com/blog/my-baby-boomer-name/" class="uri">https://juliasilge.com/blog/my-baby-boomer-name/</a>
 <ul>
@@ -589,8 +577,8 @@ $ prop &lt;dbl&gt; 2.259e-05, 1.482e-05, 1.692e-05, 1.192e-05, 1.192e-05, 2.037e
 </ul>
 <p><img src="https://hilaryparker.files.wordpress.com/2013/01/more_names_trimmed2.png" /></p>
 </div>
-<div id="resources" class="section level1" number="8">
-<h1 number="8"><span class="header-section-number">8</span> Resources</h1>
+<div id="resources" class="section level1" number="7">
+<h1 number="7"><span class="header-section-number">7</span> Resources</h1>
 <ul>
 <li><p><a href="https://alison.rbind.io/html/jamboree_heart_ggplot.html" class="uri">https://alison.rbind.io/html/jamboree_heart_ggplot.html</a></p></li>
 <li><p><a href="http://moderndive.com/2-getting-started.html" class="uri">http://moderndive.com/2-getting-started.html</a></p></li>
@@ -602,7 +590,7 @@ $ prop &lt;dbl&gt; 2.259e-05, 1.482e-05, 1.692e-05, 1.192e-05, 1.192e-05, 2.037e
 
 <p>
 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
-<img alt="Creative Commons License" style="border-width:0" src="by-nc.png" width="267" height="50"/></a>
+<img alt="Creative Commons License" style="border-width:0" src="by-nc.png" width="133" height="25"/></a>
 </p>
 
 
