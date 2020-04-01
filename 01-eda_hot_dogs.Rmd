@@ -1,7 +1,7 @@
 ---
 title: "Lab 01: Nathan's Hot-Dog Eating Contest"
 subtitle: "CS631"
-author: "Alison Hill"
+author: "Alison Hill (with minor modifications by Steven Bedrick)"
 output:
   html_document:
     theme: flatly
@@ -55,19 +55,19 @@ library(here)
 
 # Read in and wrangle data
 
-Next, we load some data. You can use the following chunk to load it in from a link:
+Next, we load some data. In the RStudio Cloud project for this lab, you will see a `data` directory with the necessary files. We can read it in using `read_csv`, and along the way use `col_factor` to tell it how to handle the gender column.
 
-```{r eval = FALSE}
-hot_dogs <- read_csv("http://bit.ly/cs631-hotdog", 
+```{r}
+hot_dogs <- read_csv(here::here("data", "hot_dog_contest.csv"), 
     col_types = cols(
       gender = col_factor(levels = NULL)
     ))
 ```
 
-Or you can save the file at the link to a local CSV file. I did this and saved my file in a folder called `data`, then built up the file path to the CSV using `here`:
+Note that if the data were _not_ already downloaded locally, `read_csv()` can load CSV files from a URL:
 
-```{r}
-hot_dogs <- read_csv(here::here("data", "hot_dog_contest.csv"), 
+```{r eval = FALSE}
+hot_dogs <- read_csv("http://bit.ly/cs631-hotdog", 
     col_types = cols(
       gender = col_factor(levels = NULL)
     ))
@@ -187,7 +187,7 @@ Let's work with this new dataset! Do the following:
 </div>
 
 ```{r eval = FALSE}
-hdm_affil <- read_csv("http://bit.ly/cs631-hotdog-affiliated", 
+hdm_affil <- read_csv(here::here("data", "hot_dog_contest_with_affiliation.csv"), 
     col_types = cols(
       affiliated = col_factor(levels = NULL), 
       gender = col_factor(levels = NULL)
