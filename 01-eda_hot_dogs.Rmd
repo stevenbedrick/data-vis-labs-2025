@@ -341,7 +341,7 @@ hot_diggity <- theme(plot.title = element_text(hjust = 0.5),
                      panel.background = element_blank(),
                      axis.line.x = element_line(color = "gray80", size = 0.5),
                      axis.ticks = element_line(color = "gray80", size = 0.5),
-                     #text = element_text(family = "Lato") # need extrafont for this
+                     text = element_text(family = "Lato") # need extrafont for this
                      )
 ```
 
@@ -355,7 +355,7 @@ We could also use someone else's theme:
 
 ```{r}
 library(ggthemes)
-affil_plot + theme_fivethirtyeight() #base_family = "Lato")
+affil_plot + theme_fivethirtyeight(base_family = "Lato")
 affil_plot + theme_tufte( base_family = "Palatino")
 ```
 

@@ -702,13 +702,13 @@ You can change <em>almost anything</em> that your heart desires to change!
                      panel.background = element_blank(),
                      axis.line.x = element_line(color = &quot;gray80&quot;, size = 0.5),
                      axis.ticks = element_line(color = &quot;gray80&quot;, size = 0.5),
-                     #text = element_text(family = &quot;Lato&quot;) # need extrafont for this
+                     text = element_text(family = &quot;Lato&quot;) # need extrafont for this
                      )</code></pre>
 <pre class="r"><code>affil_plot + hot_diggity </code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 <p>We could also use someone else’s theme:</p>
 <pre class="r"><code>library(ggthemes)
-affil_plot + theme_fivethirtyeight() #base_family = &quot;Lato&quot;)</code></pre>
+affil_plot + theme_fivethirtyeight(base_family = &quot;Lato&quot;)</code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <pre class="r"><code>affil_plot + theme_tufte( base_family = &quot;Palatino&quot;)</code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-22-2.png" width="672" /></p>
