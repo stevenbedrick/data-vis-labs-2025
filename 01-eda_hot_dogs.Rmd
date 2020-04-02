@@ -341,7 +341,7 @@ hot_diggity <- theme(plot.title = element_text(hjust = 0.5),
                      panel.background = element_blank(),
                      axis.line.x = element_line(color = "gray80", size = 0.5),
                      axis.ticks = element_line(color = "gray80", size = 0.5),
-                     text = element_text(family = "Lato") # need extrafont for this
+                     #text = element_text(family = "Lato") # need extrafont for this
                      )
 ```
 
@@ -355,8 +355,8 @@ We could also use someone else's theme:
 
 ```{r}
 library(ggthemes)
-affil_plot + theme_fivethirtyeight(base_family = "Lato")
-affil_plot + theme_tufte(base_family = "Palatino")
+affil_plot + theme_fivethirtyeight() #base_family = "Lato")
+affil_plot + theme_tufte( base_family = "Palatino")
 ```
 
 
@@ -411,26 +411,27 @@ Adding some plot annotations rather than having a fill legend:
 nathan_ann <- nathan_plot +
   guides(fill = FALSE) +
   coord_cartesian(xlim = c(1980, 2019), ylim = c(0, 85)) +
-  annotate('segment', x=1980.75, xend=2000.25, y= 30, yend=30, size=0.5, color="#CCB683") +
+  annotate('segment', x=1980.75, xend=2000.25, y= 30, yend=30, size=0.5, color="#CCB683")+
   annotate('segment', x=1980.75, xend=1980.75, y= 30, yend=28, size=0.5, color="#CCB683") +
   annotate('segment', x=2000.25, xend=2000.25, y= 30, yend=28, size=0.5, color="#CCB683") +
   annotate('segment', x=1990, xend=1990, y= 33, yend=30, size=0.5, color="#CCB683") +
-    annotate('text', x=1990, y=36, label="No MLE/IFOCE Affiliation", color="#CCB683", family="Lato", hjust=0.5, size = 3) + 
+nathan_ann
+    annotate('text', x=1990, y=36, label="No MLE/IFOCE Affiliation", color="#CCB683", family="Lato", hjust=0.5, size = 3) +
 
-  
-  
+
+
   annotate('segment', x=2000.75, xend=2006.25, y= 58, yend=58, size=0.5, color="#2277A0") +
   annotate('segment', x=2000.75, xend=2000.75, y= 58, yend=56, size=0.5, color="#2277A0") +
   annotate('segment', x=2006.25, xend=2006.25, y= 58, yend=56, size=0.5, color="#2277A0") +
   annotate('segment', x=2003.5, xend=2003.5, y= 61, yend=58, size=0.5, color="#2277A0") +
-  annotate('text', x=2003.5, y=65, label="MLE/IFOCE\nFormer Member", color="#2277A0", family="Lato", hjust=0.5, size = 3) + 
+  annotate('text', x=2003.5, y=65, label="MLE/IFOCE\nFormer Member", color="#2277A0", family="Lato", hjust=0.5, size = 3) +
 
-  
+
   annotate('segment', x=2006.75, xend=2017.25, y= 76, yend=76, size=0.5, color="#E9602B") +
   annotate('segment', x=2006.75, xend=2006.75, y= 76, yend=74, size=0.5, color="#E9602B") +
   annotate('segment', x=2017.25, xend=2017.25, y= 76, yend=74, size=0.5, color="#E9602B") +
   annotate('segment', x=2012, xend=2012, y= 79, yend=76, size=0.5, color="#E9602B") +
-  annotate('text', x=2012, y=82, label="MLE/IFOCE Current Member", color="#E9602B", family="Lato", hjust=0.5, size = 3) 
+  annotate('text', x=2012, y=82, label="MLE/IFOCE Current Member", color="#E9602B", family="Lato", hjust=0.5, size = 3)
 nathan_ann
 ```
 

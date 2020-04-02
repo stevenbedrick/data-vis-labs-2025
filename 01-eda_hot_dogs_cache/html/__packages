@@ -8,7 +8,5 @@ purrr
 dplyr
 stringr
 forcats
-babynames
-bindrcpp
 extrafont
 ggthemes
