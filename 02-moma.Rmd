@@ -1,7 +1,7 @@
 ---
 title: "Lab 02: MoMA Museum Tour"
 subtitle: "CS631"
-author: "Alison Hill"
+author: "Alison Hill, with (slight) modifications by Steven Bedrick"
 output:
   html_document:
     theme: flatly
@@ -10,6 +10,7 @@ output:
     toc_depth: 2
     number_sections: TRUE
     code_folding: hide
+    code_download: true
 ---
 ```{r setup, include = FALSE, cache = FALSE}
 knitr::opts_chunk$set(error = TRUE, comment = NA, warning = FALSE, errors = FALSE, message = FALSE, tidy = FALSE, cache = FALSE)
@@ -17,7 +18,7 @@ knitr::opts_chunk$set(error = TRUE, comment = NA, warning = FALSE, errors = FALS
 
 # Goals for Lab 02
 
-- Review `dplyr` functions learned in last lab and DataCamp course
+- Review `dplyr` functions learned last week
 - Practice using `dplyr` functions to get to know a new dataset
 - Map global plot aesthetics to variables in `ggplot2`
 - Create facetted plots with `ggplot2`
@@ -49,26 +50,23 @@ library(tidyverse) # readr, ggplot2, dplyr
 
 # Read in the data
 
-Note! This is not the original data- I did a lot of cleaning and decision-making in the pre-processing. The below contains only paintings and drawings in the MoMA collection.
+Note! This is not the original data- We did a lot of cleaning and decision-making in the pre-processing, and stored the result in `data/artworks-cleaned.csv`. The below contains only paintings and drawings in the MoMA collection.
 
-Use this code chunk to read in the data available at [http://bit.ly/cs631-moma](http://bit.ly/cs631-moma):
+The data set is available at [http://bit.ly/cs631-moma](http://bit.ly/cs631-moma), and is also present locally in the RStudio Cloud project:
 
 ```{r eval = FALSE}
-library(readr)
-moma <- read_csv("http://bit.ly/cs631-moma")
-```
-
-I called my cleaned data `artworks-cleaned.csv`, and stored it in a folder called `data`. You can use this code if you want to read in the local CSV file.
-
-```{r}
 library(here)
 library(readr)
 library(dplyr)
 moma <- read_csv(here::here("data", "artworks-cleaned.csv"))
 ```
 
-
-
+```{r echo=FALSE}
+library(here)
+library(readr)
+library(dplyr)
+moma <- read_csv(here::here("data", "artworks-cleaned.csv"))
+```
 
 # Know your data
 
@@ -349,7 +347,7 @@ We'll do this together *(nothing to turn in)*: see [slides](https://apreshill.gi
   <div class="panel-body">
 Let's recreate this plot from [fivethirtyeight](https://fivethirtyeight.com/features/a-nerds-guide-to-the-2229-paintings-at-moma/) (mostly)!
 
-![](https://espnfivethirtyeight.files.wordpress.com/2015/08/roeder-feature-moma-1.png?w=1150&quality=90&strip=info)
+![](https://fivethirtyeight.com/wp-content/uploads/2015/08/roeder-feature-moma-1.png?w=1150)
 
 Things to consider:
 
@@ -397,7 +395,7 @@ ggplot(moma_solo, aes(year_created, year_acquired)) +
 Let's (somewhat) try to recreate this scatterplot from [fivethirtyeight](https://fivethirtyeight.com/features/a-nerds-guide-to-the-2229-paintings-at-moma/). 
 
 
-![](https://espnfivethirtyeight.files.wordpress.com/2015/08/roeder-feature-moma-3.png?w=1150&quality=90&strip=info)
+![](https://fivethirtyeight.com/wp-content/uploads/2015/08/roeder-feature-moma-3.png?w=1150)
 
 To recreate, some things to consider:
 
@@ -436,7 +434,7 @@ ggplot(moma_dim, aes(x = width_cm, y = height_cm, colour = hw_cat)) +
 ```
 
 
-Because Grace is right, we can do better with colors!
+Those colors are intense! Would different ones work better?
 
 ```{r}
 library(ggthemes)
