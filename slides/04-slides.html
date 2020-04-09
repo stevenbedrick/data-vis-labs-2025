@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="" xml:lang="">
   <head>
     <title>Lab 04: CS631</title>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <meta name="author" content="Alison Hill" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/ohsu.css" type="text/css" />
     <link rel="stylesheet" href="css/ohsu-fonts.css" type="text/css" />
@@ -85,16 +86,16 @@ Plus 1 other package:
 # A tibble: 2 x 4
   series challenge    cake pie_tart
   &lt;fct&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;
-1 1      showstopper    5.       5.
-2 1      signature     12.       4.
+1 1      showstopper     5        5
+2 1      signature      12        4
 ```
 
 ```
 # A tibble: 2 x 4
   series challenge    cake pie_tart
   &lt;fct&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;
-1 2      showstopper    8.      17.
-2 2      signature     21.       7.
+1 2      showstopper     8       17
+2 2      signature      21        7
 ```
 ]
 
@@ -107,16 +108,16 @@ Plus 1 other package:
 # A tibble: 2 x 4
   series challenge    cake pie_tart
   &lt;fct&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;
-1 3      showstopper   12.      17.
-2 3      signature     24.      12.
+1 3      showstopper    12       17
+2 3      signature      24       12
 ```
 
 ```
 # A tibble: 2 x 4
   series challenge    cake pie_tart
   &lt;fct&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;
-1 4      showstopper   27.       9.
-2 4      signature     11.      15.
+1 4      showstopper    27        9
+2 4      signature      11       15
 ```
 ]
 
@@ -135,22 +136,22 @@ cakes_untidy %&gt;%
 # A tibble: 16 x 4
    series challenge    cake pie_tart
    &lt;fct&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;
- 1 1      showstopper    5.       5.
- 2 1      signature     12.       4.
- 3 2      showstopper    8.      17.
- 4 2      signature     21.       7.
- 5 3      showstopper   12.      17.
- 6 3      signature     24.      12.
- 7 4      showstopper   27.       9.
- 8 4      signature     11.      15.
- 9 5      showstopper   20.       6.
-10 5      signature      4.       7.
-11 6      showstopper   12.       0.
-12 6      signature     20.      17.
-13 7      showstopper   19.       3.
-14 7      signature     11.      10.
-15 8      showstopper   26.      12.
-16 8      signature     21.       8.
+ 1 1      showstopper     5        5
+ 2 1      signature      12        4
+ 3 2      showstopper     8       17
+ 4 2      signature      21        7
+ 5 3      showstopper    12       17
+ 6 3      signature      24       12
+ 7 4      showstopper    27        9
+ 8 4      signature      11       15
+ 9 5      showstopper    20        6
+10 5      signature       4        7
+11 6      showstopper    12        0
+12 6      signature      20       17
+13 7      showstopper    19        3
+14 7      signature      11       10
+15 8      showstopper    26       12
+16 8      signature      21        8
 ```
 
 
@@ -171,17 +172,17 @@ cakes_tidy
 # A tibble: 32 x 4
    series challenge   bake_type num_bakes
    &lt;fct&gt;  &lt;chr&gt;       &lt;fct&gt;         &lt;dbl&gt;
- 1 1      showstopper cake             5.
- 2 1      signature   cake            12.
- 3 1      showstopper pie_tart         5.
- 4 1      signature   pie_tart         4.
- 5 2      showstopper cake             8.
- 6 2      signature   cake            21.
- 7 2      showstopper pie_tart        17.
- 8 2      signature   pie_tart         7.
- 9 3      showstopper cake            12.
-10 3      signature   cake            24.
-# ... with 22 more rows
+ 1 1      showstopper cake              5
+ 2 1      signature   cake             12
+ 3 1      showstopper pie_tart          5
+ 4 1      signature   pie_tart          4
+ 5 2      showstopper cake              8
+ 6 2      signature   cake             21
+ 7 2      showstopper pie_tart         17
+ 8 2      signature   pie_tart          7
+ 9 3      showstopper cake             12
+10 3      signature   cake             24
+# … with 22 more rows
 ```
 
 ---
@@ -199,10 +200,10 @@ glimpse(cakes_tidy)
 ```
 Observations: 32
 Variables: 4
-$ series    &lt;fct&gt; 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5...
-$ challenge &lt;chr&gt; "showstopper", "signature", "showstopper", "signatur...
-$ bake_type &lt;fct&gt; cake, cake, pie_tart, pie_tart, cake, cake, pie_tart...
-$ num_bakes &lt;dbl&gt; 5, 12, 5, 4, 8, 21, 17, 7, 12, 24, 17, 12, 27, 11, 9...
+$ series    &lt;fct&gt; 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5,…
+$ challenge &lt;chr&gt; "showstopper", "signature", "showstopper", "signature", "sh…
+$ bake_type &lt;fct&gt; cake, cake, pie_tart, pie_tart, cake, cake, pie_tart, pie_t…
+$ num_bakes &lt;dbl&gt; 5, 12, 5, 4, 8, 21, 17, 7, 12, 24, 17, 12, 27, 11, 9, 15, 2…
 ```
 
 
@@ -214,24 +215,44 @@ library(skimr)
 skim(cakes_tidy)
 ```
 
-```
-Skim summary statistics
- n obs: 32 
- n variables: 4 
 
-Variable type: character 
-   variable missing complete  n min max empty n_unique
-1 challenge       0       32 32   9  11     0        2
+Table: Data summary
 
-Variable type: factor 
-   variable missing complete  n n_unique              top_counts ordered
-1 bake_type       0       32 32        2 cak: 16, pie: 16, NA: 0   FALSE
-2    series       0       32 32        8  1: 4, 2: 4, 3: 4, 4: 4   FALSE
+                                      
+-------------------------  -----------
+Name                       cakes_tidy 
+Number of rows             32         
+Number of columns          4          
+_______________________               
+Column type frequency:                
+character                  1          
+factor                     2          
+numeric                    1          
+________________________              
+Group variables            None       
+-------------------------  -----------
 
-Variable type: numeric 
-   variable missing complete  n  mean  sd min p25 median  p75 max     hist
-1 num_bakes       0       32 32 12.56 7.1   0   7     12 17.5  27 ▂▆▇▇▁▇▂▃
-```
+
+**Variable type: character**
+
+skim_variable    n_missing   complete_rate   min   max   empty   n_unique   whitespace
+--------------  ----------  --------------  ----  ----  ------  ---------  -----------
+challenge                0               1     9    11       0          2            0
+
+
+**Variable type: factor**
+
+skim_variable    n_missing   complete_rate  ordered    n_unique  top_counts             
+--------------  ----------  --------------  --------  ---------  -----------------------
+series                   0               1  FALSE             8  1: 4, 2: 4, 3: 4, 4: 4 
+bake_type                0               1  FALSE             2  cak: 16, pie: 16       
+
+
+**Variable type: numeric**
+
+skim_variable    n_missing   complete_rate    mean    sd   p0   p25   p50    p75   p100  hist  
+--------------  ----------  --------------  ------  ----  ---  ----  ----  -----  -----  ------
+num_bakes                0               1   12.56   7.1    0     7    12   17.5     27  ▆▇▇▇▃ 
 
 ---
 
@@ -241,18 +262,21 @@ skim(cakes_tidy) %&gt;%
   summary() 
 ```
 
-```
-A skim object    
+Table: Data summary
 
-Name: cakes_tidy   
-Number of Rows: 32   
-Number of Columns: 4    
-    
-Column type frequency    
-character: 1   
-factor: 2   
-numeric: 1
-```
+                                      
+-------------------------  -----------
+Name                       cakes_tidy 
+Number of rows             32         
+Number of columns          4          
+_______________________               
+Column type frequency:                
+character                  1          
+factor                     2          
+numeric                    1          
+________________________              
+Group variables            None       
+-------------------------  -----------
 
 
 ---
@@ -274,10 +298,10 @@ cakes_tidy %&gt;%
 # A tibble: 4 x 3
   challenge   bake_type     n
   &lt;chr&gt;       &lt;fct&gt;     &lt;dbl&gt;
-1 showstopper cake       129.
-2 signature   cake       124.
-3 signature   pie_tart    80.
-4 showstopper pie_tart    69.
+1 showstopper cake        129
+2 signature   cake        124
+3 signature   pie_tart     80
+4 showstopper pie_tart     69
 ```
 
 ---
@@ -293,22 +317,22 @@ cakes_tidy %&gt;%
 # A tibble: 16 x 3
    series bake_type     n
    &lt;fct&gt;  &lt;fct&gt;     &lt;dbl&gt;
- 1 1      cake        17.
- 2 1      pie_tart     9.
- 3 2      cake        29.
- 4 2      pie_tart    24.
- 5 3      cake        36.
- 6 3      pie_tart    29.
- 7 4      cake        38.
- 8 4      pie_tart    24.
- 9 5      cake        24.
-10 5      pie_tart    13.
-11 6      cake        32.
-12 6      pie_tart    17.
-13 7      cake        30.
-14 7      pie_tart    13.
-15 8      cake        47.
-16 8      pie_tart    20.
+ 1 1      cake         17
+ 2 1      pie_tart      9
+ 3 2      cake         29
+ 4 2      pie_tart     24
+ 5 3      cake         36
+ 6 3      pie_tart     29
+ 7 4      cake         38
+ 8 4      pie_tart     24
+ 9 5      cake         24
+10 5      pie_tart     13
+11 6      cake         32
+12 6      pie_tart     17
+13 7      cake         30
+14 7      pie_tart     13
+15 8      cake         47
+16 8      pie_tart     20
 ```
 
 ---
@@ -322,20 +346,28 @@ cakes_tidy %&gt;%
   skim()
 ```
 
-```
-Skim summary statistics
- n obs: 32 
- n variables: 2 
- group variables: bake_type 
 
-Variable type: numeric 
-  bake_type  variable missing complete  n  mean   sd min   p25 median
-1      cake num_bakes       0       16 16 15.81 7.31   4 11      15.5
-2  pie_tart num_bakes       0       16 16  9.31 5.3    0  5.75    8.5
-    p75 max     hist
-1 21     27 ▃▂▇▁▁▇▂▃
-2 12.75  17 ▂▃▃▆▃▃▁▇
-```
+Table: Data summary
+
+                                      
+-------------------------  -----------
+Name                       Piped data 
+Number of rows             32         
+Number of columns          2          
+_______________________               
+Column type frequency:                
+numeric                    1          
+________________________              
+Group variables            bake_type  
+-------------------------  -----------
+
+
+**Variable type: numeric**
+
+skim_variable   bake_type    n_missing   complete_rate    mean     sd   p0     p25    p50     p75   p100  hist  
+--------------  ----------  ----------  --------------  ------  -----  ---  ------  -----  ------  -----  ------
+num_bakes       cake                 0               1   15.81   7.31    4   11.00   15.5   21.00     27  ▅▇▁▇▅ 
+num_bakes       pie_tart             0               1    9.31   5.30    0    5.75    8.5   12.75     17  ▃▅▇▃▆ 
 
 See: https://suzanbaert.netlify.com/2018/01/dplyr-tutorial-1/
 
@@ -353,22 +385,22 @@ cakes_by_series
 # A tibble: 16 x 3
    series bake_type     n
    &lt;fct&gt;  &lt;fct&gt;     &lt;dbl&gt;
- 1 1      cake        17.
- 2 1      pie_tart     9.
- 3 2      cake        29.
- 4 2      pie_tart    24.
- 5 3      cake        36.
- 6 3      pie_tart    29.
- 7 4      cake        38.
- 8 4      pie_tart    24.
- 9 5      cake        24.
-10 5      pie_tart    13.
-11 6      cake        32.
-12 6      pie_tart    17.
-13 7      cake        30.
-14 7      pie_tart    13.
-15 8      cake        47.
-16 8      pie_tart    20.
+ 1 1      cake         17
+ 2 1      pie_tart      9
+ 3 2      cake         29
+ 4 2      pie_tart     24
+ 5 3      cake         36
+ 6 3      pie_tart     29
+ 7 4      cake         38
+ 8 4      pie_tart     24
+ 9 5      cake         24
+10 5      pie_tart     13
+11 6      cake         32
+12 6      pie_tart     17
+13 7      cake         30
+14 7      pie_tart     13
+15 8      cake         47
+16 8      pie_tart     20
 ```
 
 ---
@@ -411,6 +443,7 @@ http://vita.had.co.nz/papers/tidy-data.html
 
 https://github.com/jennybc/lotr-tidy#readme
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "atelier-lakeside-light",
@@ -420,26 +453,121 @@ https://github.com/jennybc/lotr-tidy#readme
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
-})();</script>
+})(document);
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
   }
-});
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  /* Replace <script> tags in slides area to make them executable
+   *
+   * Runs after post-processing of markdown source into slides and replaces only
+   * <script>s on the last slide of continued slides using the .has-continuation
+   * class added by xaringan. Finally, any <script>s in the slides area that
+   * aren't executed are commented out.
+   */
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container:not(.has-continuation) script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+  var scriptsNotExecuted = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container.has-continuation script'
+  );
+  if (!scriptsNotExecuted.length) return;
+  for (var i = 0; i < scriptsNotExecuted.length; i++) {
+    var comment = document.createComment(scriptsNotExecuted[i].outerHTML)
+    scriptsNotExecuted[i].parentElement.replaceChild(comment, scriptsNotExecuted[i])
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
 (function () {
   var script = document.createElement('script');
   script.type = 'text/javascript';
-  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
   if (location.protocol !== 'file:' && /^https?:/.test(script.src))
     script.src  = script.src.replace(/^https?:/, '');
   document.getElementsByTagName('head')[0].appendChild(script);

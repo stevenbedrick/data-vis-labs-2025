@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="" xml:lang="">
   <head>
     <title>Lab 03: CS631</title>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <meta name="author" content="Alison Hill" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/ohsu.css" type="text/css" />
     <link rel="stylesheet" href="css/ohsu-fonts.css" type="text/css" />
@@ -107,10 +108,10 @@ glimpse(sounds)
 ```
 Observations: 33
 Variables: 4
-$ age          &lt;dbl&gt; 8, 8, 8, 9, 9, 9, 10, 10, 10, 11, 11, 11, 12, 12,...
-$ sound        &lt;chr&gt; "cockadoodledoo", "meow", "woof woof", "cockadood...
-$ kids_produce &lt;dbl&gt; 1, 0, 3, 0, 2, 2, 0, 5, 4, 0, 5, 12, 0, 12, 28, 9...
-$ kids_respond &lt;dbl&gt; 35, 35, 35, 91, 93, 93, 139, 145, 143, 94, 94, 94...
+$ age          &lt;dbl&gt; 8, 8, 8, 9, 9, 9, 10, 10, 10, 11, 11, 11, 12, 12, 12, 13…
+$ sound        &lt;chr&gt; "cockadoodledoo", "meow", "woof woof", "cockadoodledoo",…
+$ kids_produce &lt;dbl&gt; 1, 0, 3, 0, 2, 2, 0, 5, 4, 0, 5, 12, 0, 12, 28, 9, 125, …
+$ kids_respond &lt;dbl&gt; 35, 35, 35, 91, 93, 93, 139, 145, 143, 94, 94, 94, 141, …
 ```
 
 
@@ -254,17 +255,17 @@ sounds %&gt;%
 # A tibble: 33 x 5
      age sound          kids_produce kids_respond form 
    &lt;dbl&gt; &lt;chr&gt;                 &lt;dbl&gt;        &lt;dbl&gt; &lt;chr&gt;
- 1    8. cockadoodledoo           1.          35. WS   
- 2    8. meow                     0.          35. WS   
- 3    8. woof woof                3.          35. WS   
- 4    9. cockadoodledoo           0.          91. WS   
- 5    9. meow                     2.          93. WS   
- 6    9. woof woof                2.          93. WS   
- 7   10. cockadoodledoo           0.         139. WS   
- 8   10. meow                     5.         145. WS   
- 9   10. woof woof                4.         143. WS   
-10   11. cockadoodledoo           0.          94. WS   
-# ... with 23 more rows
+ 1     8 cockadoodledoo            1           35 WS   
+ 2     8 meow                      0           35 WS   
+ 3     8 woof woof                 3           35 WS   
+ 4     9 cockadoodledoo            0           91 WS   
+ 5     9 meow                      2           93 WS   
+ 6     9 woof woof                 2           93 WS   
+ 7    10 cockadoodledoo            0          139 WS   
+ 8    10 meow                      5          145 WS   
+ 9    10 woof woof                 4          143 WS   
+10    11 cockadoodledoo            0           94 WS   
+# … with 23 more rows
 ```
 
 ---
@@ -289,17 +290,17 @@ sounds %&gt;%
 # A tibble: 33 x 5
      age sound          kids_produce kids_respond prop_produce
    &lt;dbl&gt; &lt;chr&gt;                 &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
- 1    8. cockadoodledoo           1.          35.       0.0286
- 2    8. meow                     0.          35.       0.    
- 3    8. woof woof                3.          35.       0.0857
- 4    9. cockadoodledoo           0.          91.       0.    
- 5    9. meow                     2.          93.       0.0215
- 6    9. woof woof                2.          93.       0.0215
- 7   10. cockadoodledoo           0.         139.       0.    
- 8   10. meow                     5.         145.       0.0345
- 9   10. woof woof                4.         143.       0.0280
-10   11. cockadoodledoo           0.          94.       0.    
-# ... with 23 more rows
+ 1     8 cockadoodledoo            1           35       0.0286
+ 2     8 meow                      0           35       0     
+ 3     8 woof woof                 3           35       0.0857
+ 4     9 cockadoodledoo            0           91       0     
+ 5     9 meow                      2           93       0.0215
+ 6     9 woof woof                 2           93       0.0215
+ 7    10 cockadoodledoo            0          139       0     
+ 8    10 meow                      5          145       0.0345
+ 9    10 woof woof                 4          143       0.0280
+10    11 cockadoodledoo            0           94       0     
+# … with 23 more rows
 ```
 
 ---
@@ -325,17 +326,17 @@ sounds %&gt;%
 # A tibble: 33 x 5
      age sound          kids_produce kids_respond prop_produce
    &lt;dbl&gt; &lt;chr&gt;                 &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
- 1    8. cockadoodledoo           1.          35.         2.86
- 2    8. meow                     0.          35.         0.  
- 3    8. woof woof                3.          35.         8.57
- 4    9. cockadoodledoo           0.          91.         0.  
- 5    9. meow                     2.          93.         2.15
- 6    9. woof woof                2.          93.         2.15
- 7   10. cockadoodledoo           0.         139.         0.  
- 8   10. meow                     5.         145.         3.45
- 9   10. woof woof                4.         143.         2.80
-10   11. cockadoodledoo           0.          94.         0.  
-# ... with 23 more rows
+ 1     8 cockadoodledoo            1           35         2.86
+ 2     8 meow                      0           35         0   
+ 3     8 woof woof                 3           35         8.57
+ 4     9 cockadoodledoo            0           91         0   
+ 5     9 meow                      2           93         2.15
+ 6     9 woof woof                 2           93         2.15
+ 7    10 cockadoodledoo            0          139         0   
+ 8    10 meow                      5          145         3.45
+ 9    10 woof woof                 4          143         2.80
+10    11 cockadoodledoo            0           94         0   
+# … with 23 more rows
 ```
 
 ---
@@ -591,6 +592,7 @@ https://rmarkdown.rstudio.com/html_document_format.html
 
 https://rmarkdown.rstudio.com/pdf_document_format.html
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "atelier-lakeside-light",
@@ -600,26 +602,121 @@ https://rmarkdown.rstudio.com/pdf_document_format.html
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
-})();</script>
+})(document);
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
   }
-});
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  /* Replace <script> tags in slides area to make them executable
+   *
+   * Runs after post-processing of markdown source into slides and replaces only
+   * <script>s on the last slide of continued slides using the .has-continuation
+   * class added by xaringan. Finally, any <script>s in the slides area that
+   * aren't executed are commented out.
+   */
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container:not(.has-continuation) script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+  var scriptsNotExecuted = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container.has-continuation script'
+  );
+  if (!scriptsNotExecuted.length) return;
+  for (var i = 0; i < scriptsNotExecuted.length; i++) {
+    var comment = document.createComment(scriptsNotExecuted[i].outerHTML)
+    scriptsNotExecuted[i].parentElement.replaceChild(comment, scriptsNotExecuted[i])
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
 (function () {
   var script = document.createElement('script');
   script.type = 'text/javascript';
-  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
   if (location.protocol !== 'file:' && /^https?:/.test(script.src))
     script.src  = script.src.replace(/^https?:/, '');
   document.getElementsByTagName('head')[0].appendChild(script);
