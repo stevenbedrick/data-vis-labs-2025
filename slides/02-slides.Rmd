@@ -328,8 +328,8 @@ ggplot(moma_ex, aes(painted, acquired, color = gender)) +
 library(ggplot2)
 ggplot(moma_ex, aes(painted, acquired, color = gender)) + 
   geom_point() + facet_wrap(~gender)
-```
 
+```
 
 ---
 
