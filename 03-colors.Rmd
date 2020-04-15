@@ -1,7 +1,7 @@
 ---
 title: "Lab 03: Colors with Animal Sounds"
 subtitle: "CS631"
-author: "Alison Hill"
+author: "Alison Hill w/ minor tweaks by Steven Bedrick"
 output:
   html_document:
     theme: flatly
