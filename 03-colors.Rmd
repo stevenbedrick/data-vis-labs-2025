@@ -121,7 +121,12 @@ Other variables in this dataset:
 
 # Discrete vs continuous variables
 
-[WHAT IS THE DIFFERENCE BETWEEN CATEGORICAL, ORDINAL AND NUMERICAL VARIABLES?](https://stats.idre.ucla.edu/other/mult-pkg/whatstat/what-is-the-difference-between-categorical-ordinal-and-numerical-variables/)
+<div class="panel panel-primary">
+  <div class="panel-heading">Refresher Content:</div>
+  <div class="panel-body">
+For a refresher (and more detailed deep-dive), check out: ["WHAT IS THE DIFFERENCE BETWEEN CATEGORICAL, ORDINAL AND NUMERICAL VARIABLES?"](https://stats.idre.ucla.edu/other/mult-pkg/whatstat/what-is-the-difference-between-categorical-ordinal-and-numerical-variables/)
+</div>
+</div>
 
 In order to use color with your data, most importantly, you need to know if you’re dealing with discrete or continuous variables. 
 
