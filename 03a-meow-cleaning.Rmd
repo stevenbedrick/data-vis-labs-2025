@@ -5,6 +5,7 @@ author: "Alison Hill"
 output:
   html_document:
     theme: flatly
+    code_download: true
 ---
 
 ```{r setup, include = FALSE, cache = FALSE}

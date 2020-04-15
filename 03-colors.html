@@ -457,7 +457,7 @@ $ prop_understand &lt;dbl&gt; 0.08571429, 0.28571429, 0.34285714, 0.02197802, 0.
 </div>
 <div id="discrete-vs-continuous-variables" class="section level1" number="7">
 <h1 number="7"><span class="header-section-number">7</span> Discrete vs continuous variables</h1>
-<p><a href="https://stats.idre.ucla.edu/other/mult-pkg/whatstat/what-is-the-difference-between-categorical-ordinal-and-interval-variables/">WHAT IS THE DIFFERENCE BETWEEN CATEGORICAL, ORDINAL AND INTERVAL VARIABLES?</a></p>
+<p><a href="https://stats.idre.ucla.edu/other/mult-pkg/whatstat/what-is-the-difference-between-categorical-ordinal-and-numerical-variables/">WHAT IS THE DIFFERENCE BETWEEN CATEGORICAL, ORDINAL AND NUMERICAL VARIABLES?</a></p>
 <p>In order to use color with your data, most importantly, you need to know if you’re dealing with discrete or continuous variables.</p>
 <div id="discrete-color-palettes" class="section level2" number="7.1">
 <h2 number="7.1"><span class="header-section-number">7.1</span> Discrete color palettes</h2>
@@ -820,11 +820,11 @@ library(wesanderson)</code></pre>
 <pre><code>[1] &quot;#E6A0C4&quot; &quot;#7294D4&quot;</code></pre>
 <p>To use these palettes, use <code>scale_color_manual</code> where <code>values</code> is set to <code>wes_palette("name")</code>. For example:</p>
 <pre class="r"><code>sound_traj +
-  scale_color_manual(values = wes_palette(&quot;Darjeeling&quot;))</code></pre>
-<pre><code>Error in wes_palette(&quot;Darjeeling&quot;): Palette not found.</code></pre>
+  scale_color_manual(values = wes_palette(&quot;Darjeeling1&quot;))</code></pre>
+<p><img src="03-colors_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
 <pre class="r"><code>sound_traj +
-  scale_color_manual(values = wes_palette(&quot;FantasticFox&quot;))</code></pre>
-<pre><code>Error in wes_palette(&quot;FantasticFox&quot;): Palette not found.</code></pre>
+  scale_color_manual(values = wes_palette(&quot;FantasticFox1&quot;))</code></pre>
+<p><img src="03-colors_files/figure-html/unnamed-chunk-37-2.png" width="672" /></p>
 <div class="panel panel-success">
 <div class="panel-heading">
 Challenge #8:
@@ -833,11 +833,11 @@ Challenge #8:
 <p>What if you just don’t want to use the colors in the order they are in? Use a <code>wes_palette</code> of your choice. Using our code from above, try picking the last 3 colors of a palette. Add it to your <code>sound_traj</code> plot.</p>
 <p>If this was easy, try using colors 2, 3, and 5 instead.</p>
 <pre class="r"><code>sound_traj +
-  scale_color_manual(values = wes_palette(&quot;Darjeeling&quot;)[3:5])</code></pre>
-<pre><code>Error in wes_palette(&quot;Darjeeling&quot;): Palette not found.</code></pre>
+  scale_color_manual(values = wes_palette(&quot;Darjeeling1&quot;)[3:5])</code></pre>
+<p><img src="03-colors_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
 <pre class="r"><code>sound_traj +
-  scale_color_manual(values = wes_palette(&quot;FantasticFox&quot;)[c(2, 3, 5)])</code></pre>
-<pre><code>Error in wes_palette(&quot;FantasticFox&quot;): Palette not found.</code></pre>
+  scale_color_manual(values = wes_palette(&quot;FantasticFox1&quot;)[c(2, 3, 5)])</code></pre>
+<img src="03-colors_files/figure-html/unnamed-chunk-38-2.png" width="672" />
 </div>
 </div>
 </div>

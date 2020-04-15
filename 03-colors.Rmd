@@ -10,6 +10,7 @@ output:
     toc_depth: 2
     number_sections: TRUE
     code_folding: hide
+    code_download: true
 ---
 ```{r setup, include = FALSE, cache = FALSE}
 knitr::opts_chunk$set(error = TRUE, comment = NA, warning = FALSE, errors = FALSE, message = FALSE, tidy = FALSE, cache = FALSE)
@@ -120,7 +121,7 @@ Other variables in this dataset:
 
 # Discrete vs continuous variables
 
-[WHAT IS THE DIFFERENCE BETWEEN CATEGORICAL, ORDINAL AND INTERVAL VARIABLES?](https://stats.idre.ucla.edu/other/mult-pkg/whatstat/what-is-the-difference-between-categorical-ordinal-and-interval-variables/)
+[WHAT IS THE DIFFERENCE BETWEEN CATEGORICAL, ORDINAL AND NUMERICAL VARIABLES?](https://stats.idre.ucla.edu/other/mult-pkg/whatstat/what-is-the-difference-between-categorical-ordinal-and-numerical-variables/)
 
 In order to use color with your data, most importantly, you need to know if you’re dealing with discrete or continuous variables. 
 
@@ -527,10 +528,10 @@ To use these palettes, use `scale_color_manual` where `values` is set to `wes_pa
 
 ```{r}
 sound_traj +
-  scale_color_manual(values = wes_palette("Darjeeling"))
+  scale_color_manual(values = wes_palette("Darjeeling1"))
 
 sound_traj +
-  scale_color_manual(values = wes_palette("FantasticFox"))
+  scale_color_manual(values = wes_palette("FantasticFox1"))
 ```
 
 
@@ -543,10 +544,10 @@ If this was easy, try using colors 2, 3, and 5 instead.
 
 ```{r}
 sound_traj +
-  scale_color_manual(values = wes_palette("Darjeeling")[3:5])
+  scale_color_manual(values = wes_palette("Darjeeling1")[3:5])
 
 sound_traj +
-  scale_color_manual(values = wes_palette("FantasticFox")[c(2, 3, 5)])
+  scale_color_manual(values = wes_palette("FantasticFox1")[c(2, 3, 5)])
 ```
   </div>
 </div>
