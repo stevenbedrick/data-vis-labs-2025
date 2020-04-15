@@ -23,7 +23,9 @@ library(viridis)
 
 # Overview
 
-There are 10 challenges total- none are in the "continuous colors" section, but you can use that section to complete the tenth challenge on your own. Upload your knitted html document by next Wednesday at noon to Sakai!
+There are 10 challenges total- none are in the "continuous colors" section, but you can use that section to complete the tenth challenge on your own. Upload your knitted html document by next Wednesday to Sakai!
+
+Note that this lab depends on _many_ packages; on the RStudio Cloud project for the lab deliverable, I have pre-installed them all (I think). We've left the installation instructions here in the lab document for demonstration purposes.
 
 # Slides for today
 
@@ -368,6 +370,8 @@ sound_traj +
                                 "seagreen", "coral"))
 ```
 
+There are many [named colors](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf) available in R!
+
 <div class="panel panel-success">
   <div class="panel-heading">Challenge #5:</div>
   <div class="panel-body">
@@ -607,6 +611,8 @@ sound_traj +
 ```
 
 ### Viridis palettes
+
+> "Use the color scales in this package to make plots that are pretty, better represent your data, easier to read by those with colorblindness, and print well in grey scale."
 
 To use, you'll need to install the `viridis` package from CRAN. This chunk of code tells you how:
 
@@ -897,7 +903,7 @@ library(viridis)
 
 The default is the `viridis` palette within the `viridis` package!
 
-Note! For discrete == FALSE (the default) all other arguments are as to `scale_fill_gradientn` or `scale_color_gradientn`. 
+Note! For discrete == FALSE (the default) all other arguments are as to `scale_fill_gradientn` or `scale_color_gradientn`. (Also note that `_gradient_n_` is not a typo- the _n_ versions of those functions allow multi-color gradients).
 
 ```{r}
 sound_by_age +
