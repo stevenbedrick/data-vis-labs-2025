@@ -1,7 +1,7 @@
 ---
 title: "Lab 04: CS631"
 subtitle: "Working with Tidy Data"
-author: "Alison Hill"
+author: "Alison Hill (with modifications by Steven Bedrick)"
 output:
   xaringan::moon_reader:
     css: ["default", "css/ohsu.css", "css/ohsu-fonts.css"]
@@ -72,6 +72,14 @@ Plus 1 other package:
 - `skimr::skim`
 
 ]
+
+---
+# The Great British Baking Data Set
+
+```{r echo=FALSE}
+cakes_raw <- read_csv(here::here("data", "tidy-gbbo-cakes.csv"))
+glimpse(cakes_raw)
+```
 
 ---
 

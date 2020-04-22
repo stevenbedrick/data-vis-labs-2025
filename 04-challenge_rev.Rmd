@@ -1,7 +1,7 @@
 ---
 title: "Lab 04: Tidy Summaries with Gapminder Data"
 subtitle: "CS631"
-author: "Alison Hill"
+author: "Alison Hill, minor updates by Steven Bedrick"
 output:
   html_document:
     theme: flatly
@@ -15,10 +15,11 @@ Both challenges are due by noon via Sakai on Wednesday May 2. For the first tidy
 1. Tidy challenge: Tidy the `gapminder_broadband_per_100.csv` file *(Tip: use `janitor::clean_names()` immediately after import to make life easier)*
     - The data are the fixed broadband internet subscribers (per 100 people) for different countries by year: "Fixed broadband subscribers are users of the Internet who subscribe to paid high-speed access to the public Internet. High-speed access is at least 256 kilobits per second in one or both directions. Source: International Telecommunication Union, World Telecommunication Development Report and database, and World Bank estimates. Note: Please cite the International Telecommunication Union for third-party use of these data."
     - Read more about the numbers [here](https://docs.google.com/spreadsheets/d/1MgJAijU4I4WnB8JDu6uPmS9lGYaPUkCt1k-RYTZ4nSE/pub#)
+    - You'll know you're done when the dataset is "tidy" according to the definition/example from the slides.
 
 1. Gapminder challenge: Read on...
 
-Install and load the `gapminder` data package. This is the same data that was used in your Datacamp "Introduction to the Tidyverse" course, and a tidied version of the larger gapminder dataset from challenge 1!
+Install and load the `gapminder` data package. 
 
 ```{r eval = FALSE}
 install.packages("gapminder")
