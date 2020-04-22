@@ -20,8 +20,9 @@ This is the site for sharing our Data Visualization Labs for CS631 at Oregon Hea
     - [Slides](slides/03-slides.html) ([pdf](slides/03-slides.pdf))
     - Dataset: [http://bit.ly/cs631-meow](http://bit.ly/cs631-meow)
     - Dataset Cleaning *(optional)*: [03a-meow-cleaning.html](03a-meow-cleaning.html) 
-- [Lab 04: Tidy Data + Distributions](04-challenge.html)
+- [Lab 04: Tidy Data + Distributions](04-challenge_rev.html)
     - [Slides](slides/04-slides.html) ([pdf](slides/04-slides.pdf))
+    - [Old Reference Lab](https://apreshill.github.io/data-vis-labs-2018/04-distributions.html)
 
 
 
