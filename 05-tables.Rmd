@@ -872,6 +872,11 @@ dust(fit) %>%
 
 The [`extrafont` package](https://github.com/wch/extrafont) is the best place to start with fonts in R and ggplot.
 
+```{r}
+library(extrafont)
+```
+
+
 Note: Follow all installation instructions from `github`!
 
 You can access fonts on your local system in `ggplot` by using the `theme()` function to set the relevant properties of your figure.
