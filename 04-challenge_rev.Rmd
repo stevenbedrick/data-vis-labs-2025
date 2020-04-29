@@ -12,14 +12,14 @@ output:
 
 Both challenges are due by the end of the day via Sakai on Wednesday April 29. For the first tidy challenge, you'll want to refer back to our [slides](slides/04-slides.html). For the second challenge, you'll want to refer to the [reference lab](04-distributions.html).
 
-1. Tidy challenge: Tidy the `gapminder_broadband_per_100.csv` file *(Tip: use `janitor::clean_names()` immediately after import to make life easier)*
+1. Tidy challenge: Tidy the [`data/gapminder_broadband_per_100.xlsx`](data/gapminder_broadband_per_100.xlsx) file *(Tip: use the `readxl` package to import from Excel, and use `janitor::clean_names()` immediately after import to make life easier)*
     - The data are the fixed broadband internet subscribers (per 100 people) for different countries by year: "Fixed broadband subscribers are users of the Internet who subscribe to paid high-speed access to the public Internet. High-speed access is at least 256 kilobits per second in one or both directions. Source: International Telecommunication Union, World Telecommunication Development Report and database, and World Bank estimates. Note: Please cite the International Telecommunication Union for third-party use of these data."
     - Read more about the numbers [here](https://docs.google.com/spreadsheets/d/1MgJAijU4I4WnB8JDu6uPmS9lGYaPUkCt1k-RYTZ4nSE/pub#)
     - You'll know you're done when the dataset is "tidy" according to the definition/example from the slides.
 
 1. Gapminder challenge: Read on...
 
-Install and load the `gapminder` data package. 
+Install and load the `gapminder` data package (already _installed_ on  RStudio Cloud). 
 
 ```{r eval = FALSE}
 install.packages("gapminder")

@@ -45,7 +45,7 @@ library(ggridges)
 
 # Make the data
 
-Below are simulated four distributions (n = 100 each), all with similar measures of center (mean = 0) and spread (s.d. = 1), but with distinctly different shapes.^[The [code for these distributions](https://github.com/hadley/boxplots-paper/blob/master/boxplots-density.r) comes from Hadley Wickham's paper on ["40 years of boxplots"](http://vita.had.co.nz/papers/boxplots.html)]
+Below are simulated four distributions (n = 250 each), all with similar measures of center (mean = 0) and spread (s.d. = 1), but with distinctly different shapes.^[The [code for these distributions](https://github.com/hadley/boxplots-paper/blob/master/boxplots-density.r) originally came from Hadley Wickham's paper on ["40 years of boxplots"](http://vita.had.co.nz/papers/boxplots.html)]
 
 1. A standard normal (`n`);
 2. A skew-right distribution (`s`, Johnson distribution with skewness 2.2 and kurtosis 13);
@@ -58,30 +58,26 @@ and kurtosis 30);
 library(SuppDists)
 # this is used later to generate the s and k distributions
 findParams <- function(mu, sigma, skew, kurt) {
-  value <- .C("JohnsonMomentFitR", as.double(mu), as.double(sigma), 
-    as.double(skew), as.double(kurt - 3), gamma = double(1), 
-    delta = double(1), xi = double(1), lambda = double(1), 
-    type = integer(1), PACKAGE = "SuppDists")
-   list(gamma = value$gamma, delta = value$delta, 
-    xi = value$xi, lambda = value$lambda, 
-    type = c("SN", "SL", "SU", "SB")[value$type])  
+   value <- JohnsonFit(c(mu, sigma, skew, kurt), moment="find")  
+    return(value)  
+   # list(gamma = value$gamma, delta = value$delta, 
+   #  xi = value$xi, lambda = value$lambda, 
+   #  type = value$type)  
 }
 ```
-
 
 ```{r make_data}
 # Generate sample data -------------------------------------------------------
 set.seed(141079)
 # normal
-n <- rnorm(100)
+n <- rnorm(250)
 # right-skew
-s <- rJohnson(100, findParams(0, 1, 2.2, 13))
+s <- rJohnson(250, findParams(0.0, 1.0, 2.2, 13.0))
 # leptikurtic
-k <- rJohnson(100, findParams(0, 1, 0, 30))
+k <- rJohnson(250, findParams(0, 1, 0, 30))
 # mixture
-mm <- rnorm(100, rep(c(-1, 1), each = 50) * sqrt(0.9), sqrt(0.1))
+mm <- rnorm(250, rep(c(-1, 1), each = 50) * sqrt(0.9), sqrt(0.1))
 ```
-
 
 
 # Tidy the data

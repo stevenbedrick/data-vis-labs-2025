@@ -190,6 +190,7 @@ cakes_tidy %>%
 
 ```{r}
 library(skimr)
+
 cakes_tidy %>% 
   group_by(bake_type) %>% 
   select_if(is.numeric) %>% 

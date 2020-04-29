@@ -1,0 +1,20 @@
+---
+title: 'Lab 05: Tables & Fonts Challenge'
+author: "Steven Bedrick"
+date: "4/29/2020"
+output:
+  html_document:
+    theme: flatly
+    number_sections: TRUE
+-----
+
+# Tables
+
+Using the data set from the reference lab of PDX flights, choose three analytical questions from the menu below, and design a  table for each one that answers it in a publication-ready format (using your choice of table library), including appropriate column names, etc. Alternatively, please feel free to come up with your own analyses!
+
+- Which airlines had the _best_ and _worst_ track records of on-time departures in each month?
+- What cities have the most service from Portland (defined however you like), and 
+
+# Fonts
+
+Spend some time on [Google Fonts](https://fonts.google.com) (or a different font repository) and pick out a serif, sanserif, and display font that "speaks to you". Write a sentence or two about each one, including what sort of scenario you think it would work well for.

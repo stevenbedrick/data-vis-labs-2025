@@ -1,6 +1,6 @@
 ---
 title: 'Lab 05: Fonts & Tables'
-author: "Alison Hill"
+author: "Alison Hill & Steven Bedrick"
 subtitle: CS631
 always_allow_html: true
 output:
@@ -21,6 +21,10 @@ knitr::opts_chunk$set(error = TRUE, comment = NA, warning = FALSE, errors = FALS
 
 # Goals for Lab 05
 
+Become familiar with tools for generating publication-ready tables directly in R.
+
+We will use data from the following paper: MacFarlane, H., Gorman, K., Ingham, R., Presmanes Hill, A., Papadakis, K., Kiss, G., & van Santen, J. (2017). [Quantitative analysis of disfluency in children with autism spectrum disorder or language impairment.](http://doi.org/10.1371/journal.pone.0173936) PLoS ONE, 12(3), e0173936. 
+
 ```{r load_packages, include = FALSE}
 library(tidyverse)
 library(janitor)
@@ -39,6 +43,9 @@ library(huxtable)
 ```{r}
 mazes <- read_csv("http://bit.ly/mazes-gist") %>% 
   clean_names()  #janitor package
+
+glimpse(mazes)
+
 ```
 
 
@@ -491,12 +498,12 @@ flights %>%
 
 
 ```{r}
-# all unique origin-dest combinations
+# unique origin-dest combinations
 flights %>% 
   select(origin, dest) %>% 
-  distinct %>% head(n=100)
+  distinct %>% head(n=50)
 
-# all unique destinations from PDX (there are 49)
+# all unique destinations from PDX (there are 49, so we'll just list the first few)
 from_pdx <- flights %>% 
   filter(origin == "PDX") %>% 
   select(origin, dest) %>%
@@ -655,7 +662,7 @@ df_ext <- df_sep2 %>%
   extract(period, into = c("month", "week"), 
           regex = "([[:alnum:]]+)_([[:alnum:]]+)")
 head(df_ext)
-````
+```
 
 ### `tidyr::unite`
 
@@ -722,9 +729,49 @@ tidy(fit)
 
 # Specialized Packages
 
-## `huxtable`
+## `gt`
+
+`gt` is a [relatively new package from RStudio](https://gt.rstudio.com/reference/cols_align.html) designed for publication-ready figures.
+
+<img src="https://gt.rstudio.com/reference/figures/gt_parts_of_a_table.svg"/>
+
+```{r}
+library(gt)
+```
+
+```{r}
+# set up a tiny little data table:
+prepped_flight_data <- flights %>% filter(dest %in% c("DEN", "DCA", "JFK", "SFO")) %>% 
+  group_by(dest) %>% 
+  mutate_at(vars(dep_delay), replace_na, replace=0.0) %>%  
+  summarise(mean_delay=mean(dep_delay, na.rm=TRUE), median_delay=median(dep_delay, na.rm=TRUE))
+glimpse(prepped_flight_data)
+
+# now make a table out of it:
+gt_formatted <- prepped_flight_data %>%  gt() %>% 
+  tab_header(title="PDX Departure Delays, DCA/DEN/JFK/SFO", subtitle="(Delay in minutes)") %>% 
+  fmt_number(columns=vars(mean_delay, median_delay), decimals=2) %>% 
+  cols_label(dest="Destination", mean_delay="Mean", median_delay="Median") %>% 
+  cols_align(align="center", columns=vars(dest))
+gt_formatted
+```
+
+Now we can turn it into whatever we need! As Latex:
+
+```{r}
+gt_formatted %>% gtsave("my_table.tex")
+
+```
+
+As RTF, to put in Word:
+
+```{r}
+gt_formatted %>% gtsave("my_table.rtf")
+```
 
 ## `tableone`
+
+`tableone` is for generating "Table 1" in your paper. You know, the "Subject Characteristics" table- lots of boring summary statistics.
 
 Vignette: https://cran.r-project.org/web/packages/tableone/vignettes/introduction.html
 
@@ -821,7 +868,52 @@ dust(fit) %>%
 
 # Finally, fonts!
 
-https://github.com/wch/extrafont
+## Your friend, `extrafont`
 
-Follow all installation instructions from `github`
+The [`extrafont` package](https://github.com/wch/extrafont) is the best place to start with fonts in R and ggplot.
 
+Note: Follow all installation instructions from `github`!
+
+You can access fonts on your local system in `ggplot` by using the `theme()` function to set the relevant properties of your figure.
+
+```{r}
+demo_plt <- ggplot(iris, aes(Sepal.Length, Sepal.Width, color=Species)) + 
+  geom_point(size=3) +
+  scale_color_discrete(labels=c("Setosa", "Versicolor", "Virginica")) + 
+  labs(x="Sepal Length (cm)", y="Sepal Width (cm)", title="Fisher's Irises") 
+demo_plt
+```
+
+Let's try changing that font a bit:
+
+```{r}
+demo_plt + theme(text=element_text(family="Optima"))
+```
+
+```{r}
+demo_plt + theme(text=element_text(family="Palatino"))
+```
+
+```{r}
+demo_plt + theme(text=element_text(family="Zapfino"))
+```
+
+Note that the specific _name_ that you must use to refer to the font is not exactly obvious. It is not the font name, but rather the font's "family name". Because of some under-the-hood details about the way that fonts work, this is a bit different from what you might see in e.g. a font selection menu in Word. You can see a list of all the fonts that R knows about by using the `fonttable()` command:
+
+```{r}
+fonttable() %>% glimpse()
+```
+
+```{r}
+fonttable() %>% select(FullName, FamilyName, FontName) %>% head(20)
+```
+
+You'll want to use the value in `FamilyName`.
+
+## Installing new fonts
+
+This part is a bit beyond the scope of this class, but the upshot is that after you install new fonts in your computer, you should tell `extrafont` about it using the `font_import()` command.
+
+## Caveats
+
+`extrafont` only knows about TrueType fonts (ones whose file ends in `.ttf`). If you have an OpenType font you want to use with R, your best bet probably involves the [`showtext` package](https://cran.rstudio.com/web/packages/showtext/vignettes/introduction.html).

@@ -411,25 +411,21 @@ library(ggridges)</code></pre>
 library(SuppDists)
 # this is used later to generate the s and k distributions
 findParams &lt;- function(mu, sigma, skew, kurt) {
-  value &lt;- .C(&quot;JohnsonMomentFitR&quot;, as.double(mu), as.double(sigma), 
-    as.double(skew), as.double(kurt - 3), gamma = double(1), 
-    delta = double(1), xi = double(1), lambda = double(1), 
-    type = integer(1), PACKAGE = &quot;SuppDists&quot;)
+   value &lt;- JohnsonFit(c(mu, sigma, skew, kurt-3))  
+  
    list(gamma = value$gamma, delta = value$delta, 
     xi = value$xi, lambda = value$lambda, 
-    type = c(&quot;SN&quot;, &quot;SL&quot;, &quot;SU&quot;, &quot;SB&quot;)[value$type])  
+    type = value$type)  
 }</code></pre>
 <pre class="r"><code># Generate sample data -------------------------------------------------------
 set.seed(141079)
 # normal
 n &lt;- rnorm(100)
 # right-skew
-s &lt;- rJohnson(100, findParams(0, 1, 2.2, 13))</code></pre>
-<pre><code>Error in .C(&quot;JohnsonMomentFitR&quot;, as.double(mu), as.double(sigma), as.double(skew), : &quot;JohnsonMomentFitR&quot; not available for .C() for package &quot;SuppDists&quot;</code></pre>
-<pre class="r"><code># leptikurtic
-k &lt;- rJohnson(100, findParams(0, 1, 0, 30))</code></pre>
-<pre><code>Error in .C(&quot;JohnsonMomentFitR&quot;, as.double(mu), as.double(sigma), as.double(skew), : &quot;JohnsonMomentFitR&quot; not available for .C() for package &quot;SuppDists&quot;</code></pre>
-<pre class="r"><code># mixture
+s &lt;- rJohnson(100, findParams(0, 1, 2.2, 13))
+# leptikurtic
+k &lt;- rJohnson(100, findParams(0, 1, 0.1, 30))
+# mixture
 mm &lt;- rnorm(100, rep(c(-1, 1), each = 50) * sqrt(0.9), sqrt(0.1))</code></pre>
 </div>
 <div id="tidy-the-data" class="section level1" number="4">
@@ -440,19 +436,230 @@ mm &lt;- rnorm(100, rep(c(-1, 1), each = 50) * sqrt(0.9), sqrt(0.1))</code></pre
                 c(&quot;n&quot;, &quot;s&quot;, &quot;k&quot;, &quot;mm&quot;)),
   vals = c(n, s, k, mm)
 )</code></pre>
-<pre><code>Error in data.frame(dist = factor(rep(c(&quot;n&quot;, &quot;s&quot;, &quot;k&quot;, &quot;mm&quot;), each = 100), : object &#39;k&#39; not found</code></pre>
 </div>
 <div id="explore-the-data" class="section level1" number="5">
 <h1 number="5"><span class="header-section-number">5</span> Explore the data</h1>
 <pre class="r"><code>glimpse(four)</code></pre>
-<pre><code>Error in glimpse(four): object &#39;four&#39; not found</code></pre>
+<pre><code>Rows: 400
+Columns: 2
+$ dist &lt;fct&gt; n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n…
+$ vals &lt;dbl&gt; 0.91835807, -0.44302553, 2.83453800, -0.74480448, 1.44310364, 0.…</code></pre>
 <p>Let’s see what our descriptive statistics look like:</p>
 <pre class="r"><code>skim(four)</code></pre>
-<pre><code>Error in is.data.frame(data): object &#39;four&#39; not found</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">four</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">400</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">factor</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: factor</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="left">ordered</th>
+<th align="right">n_unique</th>
+<th align="left">top_counts</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">dist</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">FALSE</td>
+<td align="right">4</td>
+<td align="left">n: 100, s: 100, k: 100, mm: 100</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">vals</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1.95</td>
+<td align="right">4.65</td>
+<td align="right">-3.07</td>
+<td align="right">0.13</td>
+<td align="right">0.69</td>
+<td align="right">1.46</td>
+<td align="right">25.52</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>four %&gt;% 
   group_by(dist) %&gt;% 
   skim()</code></pre>
-<pre><code>Error in eval(lhs, parent, parent): object &#39;four&#39; not found</code></pre>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">Piped data</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">400</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">numeric</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Group variables</td>
+<td align="left">dist</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="left">dist</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">vals</td>
+<td align="left">n</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.07</td>
+<td align="right">1.09</td>
+<td align="right">-3.07</td>
+<td align="right">-0.61</td>
+<td align="right">0.13</td>
+<td align="right">0.90</td>
+<td align="right">2.83</td>
+<td align="left">▁▃▇▆▁</td>
+</tr>
+<tr class="even">
+<td align="left">vals</td>
+<td align="left">s</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2.92</td>
+<td align="right">2.97</td>
+<td align="right">0.22</td>
+<td align="right">0.74</td>
+<td align="right">1.61</td>
+<td align="right">4.13</td>
+<td align="right">11.64</td>
+<td align="left">▇▂▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">vals</td>
+<td align="left">k</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4.86</td>
+<td align="right">7.67</td>
+<td align="right">0.42</td>
+<td align="right">0.45</td>
+<td align="right">0.77</td>
+<td align="right">5.05</td>
+<td align="right">25.52</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">vals</td>
+<td align="left">mm</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">-0.06</td>
+<td align="right">0.99</td>
+<td align="right">-1.63</td>
+<td align="right">-1.00</td>
+<td align="right">-0.03</td>
+<td align="right">0.86</td>
+<td align="right">1.49</td>
+<td align="left">▇▇▂▇▇</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="histograms" class="section level1" number="6">
 <h1 number="6"><span class="header-section-number">6</span> Histograms</h1>
@@ -468,7 +675,7 @@ ggplot(four, aes(x = vals)) + #no y needed for visualization of univariate distr
   geom_histogram(fill = &quot;white&quot;, colour = &quot;black&quot;) + #easier to see for me
   coord_cartesian(xlim = c(-5, 5)) + #use this to change x/y limits!
   facet_wrap(~ dist) #this is one factor variable with 4 levels</code></pre>
-<pre><code>Error in ggplot(four, aes(x = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/gghist-1.png" width="672" /></p>
 <div id="binwidths" class="section level2" number="6.1">
 <h2 number="6.1"><span class="header-section-number">6.1</span> Binwidths</h2>
 <p>Always change the binwidths on a histogram. Sometimes the default in <code>ggplot</code> works great, sometimes it does not.</p>
@@ -478,21 +685,21 @@ ggplot(four, aes(x = vals)) +
   geom_histogram(binwidth = .1, fill = &quot;white&quot;, colour = &quot;black&quot;) + #super narrow bins
   coord_cartesian(xlim = c(-5, 5)) + 
   facet_wrap(~ dist)</code></pre>
-<pre><code>Error in ggplot(four, aes(x = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/gghist_narrow-1.png" width="672" /></p>
 <p>Super wide:</p>
 <pre class="r"><code>#2 x 2 histograms in ggplot
 ggplot(four, aes(x = vals)) + 
   geom_histogram(binwidth = 2, fill = &quot;white&quot;, colour = &quot;black&quot;) + #super wide bins
   coord_cartesian(xlim = c(-5, 5)) + 
   facet_wrap(~ dist)</code></pre>
-<pre><code>Error in ggplot(four, aes(x = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/gghist_wide-1.png" width="672" /></p>
 <p>Just right? Pretty close to the default for this data.</p>
 <pre class="r"><code>#2 x 2 histograms in ggplot
 ggplot(four, aes(x = vals)) + 
   geom_histogram(binwidth = .2, fill = &quot;white&quot;, colour = &quot;black&quot;) + 
   coord_cartesian(xlim = c(-5, 5)) + 
   facet_wrap(~ dist)</code></pre>
-<pre><code>Error in ggplot(four, aes(x = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/gghist_right-1.png" width="672" /></p>
 </div>
 <div id="add-a-rug" class="section level2" number="6.2">
 <h2 number="6.2"><span class="header-section-number">6.2</span> Add a rug</h2>
@@ -502,7 +709,7 @@ ggplot(four, aes(x = vals)) +
   geom_rug() + 
   coord_cartesian(xlim = c(-5, 5)) + 
   facet_wrap(~ dist)</code></pre>
-<pre><code>Error in ggplot(four, aes(x = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/gghist_rug-1.png" width="672" /></p>
 </div>
 </div>
 <div id="boxplots-medium-to-large-n" class="section level1" number="7">
@@ -518,7 +725,7 @@ ggplot(four, aes(x = vals)) +
   scale_x_discrete(name=&quot;&quot;) + 
   scale_y_continuous(name=&quot;&quot;) + 
   coord_cartesian(ylim = c(-4,4))</code></pre>
-<pre><code>Error in ggplot(four, aes(y = vals, x = dist)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/ggbox-1.png" width="672" /></p>
 <div id="add-notches" class="section level2" number="7.1">
 <h2 number="7.1"><span class="header-section-number">7.1</span> Add notches</h2>
 <p><a href="http://docs.ggplot2.org/0.9.3.1/geom_boxplot.html">ggplot notches</a>: “Notches are used to compare groups; if the notches of two boxes do not overlap, this is strong evidence that the medians differ.” (Chambers et al., 1983, p. 62)</p>
@@ -527,7 +734,7 @@ ggplot(four, aes(x = vals)) +
   scale_x_discrete(name = &quot;&quot;) + 
   scale_y_continuous(name = &quot;&quot;) + 
   coord_cartesian(ylim = c(-4,4))</code></pre>
-<pre><code>Error in ggplot(four, aes(y = vals, x = dist)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/ggbox_notch-1.png" width="672" /></p>
 </div>
 <div id="add-summary-statistics" class="section level2" number="7.2">
 <h2 number="7.2"><span class="header-section-number">7.2</span> Add summary statistics</h2>
@@ -540,7 +747,7 @@ ggplot(four, aes(x = vals)) +
                size = 4, 
                colour = &quot;lightseagreen&quot;) + 
   coord_cartesian(ylim = c(-4, 4))</code></pre>
-<pre><code>Error in ggplot(four, aes(x = dist, y = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/ggbox_stat-1.png" width="672" /></p>
 </div>
 </div>
 <div id="univariate-scatterplots-small-to-medium-n" class="section level1" number="8">
@@ -566,7 +773,7 @@ ggplot(four, aes(x = vals)) +
   scale_x_discrete(name = &quot;&quot;) + 
   scale_y_continuous(name = &quot;&quot;) + 
   coord_cartesian(ylim = c(-4, 4))</code></pre>
-<pre><code>Error in ggplot(four, aes(x = dist, y = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/ggjitter_stat-1.png" width="672" /></p>
 </div>
 <div id="dotplot" class="section level2" number="8.2">
 <h2 number="8.2"><span class="header-section-number">8.2</span> Dotplot</h2>
@@ -582,7 +789,7 @@ ggplot(four, aes(x = vals)) +
   scale_x_discrete(name = &quot;&quot;) + 
   scale_y_continuous(name = &quot;&quot;) + 
   coord_cartesian(ylim = c(-4, 4))</code></pre>
-<pre><code>Error in ggplot(four, aes(x = dist, y = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/ggdot_stat-1.png" width="672" /></p>
 </div>
 <div id="beeswarm" class="section level2" number="8.3">
 <h2 number="8.3"><span class="header-section-number">8.3</span> Beeswarm</h2>
@@ -595,7 +802,7 @@ library(ggbeeswarm)</code></pre>
   scale_x_discrete(name = &quot;&quot;) + 
   scale_y_continuous(name = &quot;&quot;) + 
   coord_cartesian(ylim = c(-4, 4))</code></pre>
-<pre><code>Error in ggplot(four, aes(x = dist, y = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/ggbee1_stat-1.png" width="672" /></p>
 <pre class="r"><code>ggplot(four, aes(x = dist, y = vals)) +
   geom_quasirandom(fill = &quot;lightseagreen&quot;, 
                colour = &quot;lightseagreen&quot;, 
@@ -603,7 +810,7 @@ library(ggbeeswarm)</code></pre>
   scale_x_discrete(name = &quot;&quot;) + 
   scale_y_continuous(name = &quot;&quot;) + 
   coord_cartesian(ylim = c(-4, 4))</code></pre>
-<pre><code>Error in ggplot(four, aes(x = dist, y = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/ggbee2_stat-1.png" width="672" /></p>
 <p>Note that these recommendations do not apply if your data is “big”. You will know your data is too big if you try the below methods and you can’t see many of the individual points (typically, N &gt; 100).</p>
 </div>
 </div>
@@ -625,7 +832,7 @@ library(ggbeeswarm)</code></pre>
   scale_x_discrete(name = &quot;&quot;) + 
   scale_y_continuous(name = &quot;&quot;) + 
   coord_cartesian(ylim = c(-4, 4))</code></pre>
-<pre><code>Error in ggplot(four, aes(y = vals, x = dist)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/ggbox_dot-1.png" width="672" /></p>
 <p>You can also combin <code>geom_boxplot() + geom_jitter()</code>. I left the outliers in to demonstrate the jittered points only go left to right because I set the jitter <code>height = 0</code>.</p>
 <pre class="r"><code>ggplot(four, aes(y = vals, x = dist)) + 
   geom_boxplot(width = .5) + #left the outliers in here, so they are double-plotted
@@ -637,7 +844,7 @@ library(ggbeeswarm)</code></pre>
   scale_x_discrete(name = &quot;&quot;) + 
   scale_y_continuous(name = &quot;&quot;) + 
   coord_cartesian(ylim = c(-4, 4))</code></pre>
-<pre><code>Error in ggplot(four, aes(y = vals, x = dist)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/ggbox_jitter-1.png" width="672" /></p>
 </div>
 <div id="density-plots-medium-to-large-n" class="section level1" number="10">
 <h1 number="10"><span class="header-section-number">10</span> Density plots (medium to large n)</h1>
@@ -656,12 +863,12 @@ library(ggbeeswarm)</code></pre>
   geom_density(fill = &quot;lightseagreen&quot;) +
   coord_cartesian(xlim = c(-5, 5)) +
   facet_wrap(~ dist)</code></pre>
-<pre><code>Error in ggplot(four, aes(x = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/ggdensity-1.png" width="672" /></p>
 <p>Instead of doing a <code>facet_wrap</code>, I could make just one plot showing all four distributions. To make each distribution a different color, set the <code>fill</code> within the <code>aes</code>, and assign it to the factor variable <code>dist</code>. Since now all four will be plotted on top of each other, add an <code>alpha</code> level to make the color fill transparent (0 = completely transparent; 1 = completely opaque).</p>
 <pre class="r"><code># Density plots with semi-transparent fill
 ggplot(four, aes(x = vals, fill = dist)) + 
   geom_density(alpha = .5)</code></pre>
-<pre><code>Error in ggplot(four, aes(x = vals, fill = dist)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/ggdensityinone-1.png" width="672" /></p>
 <div id="add-a-histogram" class="section level3" number="10.1.1">
 <h3 number="10.1.1"><span class="header-section-number">10.1.1</span> Add a histogram</h3>
 <p>These are pretty easy to make in <code>ggplot</code>. However, note that the y-axis is different from if you just plotted the histogram. In fact, when interpreting this plot, the y-axis is only meaningful for reading density. It is meaningless for interpreting the histogram.</p>
@@ -673,7 +880,7 @@ ggplot(four, aes(x = vals, fill = dist)) +
   geom_density(alpha = .5, fill = &quot;lightseagreen&quot;) + 
   coord_cartesian(xlim = c(-5,5)) + 
   facet_wrap(~ dist)</code></pre>
-<pre><code>Error in ggplot(four, aes(x = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/gghist_density-1.png" width="672" /></p>
 </div>
 </div>
 <div id="violin-plots" class="section level2" number="10.2">
@@ -686,7 +893,7 @@ ggplot(four, aes(x = vals, fill = dist)) +
                 na.rm = TRUE,
                 scale = &quot;count&quot;) + # max width proportional to sample size
   coord_cartesian(ylim = c(-4, 4))</code></pre>
-<pre><code>Error in ggplot(four, aes(x = dist, y = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/ggvio-1.png" width="672" /></p>
 <div id="add-a-boxplot" class="section level3" number="10.2.1">
 <h3 number="10.2.1"><span class="header-section-number">10.2.1</span> Add a boxplot</h3>
 <p>Combination <code>geom_violin() + geom_boxplot()</code> is my personal pick for EDA when I have large data (N &gt; 100).</p>
@@ -701,7 +908,7 @@ ggplot(four, aes(x = vals, fill = dist)) +
                 colour = NA,
                 na.rm = TRUE) +
   coord_cartesian(ylim = c(-4, 4))</code></pre>
-<pre><code>Error in ggplot(four, aes(x = dist, y = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/ggbox_vio-1.png" width="672" /></p>
 <p>Note that it is just as easy to layer a univariate scatterplot over a violin plot, just by replacing the <code>geom_boxplot</code> with a different geom as shown abobe. Lots of combination plots are possible!</p>
 </div>
 </div>
@@ -715,7 +922,7 @@ ggplot(four, aes(x = vals, fill = dist)) +
                 colour = NA,
                 na.rm = TRUE) +
     coord_flip()</code></pre>
-<pre><code>Error in ggplot(four, aes(x = dist, y = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 </div>
 <div id="ridgeline-plots" class="section level1" number="12">
 <h1 number="12"><span class="header-section-number">12</span> Ridgeline plots</h1>
@@ -726,7 +933,7 @@ ggplot(four, aes(x = vals, y = dist)) +
   geom_density_ridges(scale = 0.9, 
                       fill = &quot;lightseagreen&quot;, 
                       alpha = .5)</code></pre>
-<pre><code>Error in ggplot(four, aes(x = vals, y = dist)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/ggridgeline-1.png" width="672" /></p>
 </div>
 <div id="raincloud-plots" class="section level1" number="13">
 <h1 number="13"><span class="header-section-number">13</span> Raincloud plots</h1>
@@ -737,7 +944,7 @@ ggplot(four, aes(x = vals, y = dist)) +
                       fill = &quot;lightseagreen&quot;, 
                       alpha = 0.7, 
                       scale = 0.7)</code></pre>
-<pre><code>Error in ggplot(four, aes(x = vals, y = dist)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/ggraincloud-1.png" width="672" /></p>
 </div>
 <div id="plotting-summary-statistics" class="section level1" number="14">
 <h1 number="14"><span class="header-section-number">14</span> Plotting summary statistics</h1>
@@ -773,14 +980,14 @@ ggplot(four, aes(x = vals, y = dist)) +
 </ul>
 <pre class="r"><code>ggplot(four, aes(x = dist, y = vals)) +
   stat_summary(fun.data = &quot;mean_se&quot;)</code></pre>
-<pre><code>Error in ggplot(four, aes(x = dist, y = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <pre class="r"><code>ggplot(four, aes(x = dist, y = vals)) +
   stat_summary(fun.y = &quot;mean&quot;, geom = &quot;point&quot;) +
   stat_summary(fun.y = &quot;max&quot;, geom = &quot;point&quot;, shape = 21)</code></pre>
-<pre><code>Error in ggplot(four, aes(x = dist, y = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <pre class="r"><code>ggplot(four, aes(x = dist, y = vals)) +
   stat_summary(fun.data = median_hilow)</code></pre>
-<pre><code>Error in ggplot(four, aes(x = dist, y = vals)): object &#39;four&#39; not found</code></pre>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>You may have noticed two different arguments that are potentially confusing: <code>fun.data</code> and <code>fun.y</code>. If the function returns three values, specify the function with the argument <code>fun.data</code>. If the function returns one value, specify <code>fun.y</code>. See below.</p>
 <pre class="r"><code>x &lt;- c(1, 2, 3)
 mean(x) # use fun.y</code></pre>

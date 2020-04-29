@@ -476,7 +476,8 @@ baby_letters &lt;- babynames %&gt;%
 letter_by_year &lt;- baby_letters %&gt;%
   count(year, sex, first_letter, wt = prop) %&gt;% 
   rename(total_prop = nn)</code></pre>
-<pre><code>Error in count(., year, sex, first_letter, wt = prop): unused arguments (sex, first_letter)</code></pre>
+<pre><code>Error: Can&#39;t rename columns that don&#39;t exist.
+[31mx[39m The column `nn` doesn&#39;t exist.</code></pre>
 <pre class="r"><code># label most popular for each year + sex
 letter_by_year &lt;- letter_by_year %&gt;% 
   group_by(sex, year) %&gt;% 
