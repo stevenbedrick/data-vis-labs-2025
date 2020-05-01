@@ -9,9 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Steven Bedrick" />
 
 
-<title>05-tables-challenge.utf8</title>
+<title>Lab 05: Tables &amp; Fonts Challenge</title>
 
 <script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -295,45 +296,40 @@ $(document).ready(function () {
 
 
 
+<h1 class="title toc-ignore">Lab 05: Tables &amp; Fonts Challenge</h1>
+<h4 class="author">Steven Bedrick</h4>
+<h4 class="date">4/29/2020</h4>
 
 </div>
 
 
-<table>
-<tbody>
-<tr class="odd">
-<td>title: ‘Lab 05: Tables &amp; Fonts Challenge’</td>
-</tr>
-<tr class="even">
-<td>author: “Steven Bedrick”</td>
-</tr>
-<tr class="odd">
-<td>date: “4/29/2020”</td>
-</tr>
-<tr class="even">
-<td>output:</td>
-</tr>
-<tr class="odd">
-<td>html_document:</td>
-</tr>
-<tr class="even">
-<td>theme: flatly</td>
-</tr>
-<tr class="odd">
-<td>number_sections: TRUE</td>
-</tr>
-</tbody>
-</table>
-<div id="tables" class="section level1">
-<h1>Tables</h1>
-<p>Using the data set from the reference lab of PDX flights, choose three analytical questions from the menu below, and design a table for each one that answers it in a publication-ready format (using your choice of table library), including appropriate column names, etc. Alternatively, please feel free to come up with your own analyses!</p>
+<div id="tables" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Tables</h1>
+<p>Using the data set from the reference lab of PNW flights, choose three analytical questions from the menu below, and design a table for each one that answers it in a publication-ready format (using your choice of table library), including appropriate column names, etc. Unless otherwise specified, all questions should be explored for flights departing from Portland. Alternatively, please feel free to come up with your own analyses!</p>
 <ul>
-<li>Which airlines had the <em>best</em> and <em>worst</em> track records of on-time departures in each month?</li>
-<li>What cities have the most service from Portland (defined however you like), and</li>
+<li>Which airlines had the <em>best</em> and <em>worst</em> track records of on-time departures in each month? Is it different between PDX and SEA?</li>
+<li>Which airlines <em>improved</em> the most in terms of on-time departures over time, and on which routes? Which airlines got worse?</li>
+<li>What cities have the most service from Portland (defined however you like, but do make sure to define it clearly!), and which have the worst?</li>
+<li>By month, what new routes were added or removed?
+<ul>
+<li><em>Hint</em>: I haven’t tried this one, but dplyr’s <code>lead</code> and <code>lag</code> commands could be helpful</li>
+</ul></li>
+<li>Finding busy aircraft (identified by <code>tailnum</code>), with “business” defined as:
+<ul>
+<li>Which specific aircraft (<code>tailnum</code>) are seen most often, for whom do they fly, and on what routes?</li>
+<li>Which specific aircraft accumulate the most <em>flight time</em>?</li>
+<li>Which specific aircraft log the most <em>distance</em>?</li>
+</ul></li>
+<li>Descriptive statistics comparing several characteristics of long-haul vs. short-haul routes (defined however you like, but you must be clear about your definition)
+<ul>
+<li>the <code>air_time</code> column will be useful here</li>
+</ul></li>
+<li>Time of Day: are some destinations from PDX “morning” destinations vs “evening” ones?</li>
 </ul>
+<p>Make sure to keep in mind the design principles that we discussed on Monday regarding spacing, use of rules, row-vs-column orientation, alignment, etc., and provide a short description of your design and its motivation.</p>
 </div>
-<div id="fonts" class="section level1">
-<h1>Fonts</h1>
+<div id="fonts" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Fonts</h1>
 <p>Spend some time on <a href="https://fonts.google.com">Google Fonts</a> (or a different font repository) and pick out a serif, sanserif, and display font that “speaks to you”. Write a sentence or two about each one, including what sort of scenario you think it would work well for.</p>
 </div>
 

@@ -739,33 +739,52 @@ tidy(fit)
 library(gt)
 ```
 
+Let's set up a tiny little data table...
+
 ```{r}
-# set up a tiny little data table:
 prepped_flight_data <- flights %>% filter(dest %in% c("DEN", "DCA", "JFK", "SFO")) %>% 
   group_by(dest) %>% 
   mutate_at(vars(dep_delay), replace_na, replace=0.0) %>%  
   summarise(mean_delay=mean(dep_delay, na.rm=TRUE), median_delay=median(dep_delay, na.rm=TRUE))
 glimpse(prepped_flight_data)
-
-# now make a table out of it:
+```
+... and now make a table out of it:
+```{r}
 gt_formatted <- prepped_flight_data %>%  gt() %>% 
   tab_header(title="PDX Departure Delays, DCA/DEN/JFK/SFO", subtitle="(Delay in minutes)") %>% 
   fmt_number(columns=vars(mean_delay, median_delay), decimals=2) %>% 
-  cols_label(dest="Destination", mean_delay="Mean", median_delay="Median") %>% 
-  cols_align(align="center", columns=vars(dest))
+  cols_label(dest="Destination", mean_delay="Mean", median_delay="Median") 
+gt_formatted 
+```
+
+We can adjust things like text alignment after-the-fact:
+
+```{r}
+gt_formatted <- gt_formatted %>% 
+  cols_align(align="center", columns=vars(dest)) %>%
+  tab_style(
+    cell_text(align = "right"), 
+    locations = cells_title(groups = c("subtitle"))
+  ) %>% 
+  tab_style(
+    cell_text(style = "italic"),
+    locations = cells_title(groups=c("title"))
+  )
 gt_formatted
 ```
 
+**Tip:** In addition to `cells_title()`, there are helpers to select any of the other cell types (e.g. `cells_column_labels()`, etc.).
+
 Now we can turn it into whatever we need! As Latex:
 
-```{r}
+```{r eval=FALSE}
 gt_formatted %>% gtsave("my_table.tex")
 
 ```
 
 As RTF, to put in Word:
 
-```{r}
+```{r=FALSE}
 gt_formatted %>% gtsave("my_table.rtf")
 ```
 
@@ -910,8 +929,19 @@ fonttable() %>% glimpse()
 ```
 
 ```{r}
+fonttable() %>% head()
+```
+
+
+```{r}
 fonttable() %>% select(FullName, FamilyName, FontName) %>% head(20)
 ```
+
+
+```{r}
+fonttable() %>% select(FamilyName) %>% distinct()
+```
+
 
 You'll want to use the value in `FamilyName`.
 
