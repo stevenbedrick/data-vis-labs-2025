@@ -25,7 +25,7 @@ This is the site for sharing our Data Visualization Labs for CS631 at Oregon Hea
     - [Old Reference Lab](https://apreshill.github.io/data-vis-labs-2018/04-distributions.html)
 - [Lab 05: Tables & Fonts](05-tables-challenge.html)
     - [Reference Lab](05-tables.html)
-
+- [Lab 06: Publishing](06-blogdown.html)
 
 ---
 #- [Lab 04: Tidy Data + Distributions](04-challenge.html)
