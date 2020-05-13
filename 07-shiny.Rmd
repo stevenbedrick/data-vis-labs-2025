@@ -509,6 +509,8 @@ server <- function(input, output, session) {
                           label=paste0("Popular names in ", input$year)
                           )
     })
+    
+    # note: don't forget the code to actually make the plot and table!
   
 }    
 ```
