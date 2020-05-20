@@ -27,6 +27,7 @@ This is the site for sharing our Data Visualization Labs for CS631 at Oregon Hea
     - [Reference Lab](05-tables.html)
 - [Lab 06: Publishing](06-blogdown.html)
 - [Lab 07: Shiny](07-shiny.html)
+- [Lab 08: Maps](08-maps.html)
 
 
 ---

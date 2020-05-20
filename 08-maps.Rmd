@@ -1,0 +1,792 @@
+---
+title: 'Lab 08: Maps & Cartography'
+author: "Steven Bedrick"
+subtitle: CS631
+always_allow_html: true
+output:
+  html_document:
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+---
+
+# Getting Started
+
+Today, we'll be working with spatial data from the [City of Portland's GIS team](https://www.portlandoregon.gov/28130). We'll be working with a few different data sets, and will produce several types of maps. To begin, let's load All The Libraries: 
+
+```{r setup, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(sf)
+library(sp)
+library(tmap)
+library(osmdata)
+library(ggmap)
+library(readxl)
+library(classInt)
+library(cowplot)
+library(maps)
+library(ggspatial)
+```
+
+## Downloading the data
+
+The data sets we will be using today are:
+
+1. [Neighborhood (Region) boundaries](https://gis-pdx.opendata.arcgis.com/datasets/neighborhoods-regions)
+2. [Willamette/Columbia River Ordinary High Water](https://gis-pdx.opendata.arcgis.com/datasets/willamette-columbia-river-ordinary-high-water)
+3. [Farmers Markets](https://gis-pdx.opendata.arcgis.com/datasets/farmers-markets)
+4. [Grocery Stores](https://gis-pdx.opendata.arcgis.com/datasets/grocery-stores)
+5. [Parks Tree Inventory](https://gis-pdx.opendata.arcgis.com/datasets/parks-tree-inventory)
+
+## An aside: Vector vs. Raster data
+
+In GIS-speak, these data sets are all _vector_ data sets, meaning that their contents are sets of x-y coordinates that define a _feature_ of some kind: a point (e.g., a specific grocery store), a line or set of line segments (e.g., a road), or a polygon (e.g., the outline of a neighborhood, or the shape of the bank of a river). Each feature can have some number of _attributes_; what those attributes are will depend on the specific data set.
+
+In contrast to _vector_ formats are _raster_ formats (sometimes called _bitmap_ formats). Raster files consist of a uniform grid of numbers (pixels), whose value contain whatever information is being captured. One example of a raster image is a digital photograph (perhaps taken from an airplane or satellite), but that is only one form. Many kinds of remote sensing devices capture raster images, and in fact there is no requirement that the values of each pixel correspond to a sensor value at all- it can be a logical (categorical) value, as well. 
+
+Crucially, raster images often contain multiple _channels_ (sometimes called _bands_), representing different sets of spatially-aligned data. One example of this would be a visible-spectrum true-color image, consisting of three bands (one for red, green, and blue). Another example might be bands for sensors capturing at different infrared wavelengths, or for different layers of data. 
+
+Like vector data, raster data files generally contain metadata situating the pixels in a specific geographic coordinate reference system. In other words, the raster file "knows" where its edges are in space, and also knows how much distance each pixel is meant to cover. One common raster file format is GeoTIFF, though there are certainly others.
+
+![](https://i.stack.imgur.com/Y84dG.png)
+
+## Spatial data in a non-spatial format
+
+Here's the data from the City of Portland park tree inventory, in CSV format:
+
+```{r loading trees csv, message=FALSE, warning=FALSE}
+trees_raw <- read_csv("data/lab08/Parks_Tree_Inventory.csv")
+glimpse(trees_raw)
+```
+
+We can use it like any data frame:
+
+```{r tree height histogram, message=FALSE, warning=FALSE}
+trees_raw %>% ggplot(mapping=aes(x=TreeHeight)) + geom_histogram(bins=50) + ggtitle("Histogram of park tree height")
+```
+
+Let's look closely at the `X` and `Y` columns:
+
+```{r echo=FALSE}
+trees_raw %>% select(X, Y) %>% head(5)
+```
+
+These clearly refer to some sort of spatial coordinates, and by convention we can guess that they are in a projected (rather than geographic) format- but without additional information it is difficult to know how to interpret them. One major limitation of the CSV format is  that it does not make it easy to embed metadata like this in the file. This is particularly important when working with geospatial data! As such, we generally prefer to work with vector file formats such as ESRI's Shapefile format, which includes metadata.
+
+## A different format: Shapefiles
+
+The Portland Maps Open Data site allows us to download data in ESRI's format; let's take a look, using the `sf` package's `st_read` function:
+
+```{r loading trees shapefile}
+trees_shape <- st_read("/Users/bedricks/Downloads/Parks_Tree_Inventory-shp")
+```
+
+Shapefiles, among other things, contain information about the coordinate reference system (CRS) that they are using:
+
+```{r "querying an object's crs"}
+st_crs(trees_shape)
+```
+
+There's a lot of information here, but looking through it we can see that the coordinates in this file are against the WGS 84 datum, and that the units are meters. Beyond that, the exact details are, for the moment, not that important. Just know that, taken all together, this is sufficient information for us to plot these points on a map and combine them with any other geospatial data we might encounter.
+
+In many ways, the object we get back is _like_ a data frame, in that there are columns, which have types, etc. In fact, most `dplyr` functions work just fine on these. One of the columns is called `geometry`, and is what store the actual coordinates of whatever objects are stored in the rows. In this case, each row is a tree, and the relevant `geometry` entry is a point. 
+
+```{r}
+trees_shape$geometry
+```
+
+For more information about this kind of file, see [the documentation](https://r-spatial.github.io/sf/articles/sf1.html). A helpful deep-dive into the format of this object [can be found here](https://www.jessesadler.com/post/simple-feature-objects/), if you're _really_ interested in what's going on in that `$geometry` property. :-)
+
+# Our first map
+
+Our first map will be a simple one, showing the various neighborhood boundaries in Portland.
+
+```{r loading our spatial data, warning=FALSE, message=FALSE}
+pdx_boundaries <- st_read("data/lab08//Neighborhoods__Regions_-shp")
+river_boundaries <- st_read("data/lab08//Willamette_Columbia_River_Ordinary_High_Water-shp/")
+```
+
+Once we have loaded the shapefiles, we have many options. The built-in base-R `plot` function can handle these, as can `ggplot` via `sf`'s `geom_sf`:
+
+```{r}
+pdx_boundaries %>% ggplot() + geom_sf()
+```
+
+Let's look more closely at our boundaries data set:
+
+```{r}
+glimpse(pdx_boundaries)
+```
+
+We see that in addition to the geometry of the boundaries themselves, we also have other columns containing information about each neighborhood. Notably, one of these is called `MAPLABEL`- let's take that as a suggestion and try labeling our regions:
+
+```{r labeling regions}
+pdx_boundaries %>% ggplot() + geom_sf() + geom_sf_label(aes(label=MAPLABEL))
+```
+
+That's not especially useful, but perhaps if we zoom in a bit? We can modify our map's viewport by using `coord_sf`
+
+```{r changing our viewport}
+pdx_boundaries %>% ggplot() + geom_sf() + 
+  coord_sf(
+    xlim=c(-13670000,-13630000), 
+    ylim=c(5690000, 5710000)
+  )
+
+```
+
+Note that the coordinates here are in the same CRS as the original shapefile, but that the map itself is being projected into a geographic form. We'll see shortly how we might convert coordinates between the two CRSs. In the meantime, let's zoom in some more:
+
+```{r really zooming in}
+pdx_boundaries %>% ggplot() + geom_sf() + 
+  coord_sf(
+    xlim=c(-13665000,-13655000), 
+    ylim=c(5693277, 5698277)) +
+    geom_sf_label(aes(label=MAPLABEL))
+  
+```
+
+<div class="panel panel-success">
+  <div class="panel-heading">Challenge #1:</div>
+  <div class="panel-body">
+    Make a version of this map centered on _your_ neighborhood, zoomed such that each of the bordering neighborhoods is visible (if "each" is too many to be useful, go with "most" or "some").
+  </div>
+</div>
+
+
+## Adding a layer
+
+There's something missing from our map: the two lovely rivers that define our city's geography. We have loaded a shapefile that describes the river; let's have a look:
+
+```{r}
+river_boundaries %>% glimpse()
+```
+
+Unlike the `pdx_boundaries` data set, there's not a lot of additional information in this one beyond the geometry (the Portland Maps site has additional data sets including bathymetric and other data). What does this geometry look like?
+
+```{r just river}
+river_boundaries %>% ggplot() + geom_sf()
+```
+
+Hey, there's our rivers! But the shape is grey; how might we turn it blue? `geom_sf` behaves like all other `ggplot` directives, and allows us to set aesthetic parameters directly or map them to data values:
+
+```{r blue river}
+river_boundaries %>% ggplot() + geom_sf(fill="blue")
+```
+
+We may also note that this map took a few seconds to render. That is because the geometry of the river is surprisingly complex, especially along the banks of the Columbia. We can help it out a bit by turning off the outline; rendering that is particularly challenging for the noisy parts of the river bank:
+
+```{r river no outline}
+river_boundaries %>% ggplot() + geom_sf(fill="blue", size=0.0)
+```
+
+
+Now, how do we combine our river layer with our neighborhood boundary layer? Regular `ggplot` geoms can be combined arbitrarily, and so can `geom_sf` layers:
+
+```{r river and city}
+pdx_boundaries %>% ggplot() + geom_sf() + geom_sf(data=river_boundaries, fill="blue", size=0.0)
+```
+
+Putting it all together, we can see that `coord_sf` applies to both data layers, and also that regular ggplot themeing applies here as well:
+
+```{r zoomed city and river}
+pdx_boundaries %>% ggplot() + 
+  geom_sf() + 
+  geom_sf(data=river_boundaries, fill="blue", size=0.0) + 
+  coord_sf(xlim=c(-13670000,-13630000), ylim=c(5690000, 5710000)) +
+  theme_minimal()
+
+```
+
+<div class="panel panel-success">
+  <div class="panel-heading">Challenge #2:</div>
+  <div class="panel-body">
+    
+    That blue is pretty deep and intense; change it to something a bit more river-like. While you're at it, the grey background for the neighborhoods is also a bit blah. Try changing it to something else.
+    
+  </div>
+</div>
+
+# Converting between geographic coordinates and projection coordinates
+
+The coordinates that the Portland Maps data are using are not in lat/long, but rather in meters. If you'd rather work with latitude and longitude, you can convert back and forth using `sf_project()`. The key is knowing how to tell it which CRS to use. 
+
+One option would be to give it all of the extensive and detailed information about the projection and datum that is found using `st_crs()`; fortunately, there exists a standardized registry of spatial reference systems, the [EPSG Geodetic Parameter Dataset](https://en.wikipedia.org/wiki/EPSG_Geodetic_Parameter_Dataset), and we can look up CRS configurations using their EPSG reference number. 
+
+```{r projection example}
+p1 <- data.frame(lon=c(-122.65), lat=c(45.5))
+ # 4326 is WGS84, 3857 is the one that Portland Maps is using
+# Interestingly, 3857 is basically WGS84, Mercator projected, and converted to use meters as units and easting/northing as its direction system (instead of lat/long)
+# It is used by a variety of mapping software packages, hence why it's what Portland Maps gives.
+
+sf_project(
+  sf::st_crs(4326), # from: default datum used by geom_sf
+  sf::st_crs(3857), # to: datum used by Portland Maps data
+  p1
+)
+
+p2 <- data.frame(lon=c(-13653336), lat=c(5700583))
+sf_project(
+  sf::st_crs(3857), # from: datum used by Portland Maps data
+  sf::st_crs(4326), # to: default datum used by geom_sf
+  p2
+)
+
+```
+
+Another common way to define a CRS is with a "`PROJ.4`" string. Instead of referring to a standard, predefined projection as with an EPSG code, the proj.4 string includes all of the necessary information to describe an arbitrary projection. Consider this example, from the `geom_sf` documentation:
+
+```{r}
+world1 <- sf::st_as_sf(map('world', plot = FALSE, fill = TRUE))
+ggplot() + geom_sf(data = world1)
+```
+```{r}
+# now, project to a Lambert Equal-Area Projection, centered at Antarctica:
+world2 <- sf::st_transform(
+  world1,
+  "+proj=laea +y_0=0 +lon_0=155 +lat_0=-90 +ellps=WGS84 +no_defs"
+)
+ggplot() + geom_sf(data = world2)
+```
+
+A deep-dive into proj.4 strings is beyond the scope of this lab, but as a challenge: look closely at that string, and see if you can think of a way to modify it to project centered on Portland (lon: -122.65, lat: -45.5), to make the following plot:
+
+```{r echo=FALSE}
+world3 <- sf::st_transform(
+  world1,
+  "+proj=laea +y_0=0 +lon_0=-122.65 +lat_0=45.5 +ellps=WGS84 +no_defs"
+)
+ggplot() + geom_sf(data = world3)
+
+```
+
+<div class="panel panel-success">
+  <div class="panel-heading">Challenge #3:</div>
+  <div class="panel-body">
+    
+    Pick a _different_ projection, and show how it looks with at least _two_ different center points. [Here is a guide](https://mgimond.github.io/Spatial/coordinate-systems-in-r.html#understanding-the-proj4-coordinate-syntax) to a little bit more information about the syntax for the proj4 specification.
+    
+  </div>
+</div>
+
+# Plotting Points
+
+Now that we can draw a base map, it's time to try plotting some data. Let's load up the tree census, farmer's marker, and grocery store data sets.
+
+```{r loading feature files, warning=FALSE, message=FALSE}
+trees_shape <- st_read("data/lab08/Parks_Tree_Inventory-shp")
+farmers_market <- st_read("data/lab08/Farmers_Markets-shp/")
+grocery_stores <- st_read("data/lab08/Grocery_Stores-shp/")
+
+```
+
+Beginning with the farmer's market data set:
+
+```{r}
+glimpse(farmers_market)
+```
+
+Just like we overlaid the river layer, we can do the same with the market. The coordinate systems are all aligned, so this will Just Work:
+
+```{r adding markets}
+pdx_boundaries %>% ggplot() +geom_sf() + 
+  geom_sf(data=river_boundaries, fill="blue", size=0.0) + 
+  geom_sf(data=farmers_market) +
+  ggtitle("Portland Farmer's Markets") +
+  theme_minimal()
+```
+
+We use aesthetic mappings, like any other ggplot geom:
+
+```{r coloring by day}
+pdx_boundaries %>% ggplot() +geom_sf() + 
+  geom_sf(data=river_boundaries, fill="blue", size=0.0) + 
+  geom_sf(data=farmers_market, mapping=aes(color=Day)) +
+  ggtitle("Portland Farmer's Markets, by Day") +
+  theme_minimal()
+```
+
+<div class="panel panel-success">
+  <div class="panel-heading">Challenge #4:</div>
+  <div class="panel-body">
+    
+  Create a map showing the location of grocery stores and farmer's markets, with a different point shape used to indicate which is which.
+    
+  </div>
+</div>
+
+
+## Adding more data
+
+Let's dig in a bit to the grocery store data set:
+
+```{r}
+grocery_stores %>% glimpse
+```
+
+As before, we can map standard ggplot aesthetics:
+
+```{r grocery by type}
+pdx_boundaries %>% ggplot() +geom_sf() + 
+  geom_sf(data=river_boundaries, fill="blue", size=0.0) + 
+  geom_sf(data=grocery_stores, mapping=aes(color=TYPE)) +
+  ggtitle("Portland Grocery Stores, by Type") +
+  theme_minimal()
+```
+
+Note that for exploring this part of the data, we may wish to bring in additional layers- perhaps the routes of I-5 and I-205. Other major arterial roads may also be important (Foster, Powell, and 82nd on the East side come to mind, as does Barbur and Capitol Highway on the West side). 
+
+With this many data points, it may begin to make sense to look not at discrete points but rather at a density or contour plot. Making this is a tiny bit more complicated, since the `X` and `Y` columns in this particular data set do not seem to be in the same coordinate system, and it is not entirely obvious from the Portland Maps site what system those columns are in. 😣 Fortunately, the points in the `$geometry` column are just fine, and we can extract those using `st_coordinates`:
+
+```{r grocery contour}
+pdx_boundaries %>% ggplot() +
+  geom_sf() + 
+  geom_sf(data=river_boundaries, fill="blue", size=0.0) + 
+  geom_sf(data=grocery_stores, color=alpha("seagreen", 0.45)) +
+  stat_density_2d(
+    data=data.frame(st_coordinates(grocery_stores$geometry)), 
+    mapping=aes(X,Y), 
+    color="red", 
+    alpha=0.5)  +
+  ggtitle("Portland Grocery Stores") +
+  theme_minimal()
+
+```
+
+We see a relative paucity of grocery stores in the far eastern part of the city as compared to the west and inner parts of the east side.
+
+## Now let's look at the trees
+
+The tree inventory data set is a different kettle of fish altogether. First, it is much larger:
+
+```{r}
+nrow(trees_shape)
+```
+
+This means that plotting these points is going to be a lot more work for R. Furthermore, the distribution of the points is rather clumpy:
+
+```{r initial trees}
+pdx_boundaries %>% ggplot() + geom_sf() + 
+  geom_sf(data=river_boundaries, fill="blue", size=0.0) + 
+  geom_sf(data=trees_shape)
+```
+
+In essence, each of those black blobs is hundreds of points overlaid on top of one another. If we do a contour map, we can see this more clearly:
+
+```{r tree contour}
+pdx_boundaries %>% ggplot() + geom_sf() + stat_density_2d(data=trees_raw, aes(X, Y))
+
+```
+
+What is going on, here? Well, let's zoom in a bit on Southwest portland:
+
+```{r}
+pdx_boundaries %>% ggplot() + geom_sf() + geom_sf(data=river_boundaries, fill="blue", size=0.0) + geom_sf(data=trees_shape) + coord_sf(xlim=c(-13662000,-13658000), ylim=c(5693059, 5697583))
+```
+
+That large clump up in the upper left-hand corner is Gabriel Park, and we can see now that the individual points in this data set are crammed in close together because they represent trees that are literally next to one another in a park. Our contour map above is really just showing us what parts of town have a lot of tree-filled parks!
+
+Let's explore the tree data a bit more by zooming in to Gabriel Park. We'll first subset our data to only include trees in that park, so let's eyeball a bounding box:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+pdx_boundaries %>% ggplot() + geom_sf() + geom_sf(data=river_boundaries, fill="blue", size=0.0) + geom_sf(data=trees_shape) + coord_sf(xlim=c(-13662000,-13658000), ylim=c(5693059, 5697583)) + 
+  geom_hline(yintercept = 5697089, linetype="dashed", color="red") + 
+  geom_hline(yintercept = 5695423, linetype="dashed", color="red") +
+  geom_vline(xintercept = -13661685, linetype="dashed", color="red") +
+  geom_vline(xintercept = -13660293, linetype="dashed", color="red") 
+
+```
+
+We can guesstimate some lon/lat coordinates, and project them into map units:
+
+```{r}
+p3 <- data.frame(lon=c(-122.725, -122.7125), lat=c(45.4675, 45.478))
+sf_project(
+  sf::st_crs(4326), # to: default datum used by geom_sf
+  sf::st_crs(3857), # from: datum used by Portland Maps data
+  p3
+)
+```
+
+And then use `st_crop` to filter our data set:
+
+```{r, warning=FALSE}
+trees_in_park <- st_crop(trees_shape, xmin=-13661685, ymin=5695423, xmax=-13660293, ymax=5697089)
+paste0("Total number of trees in original dataset: ", length(trees_shape$geometry))
+paste0("Number of trees in our bounding box: ", length(trees_in_park$geometry))
+```
+
+If we zoom in to just this box, what does our map look like?
+
+```{r}
+pdx_boundaries %>% ggplot() + geom_sf() + geom_sf(data=river_boundaries, fill="blue", size=0.0) + geom_sf(data=trees_in_park) + coord_sf(xlim=c(-13661685,-13660293), ylim=c(5695423, 5697089)) 
+```
+
+<div class="panel panel-success">
+  <div class="panel-heading">Challenge #5:</div>
+  <div class="panel-body">
+    
+  Follow this process (cropping the data set to a bounding box, etc.) for a park in your neighborhood, and create a comparable map.
+    
+  </div>
+</div>
+
+
+Note that, besides the trees themselves, this map is kind of boring. We can start to see the layout of trees in the park, but it's hard to know how to contextualize it. At this zoom level, our neighborhood boundary data set is no longer especially useful. We might instead want other features: roads, etc. Or, we might want to base our map on other data entirely, like perhaps an aerial photo. One option would be for us to find that data (roads, for instance, are available from Portland Maps) and manually add it, the way we did with the rivers. There are easier options, however. Let's look at how we might use a richer, pre-built map using OpenStreetMap data and `ggmap`.
+
+## `ggmap`
+
+``ggmap` is a package that tries to make it convenient to quickly access raster map tiles through either Google Maps or OpenStreetMap. Using Google Maps requires setting up an account with a credit card (though for reasonable numbers of requests, it is free); OSM via Stamen is free, so we'll use that today.
+
+```{r}
+st_bbox(trees_in_park)
+```
+
+```{r}
+park_base_map <- get_stamenmap(
+  c(left=-122.725, bottom=45.4675, right=-122.7125, top=45.478),
+  zoom=16,
+  maptype="terrain") # try experimenting with "toner", etc.  
+ggmap(park_base_map)
+```
+
+Let's try plotting the trees over our base map:
+
+```{r, warning=FALSE, message=FALSE}
+# ggmap isn't smart enough to reproject, so we need to by hand
+trees_park_projected <- st_transform(trees_in_park, sf::st_crs(4326))
+ggmap(park_base_map) + 
+  geom_sf(data=trees_park_projected, inherit.aes = FALSE) # note - this is needed due to a slight quirk between ggmap, ggplot, and geom_sf
+```
+
+Now that we have our points on a map, let's color by the type of tree:
+
+```{r}
+ggmap(park_base_map) + 
+  geom_sf(data=trees_park_projected, inherit.aes = FALSE, 
+          alpha=0.5, 
+          mapping=aes(color=Genus)) # just like any other ggplot geom
+```
+
+Clearly, there are too many levels for this variable to be truly useful; we would want to do some sort of additional categorizing. But it _is_ enough to see that there are some general patterns of what kinds of trees were inventoried in which part of the park!
+
+## `ggspatial`
+
+`ggspatial` is another extension to `ggplot` that makes OpenStreetMap base data easy to work with. Unlike `ggmap`, it _is_ able to automatically deal with projections:
+
+```{r, message=FALSE, warning=FALSE}
+ggplot() + annotation_map_tile(type="osm") + layer_spatial(trees_in_park)
+```
+
+`ggspatial` has several other handy features for annotating geodata that go beyond what `geom_sf` has to offer.
+
+<div class="panel panel-success">
+  <div class="panel-heading">Challenge #6:</div>
+  <div class="panel-body">
+    
+  Using either `ggmap` or `ggspatial`, take your local park's tree map (from challenge #5) and place it on a OpenStreetMap raster tile. Use at least one aesthetic mapping (color, point shape, etc.) to visualize at least one type of data about the trees (other than genus).
+  
+  Feel free to experiment with different map tile styles!
+    
+  </div>
+</div>
+
+## Interactive Map
+
+What about interactivity? [Leaflet](https://leafletjs.com) is a powerful library for interactive maps, and has excellent R integration. We will also use the `leaflet.esri` extension, so we can use ESRI's aerial photos.
+
+```{r}
+library(leaflet)
+library(leaflet.esri)
+```
+
+As with `ggmap`, Leaflet wants things in WGS84 and will not automatically reproject our data for us, so we will need to work with `trees_park_projected`:
+
+```{r}
+# now make a map with leaflet!
+leaflet(trees_park_projected) %>% # we can pass in a dataframe to use...
+  addEsriBasemapLayer(esriBasemapLayers$Imagery) %>%
+  setView(-122.719, 45.474, zoom=16) %>%
+  addCircleMarkers()
+
+```
+
+One nice thing about Leaflet maps is that we can allow the user to see more information about individual data points, via the `label` and related properties.
+
+```{r}
+leaflet(trees_park_projected) %>%
+  addEsriBasemapLayer(esriBasemapLayers$Imagery) %>%
+  setView(-122.719, 45.474, zoom=16) %>%
+  addCircleMarkers(label = ~Genus_spec) # we can refer to properties of the data frame this way
+```
+
+Note: Leaflet [works well with Shiny](https://rstudio.github.io/leaflet/shiny.html), and has  `leafletOutput`/`renderLeaflet` functions that behave as you would expect.
+
+# How about a chloropleth map?
+
+Changing gears, we now turn to chloropleth maps. We will be working with [2010 Cenus data from Portland](https://www.portlandoregon.gov/civic/28387). This data set includes a great deal of information about each neighborhood's demographics; for now, we will work with the total population.
+
+```{r}
+pdx_population <- read_excel("data/lab08/Census_2010_Data_Cleanedup.xlsx",
+                             sheet="Census_2010_Neighborhoods", 
+                             range="A7:B101", 
+                             col_names = c("Neighborhood", "Total.Pop")) %>%   
+                  mutate(Neighborhood=as.factor(Neighborhood))
+
+# we need to do a tiny bit of cleanup; the census spreadsheet has some slightly different names
+pdx_population <- pdx_population %>% mutate(Neighborhood=recode(Neighborhood,
+  "ARGAY" = "ARGAY TERRACE",
+  "BROOKLYN" = "BROOKLYN ACTION CORPS",
+  "BUCKMAN" = "BUCKMAN COMMUNITY ASSOCIATION",
+  "CENTENNIAL" = "CENTENNIAL COMMUNITY ASSOCIATION",
+  "CULLY" = "CULLY ASSOCIATION OF NEIGHBORS",
+  "CENTENNIAL" = "CENTENNIAL COMMUNITY ASSOCIATION",
+  "DOWNTOWN" = "PORTLAND DOWNTOWN",
+  "GOOSE HOLLOW" = "GOOSE HOLLOW FOOTHILLS LEAGUE",
+  "HAYDEN ISLAND" = "HAYDEN ISLAND NEIGHBORHOOD NETWORK",
+  "HOSFORD-ABERNETHY" = "HOSFORD-ABERNETHY NEIGHBORHOOD DISTRICT ASSN.",
+  "IRVINGTON" = "IRVINGTON COMMUNITY ASSOCIATION",
+  "LLOYD DISTRICT" = "LLOYD DISTRICT COMMUNITY ASSOCIATION",
+  "NORTHWEST DISTRICT" = "NORTHWEST DISTRICT ASSOCIATION",
+  "OLD TOWN-CHINATOWN" = "OLD TOWN COMMUNITY ASSOCIATION",
+  "PARKROSE HEIGHTS" = "PARKROSE HEIGHTS ASSOCIATION OF NEIGHBORS",
+  "PEARL" = "PEARL DISTRICT",
+  "SABIN" = "SABIN COMMUNITY ASSOCIATION",
+  "SELLWOOD-MORELAND" = "SELLWOOD-MORELAND IMPROVEMENT LEAGUE",
+  "SOUTHWEST HILLS" = "SOUTHWEST HILLS RESIDENTIAL LEAGUE",
+  "SUMNER" = "SUMNER ASSOCIATION OF NEIGHBORS",
+  "SUNDERLAND" = "SUNDERLAND ASSOCIATION OF NEIGHBORS",
+  "WILKES" = "WILKES COMMUNITY GROUP"
+))
+
+# and now left join with our boundary data set- note that there will be some regions with no population data
+boundaries_with_pop <- left_join(pdx_boundaries, pdx_population, by=c("NAME"="Neighborhood"))
+boundaries_with_pop %>% glimpse
+```
+
+Now that we've got the population column, we can tell `geom_sf` to use it for the "fill" aesthetic:
+
+```{r}
+boundaries_with_pop %>% ggplot() + 
+  geom_sf(aes(fill=Total.Pop)) +
+  scale_fill_gradient() +
+  geom_sf(data=river_boundaries, fill="blue", size=0.0) 
+
+```
+
+Note, however, that this is forgetting the first rule of chloropleth maps: beware of differing region sizes! We should really be plotting _population density_- people per square kilometer, or something like that.
+
+```{r compute adjusted population}
+# compute people per square kilometer
+# NB: Shape_Area is in meters^2
+boundaries_with_pop <- boundaries_with_pop %>% 
+  mutate(adj_pop = (Total.Pop / (Shape_Area / 1E6))) %>% arrange(adj_pop)
+```
+
+Now, let's look at our revised map:
+
+```{r first attempt at density map, echo=FALSE}
+boundaries_with_pop %>% 
+  ggplot() + 
+  geom_sf(aes(fill=adj_pop)) +
+  scale_fill_gradient(
+    name=expression("Population/km" ^2)
+    ) +
+  geom_sf(data=river_boundaries, fill="blue", size=0.0) +
+  ggtitle("Population density, by neighborhood")
+```
+
+That's much better!
+
+
+<div class="panel panel-success">
+  <div class="panel-heading">Challenge #7:</div>
+  <div class="panel-body">
+    
+  Look at the original spreadsheet and pick another column of interest (besides total population); revise the data ingest process, and map _that_ column instead.
+    
+  </div>
+</div>
+
+## Setting Color Scales
+
+The default colors have two big issues: first, they are blue, so conflict with the river; second, we have some missing data (i.e., neighborhoods where we don't have population data) and those are not apparent in this scale; third, the scale may be highlighting certain differences at the expense of others. Let's explore some different coloring options! First, let's familiarize ourselves with the data distribution across neighborhoods.
+
+```{r, echo=FALSE}
+boundaries_with_pop %>% 
+  filter(!is.na(adj_pop)) %>% 
+  ggplot(mapping = aes(x=fct_reorder(MAPLABEL, -adj_pop), y=adj_pop)) +
+    geom_col() +
+    theme(axis.text.x=element_text(angle=270, hjust=0, size=6, vjust=0.5)) +
+    scale_y_continuous(name=expression("People/km" ^2)) +
+  scale_x_discrete(name=NULL) +
+  ggtitle("Population Density by Neighborhood")
+```
+
+We can see straight away that the distribution is not uniform- there are some outlier neighborhoods with much higher population density. Another way to look at this is with a histogram:
+
+```{r echo=FALSE}
+boundaries_with_pop %>% 
+  filter(!is.na(adj_pop)) %>% 
+  ggplot(mapping = aes(x=adj_pop)) +
+    geom_histogram(bins=20) +
+  scale_x_continuous(name=expression("People/km" ^2)) +
+  scale_y_continuous(name="# Counties") +
+  ggtitle("Population Density Histogram")
+
+```
+
+If we have uniform distribution of data, a uniform color scale may be what we want, but in this case it is not: the color range is going to be very compressed down in the range at which most of the data lives. Let's explore four different options:
+
+1. Equal spacing across the entire range of data
+2. Quantile spacing (i.e., color breaks at each quantile boundary)
+3. A simple breaking scheme that takes into account the data's variability
+4. A more sophisticated adaptive scheme (Jenks' algorithm), that looks for "natural" breaks in the range of data.
+
+```{r}
+# following https://blog.datawrapper.de/how-to-choose-a-color-palette-for-choropleth-maps/
+# and https://rpubs.com/danielkirsch/styling-choropleth-maps
+
+min.pop <- min(boundaries_with_pop$adj_pop, na.rm=TRUE)
+max.pop <- max(boundaries_with_pop$adj_pop, na.rm=TRUE)
+diff.pop <- max.pop - min.pop
+std.dev.pop <- sd(boundaries_with_pop$adj_pop, na.rm = TRUE)
+
+# some possible color break points
+equal.interval <- seq(min.pop, max.pop, by= diff.pop / 6) 
+quantile.interval <- quantile(boundaries_with_pop$adj_pop, probs=seq(0, 1, by = 1/6), na.rm = TRUE)
+std.interval <- c(seq(min.pop, max.pop, by=std.dev.pop), max.pop)
+jenks.interval <- classIntervals(boundaries_with_pop$adj_pop, n=6, style='jenks')$brks
+
+# now let's store the relevant break point in a variable:
+boundaries_with_pop$pop.equal = cut(boundaries_with_pop$adj_pop, breaks=equal.interval, include.lowest = TRUE)
+boundaries_with_pop$pop.quantile = cut(boundaries_with_pop$adj_pop, breaks=quantile.interval, include.lowest = TRUE)
+boundaries_with_pop$pop.std = cut(boundaries_with_pop$adj_pop, breaks=std.interval, include.lowest = TRUE)
+boundaries_with_pop$pop.jenks = cut(boundaries_with_pop$adj_pop, breaks=jenks.interval, include.lowest = TRUE)
+
+popDensBarChart <- function(break_col) {
+  boundaries_with_pop %>% 
+  filter(!is.na(adj_pop)) %>% 
+  ggplot(mapping = aes(x=fct_reorder(MAPLABEL, -adj_pop), y=adj_pop)) +
+    geom_col(aes(fill=.data[[break_col]])) +
+    # theme(axis.text.x=element_text(angle=270, hjust=0, size=6, vjust=0.5)) +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank()) +
+    scale_y_continuous(name=expression("People/km" ^2)) +
+  scale_x_discrete(name=NULL) +
+    scale_fill_discrete(guide=FALSE) +
+  ggtitle(break_col)
+}
+
+plot_grid(
+  popDensBarChart("pop.equal"),
+  popDensBarChart("pop.quantile"),
+  popDensBarChart("pop.std"),
+  popDensBarChart("pop.jenks"),
+  nrow=2, ncol=2
+)
+
+
+```
+
+We can see here that the quantile method is probably not what we want: lots of the denser counties are getting lumped together in a way that they probably shouldn't be. Now let's try using different ones of these for our map. While we're at it, we are going to change our color scheme as well.
+
+
+```{r map with different breaks, echo=FALSE}
+pop.plot <- function(col) {
+  boundaries_with_pop %>% 
+  ggplot() + 
+  geom_sf(aes(fill=.data[[col]])) +
+  scale_fill_brewer(palette="YlOrBr", name=expression("Population/km" ^2)) +
+  geom_sf(data=river_boundaries, fill="blue", size=0.0) +
+  ggtitle(col)
+
+}
+
+pop.plot("pop.equal")
+  pop.plot("pop.quantile")
+  pop.plot("pop.std")
+  pop.plot("pop.jenks")
+
+```
+
+#<div class="panel panel-success">
+  <div class="panel-heading">Challenge #8:</div>
+  <div class="panel-body">
+    
+  Perform a similar analysis for the census data column you are working with. Is six the right number of bins? Which method works best for your specific data?
+  
+  </div>
+</div>
+
+
+ Using `tmap`
+
+`tmap` is a powerful library for "thematic maps"- chloropleth maps, etc. It has some additional capabilities beyond what `ggplot` and `geom_sf` have to offer.
+
+```{r tmap example}
+tm_shape(pdx_boundaries) + 
+  tm_fill() + 
+  tm_borders() + 
+  tm_shape(river_boundaries) + 
+  tm_fill(col="blue")
+```
+
+
+
+# Useful Shiny App for Bounding Box Calculation
+
+This is a small Shiny app for helping with finding bounding box locations.
+
+```{r useful shiny app}
+library(shiny)
+ui <- fluidPage(
+  titlePanel("Bounding Box Calculator"),
+  fluidRow(
+    column(6, plotOutput("boundaryPlot", click="plot_click")),
+    column(6, plotOutput("zoomedMap"))
+           ),
+  textOutput("clicked_pt")
+)
+
+server <- function(input, output, session) {
+  
+  pdx_bbox <- st_bbox(pdx_boundaries)
+  centerX <- pdx_bbox$xmin + ((pdx_bbox$xmax - pdx_bbox$xmin) / 2)
+  centerY <- pdx_bbox$ymin + ((pdx_bbox$ymax - pdx_bbox$ymin) / 2)
+  # initial values
+  vals <- reactiveValues(
+    x=centerX,
+    y=centerY
+  )
+  
+  # udpate on click
+  observeEvent(input$plot_click, {
+    vals$x = input$plot_click$x
+    vals$y = input$plot_click$y
+  })
+  
+  output$boundaryPlot <- renderPlot({
+    pdx_boundaries %>% ggplot() + geom_sf() +
+      geom_sf(data=river_boundaries, fill="blue", size=0.0)  +
+      geom_hline(yintercept=vals$y, linetype="dashed", color="red", alpha=0.7) + 
+      geom_vline(xintercept = vals$x, linetype="dashed", color="red", alpha=0.7)
+  })
+  
+  output$zoomedMap <- renderPlot({
+    pdx_boundaries %>% ggplot() + 
+      geom_sf() + 
+      geom_sf(data=river_boundaries, fill="blue", size=0.0) +
+      coord_sf(xlim=c(vals$x - 2000,vals$x + 2000), ylim=c(vals$y - 2000, vals$y + 2000))  + 
+      geom_sf_label(aes(label=MAPLABEL))
+  })
+  
+  output$clicked_pt <- renderText(paste0("lon: ", vals$x, " lat: ", vals$y))
+
+}
+
+shinyApp(ui = ui, server = server)
+
+```
+

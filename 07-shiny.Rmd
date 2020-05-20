@@ -110,11 +110,14 @@ library(shiny)
 ui <- fluidPage(
   titlePanel("Hello, world!"),
   "This is some text!",
-  textOutput("timestamp")
+  textOutput("timestamp"),
 )
 
 server <- function(input, output, session) {
-  output$timestamp <- renderText(paste0("The current time is: ", Sys.time()))
+
+  output$timestamp <- renderText({
+      paste0("The current time is: ", Sys.time())
+    })
 }
 
 shinyApp(ui = ui, server = server)
