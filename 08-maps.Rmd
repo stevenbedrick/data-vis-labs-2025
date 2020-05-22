@@ -711,7 +711,7 @@ pop.plot("pop.equal")
 
 ```
 
-#<div class="panel panel-success">
+<div class="panel panel-success">
   <div class="panel-heading">Challenge #8:</div>
   <div class="panel-body">
     
@@ -721,7 +721,7 @@ pop.plot("pop.equal")
 </div>
 
 
- Using `tmap`
+# Using `tmap`
 
 `tmap` is a powerful library for "thematic maps"- chloropleth maps, etc. It has some additional capabilities beyond what `ggplot` and `geom_sf` have to offer.
 
