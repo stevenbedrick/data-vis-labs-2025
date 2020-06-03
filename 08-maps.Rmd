@@ -317,7 +317,6 @@ pdx_boundaries %>% ggplot() +geom_sf() +
   </div>
 </div>
 
-
 ## Adding more data
 
 Let's dig in a bit to the grocery store data set:

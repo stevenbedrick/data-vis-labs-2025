@@ -28,7 +28,7 @@ This is the site for sharing our Data Visualization Labs for CS631 at Oregon Hea
 - [Lab 06: Publishing](06-blogdown.html)
 - [Lab 07: Shiny](07-shiny.html)
 - [Lab 08: Maps](08-maps.html)
-
+- [Lab 09: Tableau](09-tableau.html)
 
 ---
 #- [Lab 04: Tidy Data + Distributions](04-challenge.html)

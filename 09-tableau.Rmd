@@ -1,0 +1,26 @@
+---
+title: 'Lab 09: Tableau'
+author: "Steven Bedrick"
+date: "6/3/2020"
+output: html_document
+---
+
+You'll want to install Tableau Desktop; you can [sign up for a free student license](https://www.tableau.com/academic/students). You'll also want to sign up for a ["Tableau Online" account](https://www.tableau.com/products/cloud-bi?utm_medium=Product&utm_source=Tableau+Desktop#form), which you can try out for free.
+
+In this lab, we will get our feet wet with the `babynames` dataset, and then create a small COVID-19 dashboard in the spirit of [Oregon Health Authority's dashboard](https://public.tableau.com/profile/oregon.health.authority.covid.19#!/vizhome/OregonCOVID-19PublicHealthIndicators/COVID-19Burden). 
+
+First, export two specific data sets from R:
+
+```{r, eval=FALSE}
+library(babynames)
+library(covdata)
+
+# Export the relevant data:
+
+write.csv(nytcovcounty, file=...)
+write.csv(babynames, file=...)
+```
+
+Then, download [county-level population data](https://www.census.gov/data/datasets/time-series/demo/popest/2010s-counties-total.html) from the Census Bureau. There are several data sets at this address; I used [this one](https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/counties/totals/co-est2019-alldata.csv).
+
+Finally, download the [daily case counts](https://public.tableau.com/profile/oregon.health.authority.covid.19#!/vizhome/OregonHealthAuthorityCOVID-19DataDashboard/COVID-19EPICases?:display_count=y&:toolbar=n&:origin=viz_share_link&:showShareOptions=false) from the OHA.

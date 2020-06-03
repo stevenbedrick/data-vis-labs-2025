@@ -9,9 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Steven Bedrick" />
 
 
-<title>Principles &amp; Practice of Data Visualization</title>
+<title>Lab 09: Tableau</title>
 
 <script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -295,48 +296,24 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Principles &amp; Practice of Data Visualization</h1>
+<h1 class="title toc-ignore">Lab 09: Tableau</h1>
+<h4 class="author">Steven Bedrick</h4>
+<h4 class="date">6/3/2020</h4>
 
 </div>
 
 
-<p>This is the site for sharing our Data Visualization Labs for CS631 at Oregon Health &amp; Science University, Spring 2020 edition.</p>
-<ul>
-<li><p><a href="00-install_name_plot.html">Lab 00: Introduce Yourself</a></p></li>
-<li><p><a href="01-eda_hot_dogs.html">Lab 01: Nathan’s Hot Dog Eating Context</a></p>
-<ul>
-<li><a href="slides/01-slides.html">Slides</a> (<a href="slides/01-slides.pdf">pdf</a>)</li>
-<li>Dataset 1: <a href="http://bit.ly/cs631-hotdog">http://bit.ly/cs631-hotdog</a></li>
-<li>Dataset 2: <a href="http://bit.ly/cs631-hotdog-affiliated">http://bit.ly/cs631-hotdog-affiliated</a></li>
-<li>Addendum: <a href="01-addendum.html">01-addendum.html</a></li>
-</ul></li>
-<li><p><a href="02-moma.html">Lab 02: MoMA Museum Tour</a></p>
-<ul>
-<li><a href="slides/02-slides.html">Slides</a> (<a href="slides/02-slides.pdf">pdf</a>)</li>
-<li>Dataset: <a href="http://bit.ly/cs631-moma">http://bit.ly/cs631-moma</a></li>
-<li>Dataset Cleaning <em>(optional)</em>: <a href="02a-moma-cleaning.html">02a-moma-cleaning.html</a></li>
-<li>Addendum: <a href="02-addendum.html">02-addendum.html</a></li>
-</ul></li>
-<li><p><a href="03-colors.html">Lab 03: Colors with Animal Sounds</a></p>
-<ul>
-<li><a href="slides/03-slides.html">Slides</a> (<a href="slides/03-slides.pdf">pdf</a>)</li>
-<li>Dataset: <a href="http://bit.ly/cs631-meow">http://bit.ly/cs631-meow</a></li>
-<li>Dataset Cleaning <em>(optional)</em>: <a href="03a-meow-cleaning.html">03a-meow-cleaning.html</a></li>
-</ul></li>
-<li><p><a href="04-challenge_rev.html">Lab 04: Tidy Data + Distributions</a></p>
-<ul>
-<li><a href="slides/04-slides.html">Slides</a> (<a href="slides/04-slides.pdf">pdf</a>)</li>
-<li><a href="https://apreshill.github.io/data-vis-labs-2018/04-distributions.html">Old Reference Lab</a></li>
-</ul></li>
-<li><p><a href="05-tables-challenge.html">Lab 05: Tables &amp; Fonts</a></p>
-<ul>
-<li><a href="05-tables.html">Reference Lab</a></li>
-</ul></li>
-<li><p><a href="06-blogdown.html">Lab 06: Publishing</a></p></li>
-<li><p><a href="07-shiny.html">Lab 07: Shiny</a></p></li>
-<li><p><a href="08-maps.html">Lab 08: Maps</a></p></li>
-<li><p><a href="09-tableau.html">Lab 09: Tableau</a></p></li>
-</ul>
+<p>You’ll want to install Tableau Desktop; you can <a href="https://www.tableau.com/academic/students">sign up for a free student license</a>. You’ll also want to sign up for a <a href="https://www.tableau.com/products/cloud-bi?utm_medium=Product&amp;utm_source=Tableau+Desktop#form">“Tableau Online” account</a>, which you can try out for free.</p>
+<p>In this lab, we will get our feet wet with the <code>babynames</code> dataset, and then create a small COVID-19 dashboard in the spirit of <a href="https://public.tableau.com/profile/oregon.health.authority.covid.19#!/vizhome/OregonCOVID-19PublicHealthIndicators/COVID-19Burden">Oregon Health Authority’s dashboard</a>.</p>
+<p>First, export two specific data sets from R:</p>
+<pre class="r"><code>library(babynames)
+library(covdata)
+
+# Export the relevant data:
+
+write.csv(nytcovcounty, file=...)
+write.csv(babynames, file=...)</code></pre>
+<p>Then, download <a href="https://www.census.gov/data/datasets/time-series/demo/popest/2010s-counties-total.html">county-level population data</a> from the Census Bureau. There are several data sets at this address; I used <a href="https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/counties/totals/co-est2019-alldata.csv">this one</a>.</p>
 
 <p>
 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
