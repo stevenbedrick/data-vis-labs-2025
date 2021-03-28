@@ -10,3 +10,12 @@ See my blogdown demo site here:
 And the GitHub repository for it here: 
 
 - https://github.com/apreshill/ada-blog
+
+
+## Notes on building the site
+
+- In RStudio, from the Console, run `rmarkdown::render_site()` with the project root as the working directory.
+- This won't re-knit the lecture slides; you'll need to do those manually.
+- Various libraries and packages will need to be installed, and some of them are from Github via devtools. As such, RStudio won't find them automatically- you'll need to iterate a bit.
+  - you'll also need `pagedown` for the slides
+- For lab 5, make sure to run `extrafont::font_import()` before trying to knit!

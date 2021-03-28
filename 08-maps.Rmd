@@ -1,7 +1,7 @@
 ---
 title: 'Lab 08: Maps & Cartography'
 author: "Steven Bedrick"
-subtitle: BMi 5/625
+subtitle: "BMI 5/625"
 always_allow_html: true
 output:
   html_document:
@@ -343,7 +343,7 @@ With this many data points, it may begin to make sense to look not at discrete p
 pdx_boundaries %>% ggplot() +
   geom_sf() + 
   geom_sf(data=river_boundaries, fill="blue", size=0.0) + 
-  geom_sf(data=grocery_stores, color=alpha("seagreen", 0.45)) +
+  geom_sf(data=grocery_stores, color=scales::alpha("seagreen", 0.45)) +
   stat_density_2d(
     data=data.frame(st_coordinates(grocery_stores$geometry)), 
     mapping=aes(X,Y), 

@@ -14,23 +14,38 @@
 
 <title>Lab 03a: Animal Word Cleaning</title>
 
-<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
-<style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -44,31 +59,11 @@ if (window.hljs) {
 
 
 <style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
+#rmd-source-code {
+  display: none;
 }
 </style>
+
 
 
 
@@ -78,10 +73,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -98,40 +89,13 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 60px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h2 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h3 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h4 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h5 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h6 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -159,7 +123,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -171,7 +135,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -182,10 +146,23 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -197,7 +174,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -247,6 +223,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -269,7 +248,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">CS631 Labs, Spring 2020</a>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2021</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -292,12 +271,19 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
 
 
 
 <h1 class="title toc-ignore">Lab 03a: Animal Word Cleaning</h1>
-<h3 class="subtitle">CS631</h3>
+<h3 class="subtitle">BMI 5/625</h3>
 <h4 class="author">Alison Hill</h4>
 
 </div>
@@ -350,6 +336,7 @@ write_csv(sounds_summary, here::here(&quot;data&quot;,
                                         &quot;animal_sounds_summary.csv&quot;))</code></pre>
 </div>
 
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiTGFiIDAzYTogQW5pbWFsIFdvcmQgQ2xlYW5pbmciCnN1YnRpdGxlOiAiQk1JIDUvNjI1IgphdXRob3I6ICJBbGlzb24gSGlsbCIKb3V0cHV0OgogIGh0bWxfZG9jdW1lbnQ6CiAgICB0aGVtZTogZmxhdGx5CiAgICBjb2RlX2Rvd25sb2FkOiB0cnVlCi0tLQoKYGBge3Igc2V0dXAsIGluY2x1ZGUgPSBGQUxTRSwgY2FjaGUgPSBGQUxTRX0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KGVycm9yID0gVFJVRSwgY29tbWVudCA9IE5BLCB3YXJuaW5nID0gRkFMU0UsIGVycm9ycyA9IEZBTFNFLCBtZXNzYWdlID0gRkFMU0UsIHRpZHkgPSBGQUxTRSwgY2FjaGUgPSBGQUxTRSkKYGBgCgojIERhdGEKaHR0cDovL2xhbmdjb2cuZ2l0aHViLmlvL3dvcmRiYW5rci8KCiMgUGFja2FnZXMKCmBgYHtyfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeSh3b3JkYmFua3IpCmxpYnJhcnkoaGVyZSkKYGBgCgpgYGB7cn0KbXlfc291bmRzIDwtIGMoIm1lb3ciLCAid29vZiB3b29mIiwgImNvY2thZG9vZGxlZG9vIikKCiMgZmlyc3QgZ2V0IHRoZSBpdGVtcyBpbiB0aGUgYW5pbWFsIGNhdGVnb3J5CnNvdW5kcyA8LSBnZXRfaXRlbV9kYXRhKGxhbmd1YWdlID0gIkVuZ2xpc2ggKEFtZXJpY2FuKSIsIAogICAgICAgICAgICAgICAgICAgICAgICAgZm9ybSA9ICJXRyIpICU+JQogIGZpbHRlcihkZWZpbml0aW9uICVpbiUgbXlfc291bmRzKSAKCiMgdGhlbiBnZXQgaW5zdHJ1bWVudCBkYXRhIGZvciB0aG9zZSBpdGVtcwpzb3VuZHNfZGF0YSA8LSBnZXRfaW5zdHJ1bWVudF9kYXRhKAogIGxhbmd1YWdlID0gIkVuZ2xpc2ggKEFtZXJpY2FuKSIsCiAgZm9ybSA9ICJXRyIsCiAgaXRlbXMgPSBzb3VuZHMkaXRlbV9pZCwKICBhZG1pbmlzdHJhdGlvbnMgPSBUUlVFLAogIGl0ZW1pbmZvID0gVFJVRQogICkgJT4lIAogIG11dGF0ZShwcm9kdWNlcyA9IHZhbHVlID09ICJwcm9kdWNlcyIsCiAgICAgICAgIHVuZGVyc3RhbmRzID0gY2FzZV93aGVuKAogICAgICAgICAgIHByb2R1Y2VzID09IFRSVUUgfCB2YWx1ZSA9PSAidW5kZXJzdGFuZHMiIH4gVFJVRSwKICAgICAgICAgICBUUlVFIH4gRkFMU0UKICAgICAgICAgKSkgJT4lIAogIGRyb3BfbmEocHJvZHVjZXMpICU+JSAKICByZW5hbWUoc291bmQgPSB1bmlfbGVtbWEpCgojIHdoYXQgcHJvcG9ydGlvbiBvZiBraWRzIGF0IGVhY2ggYWdlIHVuZGVyc3RhbmQvcHJvZHVjZSBlYWNoIHdvcmQ/CnNvdW5kc19zdW1tYXJ5IDwtIHNvdW5kc19kYXRhICU+JSAKICBncm91cF9ieShhZ2UsIHNvdW5kKSAlPiUKICBzdW1tYXJpc2Uoa2lkc19wcm9kdWNlID0gc3VtKHByb2R1Y2VzLCBuYS5ybSA9IFRSVUUpLAogICAgICAgICAgICBraWRzX3VuZGVyc3RhbmQgPSBzdW0odW5kZXJzdGFuZHMsIG5hLnJtID0gVFJVRSksCiAgICAgICAgICAgIGtpZHNfcmVzcG9uZCA9IG5fZGlzdGluY3QoZGF0YV9pZCksCiAgICAgICAgICAgIHByb3BfcHJvZHVjZSA9IGtpZHNfcHJvZHVjZSAvIGtpZHNfcmVzcG9uZCwKICAgICAgICAgICAgcHJvcF91bmRlcnN0YW5kID0ga2lkc191bmRlcnN0YW5kIC8ga2lkc19yZXNwb25kKQpgYGAKCgpOb3cgbGV0J3MgZXhwb3J0IGJvdGggZGF0YSBmcmFtZXMgZm9yIHRoZSBsYWIuCgpgYGB7cn0Kd3JpdGVfY3N2KHNvdW5kc19kYXRhLCBoZXJlOjpoZXJlKCJkYXRhIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImFuaW1hbF9zb3VuZHNfZGF0YS5jc3YiKSkKd3JpdGVfY3N2KHNvdW5kc19zdW1tYXJ5LCBoZXJlOjpoZXJlKCJkYXRhIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJhbmltYWxfc291bmRzX3N1bW1hcnkuY3N2IikpCmBgYAoK</div>
 <p>
 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
 <img alt="Creative Commons License" style="border-width:0" src="by-nc.png" width="133" height="25"/></a>
@@ -363,7 +350,7 @@ write_csv(sounds_summary, here::here(&quot;data&quot;,
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -381,12 +368,17 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("03a-meow-cleaning.Rmd");
+});
+</script>
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

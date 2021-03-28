@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Lab 04: CS631</title>
+    <title>Lab 04: BMI 5/625</title>
     <meta charset="utf-8" />
     <meta name="author" content="Alison Hill (with modifications by Steven Bedrick)" />
     <script src="libs/header-attrs/header-attrs.js"></script>
@@ -13,7 +13,7 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Lab 04: CS631
+# Lab 04: BMI 5/625
 ## Working with Tidy Data
 ### Alison Hill (with modifications by Steven Bedrick)
 
@@ -80,11 +80,11 @@ Plus 1 other package:
 ```
 Rows: 1,772
 Columns: 5
-$ series    &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
-$ episode   &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,…
-$ baker     &lt;chr&gt; "Annetha", "David", "Edd", "Jasminder", "Jonathan", "Louise…
-$ challenge &lt;chr&gt; "signature", "signature", "signature", "signature", "signat…
-$ cake      &lt;chr&gt; "cake", "cake", "cake", "cake", "cake", "cake", "cake", "ca…
+$ series    &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+$ episode   &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, …
+$ baker     &lt;chr&gt; "Annetha", "David", "Edd", "Jasminder", "Jonathan", "Louise"…
+$ challenge &lt;chr&gt; "signature", "signature", "signature", "signature", "signatu…
+$ cake      &lt;chr&gt; "cake", "cake", "cake", "cake", "cake", "cake", "cake", "cak…
 ```
 
 ---
@@ -214,10 +214,10 @@ glimpse(cakes_tidy)
 ```
 Rows: 32
 Columns: 4
-$ series    &lt;fct&gt; 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5,…
-$ challenge &lt;chr&gt; "showstopper", "signature", "showstopper", "signature", "sh…
-$ bake_type &lt;fct&gt; cake, cake, pie_tart, pie_tart, cake, cake, pie_tart, pie_t…
-$ num_bakes &lt;dbl&gt; 5, 12, 5, 4, 8, 21, 17, 7, 12, 24, 17, 12, 27, 11, 9, 15, 2…
+$ series    &lt;fct&gt; 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, …
+$ challenge &lt;chr&gt; "showstopper", "signature", "showstopper", "signature", "sho…
+$ bake_type &lt;fct&gt; cake, cake, pie_tart, pie_tart, cake, cake, pie_tart, pie_ta…
+$ num_bakes &lt;dbl&gt; 5, 12, 5, 4, 8, 21, 17, 7, 12, 24, 17, 12, 27, 11, 9, 15, 20…
 ```
 
 
@@ -232,41 +232,40 @@ skim(cakes_tidy)
 
 Table: Data summary
 
-                                      
--------------------------  -----------
-Name                       cakes_tidy 
-Number of rows             32         
-Number of columns          4          
-_______________________               
-Column type frequency:                
-character                  1          
-factor                     2          
-numeric                    1          
-________________________              
-Group variables            None       
--------------------------  -----------
+|                         |           |
+|:------------------------|:----------|
+|Name                     |cakes_tidy |
+|Number of rows           |32         |
+|Number of columns        |4          |
+|_______________________  |           |
+|Column type frequency:   |           |
+|character                |1          |
+|factor                   |2          |
+|numeric                  |1          |
+|________________________ |           |
+|Group variables          |None       |
 
 
 **Variable type: character**
 
-skim_variable    n_missing   complete_rate   min   max   empty   n_unique   whitespace
---------------  ----------  --------------  ----  ----  ------  ---------  -----------
-challenge                0               1     9    11       0          2            0
+|skim_variable | n_missing| complete_rate| min| max| empty| n_unique| whitespace|
+|:-------------|---------:|-------------:|---:|---:|-----:|--------:|----------:|
+|challenge     |         0|             1|   9|  11|     0|        2|          0|
 
 
 **Variable type: factor**
 
-skim_variable    n_missing   complete_rate  ordered    n_unique  top_counts             
---------------  ----------  --------------  --------  ---------  -----------------------
-series                   0               1  FALSE             8  1: 4, 2: 4, 3: 4, 4: 4 
-bake_type                0               1  FALSE             2  cak: 16, pie: 16       
+|skim_variable | n_missing| complete_rate|ordered | n_unique|top_counts             |
+|:-------------|---------:|-------------:|:-------|--------:|:----------------------|
+|series        |         0|             1|FALSE   |        8|1: 4, 2: 4, 3: 4, 4: 4 |
+|bake_type     |         0|             1|FALSE   |        2|cak: 16, pie: 16       |
 
 
 **Variable type: numeric**
 
-skim_variable    n_missing   complete_rate    mean    sd   p0   p25   p50    p75   p100  hist  
---------------  ----------  --------------  ------  ----  ---  ----  ----  -----  -----  ------
-num_bakes                0               1   12.56   7.1    0     7    12   17.5     27  ▆▇▇▇▃ 
+|skim_variable | n_missing| complete_rate|  mean|  sd| p0| p25| p50|  p75| p100|hist  |
+|:-------------|---------:|-------------:|-----:|---:|--:|---:|---:|----:|----:|:-----|
+|num_bakes     |         0|             1| 12.56| 7.1|  0|   7|  12| 17.5|   27|▆▇▇▇▃ |
 
 ---
 
@@ -278,19 +277,18 @@ skim(cakes_tidy) %&gt;%
 
 Table: Data summary
 
-                                      
--------------------------  -----------
-Name                       cakes_tidy 
-Number of rows             32         
-Number of columns          4          
-_______________________               
-Column type frequency:                
-character                  1          
-factor                     2          
-numeric                    1          
-________________________              
-Group variables            None       
--------------------------  -----------
+|                         |           |
+|:------------------------|:----------|
+|Name                     |cakes_tidy |
+|Number of rows           |32         |
+|Number of columns        |4          |
+|_______________________  |           |
+|Column type frequency:   |           |
+|character                |1          |
+|factor                   |2          |
+|numeric                  |1          |
+|________________________ |           |
+|Group variables          |None       |
 
 
 ---
@@ -354,6 +352,7 @@ cakes_tidy %&gt;%
 
 ```r
 library(skimr)
+
 cakes_tidy %&gt;% 
   group_by(bake_type) %&gt;% 
   select_if(is.numeric) %&gt;% 
@@ -363,25 +362,24 @@ cakes_tidy %&gt;%
 
 Table: Data summary
 
-                                      
--------------------------  -----------
-Name                       Piped data 
-Number of rows             32         
-Number of columns          2          
-_______________________               
-Column type frequency:                
-numeric                    1          
-________________________              
-Group variables            bake_type  
--------------------------  -----------
+|                         |           |
+|:------------------------|:----------|
+|Name                     |Piped data |
+|Number of rows           |32         |
+|Number of columns        |2          |
+|_______________________  |           |
+|Column type frequency:   |           |
+|numeric                  |1          |
+|________________________ |           |
+|Group variables          |bake_type  |
 
 
 **Variable type: numeric**
 
-skim_variable   bake_type    n_missing   complete_rate    mean     sd   p0     p25    p50     p75   p100  hist  
---------------  ----------  ----------  --------------  ------  -----  ---  ------  -----  ------  -----  ------
-num_bakes       cake                 0               1   15.81   7.31    4   11.00   15.5   21.00     27  ▅▇▁▇▅ 
-num_bakes       pie_tart             0               1    9.31   5.30    0    5.75    8.5   12.75     17  ▃▅▇▃▆ 
+|skim_variable |bake_type | n_missing| complete_rate|  mean|   sd| p0|   p25|  p50|   p75| p100|hist  |
+|:-------------|:---------|---------:|-------------:|-----:|----:|--:|-----:|----:|-----:|----:|:-----|
+|num_bakes     |cake      |         0|             1| 15.81| 7.31|  4| 11.00| 15.5| 21.00|   27|▅▇▁▇▅ |
+|num_bakes     |pie_tart  |         0|             1|  9.31| 5.30|  0|  5.75|  8.5| 12.75|   17|▃▅▇▃▆ |
 
 See: https://suzanbaert.netlify.com/2018/01/dplyr-tutorial-1/
 

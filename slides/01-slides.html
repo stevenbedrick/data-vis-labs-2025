@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="" xml:lang="">
   <head>
-    <title>Lab 01: CS631</title>
-    <meta charset="utf-8">
-    <meta name="author" content="Alison Hill" />
+    <title>Lab 01: BMI 5/625</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Alison Hill, updates by Steven Bedrick" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/ohsu.css" type="text/css" />
     <link rel="stylesheet" href="css/ohsu-fonts.css" type="text/css" />
@@ -12,9 +13,9 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Lab 01: CS631
+# Lab 01: BMI 5/625
 ## Working in R
-### Alison Hill
+### Alison Hill, updates by Steven Bedrick
 
 ---
 
@@ -29,7 +30,7 @@ class: center, middle, inverse, title-slide
 
 --
 
-* Name objects in R (`i_like_snake_case &lt;- `)
+* Name objects in R (`i_like_snake_case &lt;- `) asdf
 
 --
 
@@ -136,8 +137,8 @@ mood
 ```
 
 ```
- [1] "yippee" "yippee" "yippee" "yippee" "yippee" "yippee" "yippee"
- [8] "yippee" "yippee" "yippee"
+ [1] "yippee" "yippee" "yippee" "yippee" "yippee" "yippee" "yippee" "yippee"
+ [9] "yippee" "yippee"
 ```
 
 ---
@@ -152,8 +153,8 @@ my_alpha
 ```
 
 ```
- [1] "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q"
-[18] "r" "s" "t" "u" "v" "w" "x" "y" "z"
+ [1] "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s"
+[20] "t" "u" "v" "w" "x" "y" "z"
 ```
 
 --
@@ -165,20 +166,20 @@ my_names
 ```
 
 ```
-# A tibble: 1,858,689 x 5
+# A tibble: 1,924,665 x 5
     year sex   name          n   prop
    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt;
- 1 1880. F     Mary       7065 0.0724
- 2 1880. F     Anna       2604 0.0267
- 3 1880. F     Emma       2003 0.0205
- 4 1880. F     Elizabeth  1939 0.0199
- 5 1880. F     Minnie     1746 0.0179
- 6 1880. F     Margaret   1578 0.0162
- 7 1880. F     Ida        1472 0.0151
- 8 1880. F     Alice      1414 0.0145
- 9 1880. F     Bertha     1320 0.0135
-10 1880. F     Sarah      1288 0.0132
-# ... with 1,858,679 more rows
+ 1  1880 F     Mary       7065 0.0724
+ 2  1880 F     Anna       2604 0.0267
+ 3  1880 F     Emma       2003 0.0205
+ 4  1880 F     Elizabeth  1939 0.0199
+ 5  1880 F     Minnie     1746 0.0179
+ 6  1880 F     Margaret   1578 0.0162
+ 7  1880 F     Ida        1472 0.0151
+ 8  1880 F     Alice      1414 0.0145
+ 9  1880 F     Bertha     1320 0.0135
+10  1880 F     Sarah      1288 0.0132
+# … with 1,924,655 more rows
 ```
 
 
@@ -293,9 +294,9 @@ my_things
 ```
 
 ```
- [1] "1"      "2"      "3"      "4"      "5"      "6"      "7"     
- [8] "8"      "9"      "10"     "yippee" "yippee" "yippee" "yippee"
-[15] "yippee" "yippee" "yippee" "yippee" "yippee" "yippee"
+ [1] "1"      "2"      "3"      "4"      "5"      "6"      "7"      "8"     
+ [9] "9"      "10"     "yippee" "yippee" "yippee" "yippee" "yippee" "yippee"
+[17] "yippee" "yippee" "yippee" "yippee"
 ```
 
 --
@@ -380,13 +381,13 @@ glimpse(babynames)
 ```
 
 ```
-Observations: 1,858,689
-Variables: 5
-$ year &lt;dbl&gt; 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 188...
-$ sex  &lt;chr&gt; "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F...
-$ name &lt;chr&gt; "Mary", "Anna", "Emma", "Elizabeth", "Minnie", "Margaret"...
-$ n    &lt;int&gt; 7065, 2604, 2003, 1939, 1746, 1578, 1472, 1414, 1320, 128...
-$ prop &lt;dbl&gt; 0.072384329, 0.026679234, 0.020521700, 0.019865989, 0.017...
+Rows: 1,924,665
+Columns: 5
+$ year &lt;dbl&gt; 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880,…
+$ sex  &lt;chr&gt; "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", "F", …
+$ name &lt;chr&gt; "Mary", "Anna", "Emma", "Elizabeth", "Minnie", "Margaret", "Ida",…
+$ n    &lt;int&gt; 7065, 2604, 2003, 1939, 1746, 1578, 1472, 1414, 1320, 1288, 1258,…
+$ prop &lt;dbl&gt; 0.07238359, 0.02667896, 0.02052149, 0.01986579, 0.01788843, 0.016…
 ```
 
 --
@@ -532,10 +533,10 @@ babynames %&gt;% count(sex) # count is from dplyr
 
 ```
 # A tibble: 2 x 2
-  sex        nn
-  &lt;chr&gt;   &lt;int&gt;
-1 F     1100858
-2 M      757831
+  sex         n
+* &lt;chr&gt;   &lt;int&gt;
+1 F     1138293
+2 M      786372
 ```
 
 ---
@@ -546,13 +547,13 @@ class: middle
 
 ```r
 greet &lt;- function(name) {
-  glue::glue("Welcome to CS631, {name}!")
+  glue::glue("Welcome to BMI 5/625, {name}!")
 }
 greet("Sloane")
 ```
 
 ```
-Welcome to CS631, Sloane!
+Welcome to BMI 5/625, Sloane!
 ```
 
 
@@ -703,7 +704,7 @@ slice(babynames, 1)
 # A tibble: 1 x 5
    year sex   name      n   prop
   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;  &lt;dbl&gt;
-1 1880. F     Mary   7065 0.0724
+1  1880 F     Mary   7065 0.0724
 ```
 
 --
@@ -725,7 +726,7 @@ babynames %&gt;% slice(1)
 # A tibble: 1 x 5
    year sex   name      n   prop
   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;  &lt;dbl&gt;
-1 1880. F     Mary   7065 0.0724
+1  1880 F     Mary   7065 0.0724
 ```
 
 --
@@ -748,7 +749,7 @@ slice(filter(babynames, sex == "M"), 1)
 # A tibble: 1 x 5
    year sex   name      n   prop
   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;  &lt;dbl&gt;
-1 1880. M     John   9655 0.0815
+1  1880 M     John   9655 0.0815
 ```
 
 --
@@ -766,7 +767,7 @@ babynames %&gt;% filter(sex == "M") %&gt;% slice(1)
 # A tibble: 1 x 5
    year sex   name      n   prop
   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;  &lt;dbl&gt;
-1 1880. M     John   9655 0.0815
+1  1880 M     John   9655 0.0815
 ```
 
 
@@ -789,7 +790,7 @@ babynames %&gt;% filter(sex == "M") %&gt;% slice(1)
 # A tibble: 1 x 5
    year sex   name      n   prop
   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;  &lt;dbl&gt;
-1 1880. M     John   9655 0.0815
+1  1880 M     John   9655 0.0815
 ```
 
 --
@@ -807,7 +808,7 @@ babynames %&gt;% filter(.data = ., sex == "M") %&gt;% slice(.data = ., 1)
 # A tibble: 1 x 5
    year sex   name      n   prop
   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;  &lt;dbl&gt;
-1 1880. M     John   9655 0.0815
+1  1880 M     John   9655 0.0815
 ```
 
 --
@@ -825,7 +826,7 @@ babynames %&gt;% filter(., sex == "M") %&gt;% slice(., 1)
 # A tibble: 1 x 5
    year sex   name      n   prop
   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;  &lt;dbl&gt;
-1 1880. M     John   9655 0.0815
+1  1880 M     John   9655 0.0815
 ```
 
 ---
@@ -892,7 +893,9 @@ ipak(pkgs) # take function, and give it that list
 ```
 
 Function from: https://gist.github.com/stevenworthington/3178163
+
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "atelier-lakeside-light",
@@ -902,26 +905,111 @@ Function from: https://gist.github.com/stevenworthington/3178163
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
-})();</script>
+})(document);
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
   }
-});
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
 (function () {
   var script = document.createElement('script');
   script.type = 'text/javascript';
-  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
   if (location.protocol !== 'file:' && /^https?:/.test(script.src))
     script.src  = script.src.replace(/^https?:/, '');
   document.getElementsByTagName('head')[0].appendChild(script);

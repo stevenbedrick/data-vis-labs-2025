@@ -1,7 +1,7 @@
-name: CS631 Labs, Spring 2020
+name: "BMI 5/625 Labs, Spring 2021"
 output_dir: '.'
 navbar:
-  title: CS631 Labs, Spring 2020
+  title: "BMI 5/625 Labs, Spring 2021"
   left:
   - text: Slides & Reading
     href: slides.html
