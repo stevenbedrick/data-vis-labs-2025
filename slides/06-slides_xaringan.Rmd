@@ -1,5 +1,5 @@
 ---
-title: "Lab 06: CS631"
+title: "Lab 06: BMI 5/625"
 subtitle: "Making Slides in the Tada!-verse"
 author: "Alison Hill"
 output:
@@ -169,7 +169,7 @@ I deleted the `date`.
 
 ```{r eval = FALSE}
 ---
-title: "Lab 06: CS631" #<<
+title: "Lab 06: BMI 5/625" #<<
 subtitle: "Working in the Tada!-verse" #<<
 author: "Alison Hill"
 output: xaringan::moon_reader
@@ -550,7 +550,7 @@ knitr::kable(head(iris), format = "html")
 
 ```{r eval = FALSE}
 ---
-title: "Lab 06: CS631"
+title: "Lab 06: BMI 5/625"
 subtitle: "Working in the Tada!-verse"
 author: "Alison Hill"
 date: "May 15, 2018"
@@ -563,7 +563,7 @@ output: xaringan::moon_reader
 
 ```{r eval = FALSE}
 ---
-title: "Lab 06: CS631"
+title: "Lab 06: BMI 5/625"
 subtitle: "Working in the Tada!-verse"
 author: "Alison Hill"
 date: "May 15, 2018"
@@ -586,7 +586,7 @@ names(xaringan:::list_css())
 
 ```{r eval = FALSE}
 ---
-title: "Lab 06: CS631"
+title: "Lab 06: BMI 5/625"
 subtitle: "Working in the Tada!-verse"
 author: "Alison Hill"
 date: "May 15, 2018"
@@ -601,7 +601,7 @@ output:
 
 ```{r eval = FALSE}
 ---
-title: "Lab 06: CS631"
+title: "Lab 06: BMI 5/625"
 subtitle: "Working in the Tada!-verse"
 author: "Alison Hill"
 date: "May 15, 2018"

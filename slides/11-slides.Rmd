@@ -1,5 +1,5 @@
 ---
-title: "Lab 11 (?): CS631"
+title: "Lab 11 (?): BMI 5/625"
 subtitle: "One Dataset, Visualized 11 Ways"
 author: "Alison Hill, Steven Bedrick, Jackie Wirz"
 output:

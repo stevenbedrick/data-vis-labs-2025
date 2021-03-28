@@ -2,7 +2,7 @@
 title: "Principles & Practice of Data Visualization"
 ---
 
-This is the site for sharing our Data Visualization Labs for CS631 at Oregon Health & Science University, Spring 2020 edition.
+This is the site for sharing our Data Visualization Labs for BMI 5/625 at Oregon Health & Science University, Spring 2021 edition.
 
 - [Lab 00: Introduce Yourself](00-install_name_plot.html)
 

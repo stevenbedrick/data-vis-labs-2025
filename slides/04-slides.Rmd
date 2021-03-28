@@ -1,5 +1,5 @@
 ---
-title: "Lab 04: CS631"
+title: "Lab 04: BMI 5/625"
 subtitle: "Working with Tidy Data"
 author: "Alison Hill (with modifications by Steven Bedrick)"
 output:

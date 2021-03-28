@@ -1,5 +1,5 @@
 ---
-title: "Lab 06: CS631"
+title: "Lab 06: BMI 5/625"
 subtitle: "Making a Site in the Tada!-verse <br> Part One: Build a Site"
 author: "Alison Hill"
 output:
@@ -245,7 +245,7 @@ class: middle, inverse, center
 .pull-left[
 ```{r eval = FALSE}
 +++
-title = "Lab 06: CS631"
+title = "Lab 06: BMI 5/625"
 tags = ["toml","yaml"]
 
 type = "article"
@@ -264,7 +264,7 @@ related = []
 .pull-right[
 ```{r eval = FALSE}
 ---
-title: "Lab 06: CS631"
+title: "Lab 06: BMI 5/625"
 tags:
 - toml
 - yaml
@@ -292,7 +292,7 @@ article:
 .pull-left[
 ```{r eval = FALSE}
 +++ #<<
-title = "Lab 06: CS631"
+title = "Lab 06: BMI 5/625"
 tags = ["toml","yaml"]
 
 type = "article"
@@ -311,7 +311,7 @@ related = []
 .pull-right[
 ```{r eval = FALSE}
 --- #<<
-title: "Lab 06: CS631"
+title: "Lab 06: BMI 5/625"
 tags:
 - toml
 - yaml
@@ -338,7 +338,7 @@ article:
 .pull-left[
 ```{r eval = FALSE}
 +++ 
-title = "Lab 06: CS631" #<<
+title = "Lab 06: BMI 5/625" #<<
 tags = ["toml","yaml"]
 
 type = "article"
@@ -357,7 +357,7 @@ related = []
 .pull-right[
 ```{r eval = FALSE}
 --- 
-title: "Lab 06: CS631" #<<
+title: "Lab 06: BMI 5/625" #<<
 tags:
 - toml
 - yaml
@@ -384,7 +384,7 @@ article:
 .pull-left[
 ```{r eval = FALSE}
 +++ 
-title = "Lab 06: CS631" 
+title = "Lab 06: BMI 5/625" 
 tags = ["toml","yaml"] #<<
 
 type = "article"
@@ -403,7 +403,7 @@ related = []
 .pull-right[
 ```{r eval = FALSE}
 --- 
-title: "Lab 06: CS631" 
+title: "Lab 06: BMI 5/625" 
 tags: #<<
 - toml #<<
 - yaml #<<

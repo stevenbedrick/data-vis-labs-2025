@@ -1,5 +1,5 @@
 ---
-title: "Lab 07: CS631"
+title: "Lab 07: BMI 5/625"
 subtitle: "Making a Site in the Tada!-verse <br> Part Deux: Make a Shareable Site"
 author: "Alison Hill"
 output:

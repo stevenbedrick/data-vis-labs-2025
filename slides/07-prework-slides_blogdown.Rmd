@@ -1,5 +1,5 @@
 ---
-title: "Lab 07 Pre-Work: CS631"
+title: "Lab 07 Pre-Work: BMI 5/625"
 subtitle: "Making a Site in the Tada!-verse <br> Part Deux: Connecting to GitHub"
 author: "Alison Hill"
 output:

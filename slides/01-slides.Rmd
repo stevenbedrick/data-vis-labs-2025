@@ -1,7 +1,7 @@
 ---
-title: "Lab 01: CS631"
+title: "Lab 01: BMI 5/625"
 subtitle: "Working in R"
-author: "Alison Hill"
+author: "Alison Hill, updates by Steven Bedrick"
 output:
   xaringan::moon_reader:
     css: ["default", "css/ohsu.css", "css/ohsu-fonts.css"]
@@ -392,7 +392,7 @@ class: middle
 
 ```{r}
 greet <- function(name) {
-  glue::glue("Welcome to CS631, {name}!")
+  glue::glue("Welcome to BMI 5/625, {name}!")
 }
 greet("Sloane")
 ```

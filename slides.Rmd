@@ -1,5 +1,5 @@
 ---
-title: "In-Class Slides & Reading for CS631 Labs"
+title: "In-Class Slides & Reading for BMI5/625 Labs"
 output: html_document
 ---
 

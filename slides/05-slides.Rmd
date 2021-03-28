@@ -1,5 +1,5 @@
 ---
-title: "Lab 05: CS631"
+title: "Lab 05: BMI 5/625"
 subtitle: ""
 author: "Alison Hill"
 output:

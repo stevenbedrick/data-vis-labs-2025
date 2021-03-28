@@ -1,6 +1,6 @@
 ---
 title: "Lab 02a: MOMA cleaning"
-subtitle: "CS631"
+subtitle: "BMI5/625"
 author: "Alison Hill"
 output:
   html_document:

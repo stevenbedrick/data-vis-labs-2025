@@ -1,6 +1,6 @@
 ---
 title: "Lab 02: MoMA Museum Tour"
-subtitle: "CS631"
+subtitle: "BMI 5/625"
 author: "Alison Hill, with (slight) modifications by Steven Bedrick"
 output:
   html_document:

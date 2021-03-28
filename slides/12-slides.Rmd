@@ -1,5 +1,5 @@
 ---
-title: "Lab 12: CS631"
+title: "Lab 12: BMI 5/625"
 subtitle: "Wrap-up"
 author: "Alison Hill, Steven Bedrick, Jackie Wirz"
 output:

@@ -1,7 +1,7 @@
 ---
 title: 'Lab 05: Fonts & Tables'
 author: "Alison Hill & Steven Bedrick"
-subtitle: CS631
+subtitle: "BMI 5/625"
 always_allow_html: true
 output:
   html_document:

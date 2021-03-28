@@ -1,5 +1,5 @@
 ---
-title: "Lab 02: CS631"
+title: "Lab 02: BMI 5/625"
 subtitle: "Working in the Tidyverse"
 author: "Alison Hill (w/ modifications by Steven Bedrick)"
 output:

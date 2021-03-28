@@ -1,6 +1,6 @@
 ---
 title: "Lab 03: Colors with Animal Sounds"
-subtitle: "CS631"
+subtitle: "BMI 5/625"
 author: "Alison Hill w/ minor tweaks by Steven Bedrick"
 output:
   html_document:

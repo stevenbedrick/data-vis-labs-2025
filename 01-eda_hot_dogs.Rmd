@@ -1,6 +1,6 @@
 ---
 title: "Lab 01: Nathan's Hot-Dog Eating Contest"
-subtitle: "CS631"
+subtitle: "BMI 5/625"
 author: "Alison Hill (with minor modifications by Steven Bedrick)"
 output:
   html_document:

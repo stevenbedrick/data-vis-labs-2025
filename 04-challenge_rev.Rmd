@@ -1,6 +1,6 @@
 ---
 title: "Lab 04: Tidy Summaries with Gapminder Data"
-subtitle: "CS631"
+subtitle: "BMI 5/625"
 author: "Alison Hill, minor updates by Steven Bedrick"
 output:
   html_document:

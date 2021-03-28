@@ -1,6 +1,6 @@
 ---
 title: "Lab 05: Addendum"
-subtitle: "CS631"
+subtitle: "BMI 5/625"
 author: "Alison Hill"
 output:
   html_document:
