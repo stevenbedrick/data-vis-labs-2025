@@ -1,0 +1,234 @@
+---
+title: "Lab 01b: BMI 5/625"
+subtitle: "Introducing ggplot"
+author: "Steven Bedrick"
+output:
+  xaringan::moon_reader:
+    css: ["default", "css/ohsu.css", "css/ohsu-fonts.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: atelier-lakeside-light
+      highlightLines: true
+      countIncrementalSlides: false
+knit: pagedown::chrome_print
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+  comment = NA, dpi = 300,
+  fig.align = "center", out.width = "80%", cache = FALSE)
+library(tidyverse)
+library(palmerpenguins)
+
+```
+## R Basics
+
+--
+
+* R is an interpreter (`>`)
+
+--
+
+* Name objects in R (`i_like_snake_case <- `) asdf
+
+--
+
+* Know your object types (`typeof()`)
+
+--
+
+* Case matters (`my_names != My_names`)
+
+
+--
+
+* Use comments! (`# use the hashtag symbol`) 
+
+--
+
+* Functions (`fun`!)
+
+--
+
+* Use packages (*"install once per machine, load once per R session"*)
+
+--
+
+* Use the `%>%` (*"dataframe first, dataframe once"*)
+
+
+
+
+
+---
+
+## Introducing `ggplot`
+
+* Goal for this session: a very quick `ggplot` refresher
+
+--
+
+* Meet our dataset:
+
+--
+
+  * [Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/)
+
+--
+
+```{r}
+glimpse(penguins)
+```
+
+
+
+---
+
+## Sidebar: Why not Fisher's Irises?
+
+```{r, echo=FALSE, fig.height=4}
+iris %>% ggplot(aes(x=Sepal.Length, y=Sepal.Width, color=Species)) + geom_point()
+```
+
+--
+
+* Hint: The original citation for that data is:
+
+--
+
+  * R. A. Fisher (1936) "The use of multiple measurements in taxonomic problems." _Annals of Eugenics_ 7(2): 179-188
+
+--
+
+* `r emo::ji("palm")`
+
+---
+
+## So: Penguins!
+
+```{r}
+glimpse(penguins)
+```
+
+---
+
+## Core `ggplot` concepts
+
+--
+
+* _Aesthetics_ map data to visual properties of the plot
+
+--
+
+* _Geometries_ ("geoms") actually put "ink on the page"
+
+--
+
+  * Each type of graph (scatterplot, etc.) has a corresponding geom
+
+--
+
+  * Different geoms attend to different aesthetics
+  
+--
+
+    * e.g., `geom_point` cares about `x` and `y`
+--
+
+  * Multiple geoms can be combined on the same plot
+
+--
+
+* _Scales_ control axes, fills, etc.
+
+--
+
+* _Themes_ control visual properties (fonts, background colors, etc.)
+
+---
+class: center, middle
+
+## `ggplot` is an _opinionated_ tool!
+
+---
+
+## Data considerations
+
+--
+
+* By default, `ggplot` assumes "tidy" data
+
+--
+
+* Think: one "row" per mark on the graph...
+
+--
+
+* ... and then the various properties for each mark in columns.
+
+---
+
+## Our first plot
+
+```{r, eval=FALSE}
+penguins %>% ggplot(
+  mapping=aes(x=bill_length_mm, y=bill_depth_mm)
+  ) + geom_point()
+```
+--
+```{r, echo=FALSE, fig.height=4}
+penguins %>% ggplot(
+  mapping=aes(x=bill_length_mm, y=bill_depth_mm)
+  ) + geom_point()
+```
+
+---
+
+## What about color?
+
+
+```{r, eval=FALSE}
+penguins %>% ggplot(
+  mapping=aes(x=bill_length_mm, y=bill_depth_mm, color=species)
+  ) + geom_point()
+```
+--
+```{r, echo=FALSE, fig.height=4}
+penguins %>% ggplot(
+  mapping=aes(x=bill_length_mm, y=bill_depth_mm, color=species)
+  ) + geom_point()
+```
+
+---
+
+## Want a different plot? Try a different geom
+
+```{r, fig.height=4}
+penguins %>% ggplot(
+  mapping=aes(x=bill_length_mm, fill=species)
+  ) + geom_histogram()
+```
+
+---
+
+## We can specify aesthetic values by hand:
+
+```{r, fig.height=4}
+penguins %>% ggplot(
+  mapping=aes(x=bill_length_mm, fill=species)
+  ) + geom_histogram(alpha=0.6)
+```
+
+---
+
+## Customizing other aspects of the plot
+
+```{r, fig.height=4}
+penguins %>% ggplot(
+  mapping=aes(x=bill_length_mm, fill=species)
+  ) + geom_histogram(alpha=0.6) +
+  labs(x="Bill Length (mm)", y="Frequency") +
+  ggtitle("Bill Length, by species")
+```
+
