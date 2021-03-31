@@ -416,8 +416,7 @@ nathan_ann <- nathan_plot +
   annotate('segment', x=1980.75, xend=1980.75, y= 30, yend=28, size=0.5, color="#CCB683") +
   annotate('segment', x=2000.25, xend=2000.25, y= 30, yend=28, size=0.5, color="#CCB683") +
   annotate('segment', x=1990, xend=1990, y= 33, yend=30, size=0.5, color="#CCB683") +
-nathan_ann
-    annotate('text', x=1990, y=36, label="No MLE/IFOCE Affiliation", color="#CCB683", family="Lato", hjust=0.5, size = 3) +
+  annotate('text', x=1990, y=36, label="No MLE/IFOCE Affiliation", color="#CCB683", family="Lato", hjust=0.5, size = 3) +
 
 
 
