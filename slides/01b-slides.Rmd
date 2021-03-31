@@ -22,46 +22,6 @@ library(tidyverse)
 library(palmerpenguins)
 
 ```
-## R Basics
-
---
-
-* R is an interpreter (`>`)
-
---
-
-* Name objects in R (`i_like_snake_case <- `) asdf
-
---
-
-* Know your object types (`typeof()`)
-
---
-
-* Case matters (`my_names != My_names`)
-
-
---
-
-* Use comments! (`# use the hashtag symbol`) 
-
---
-
-* Functions (`fun`!)
-
---
-
-* Use packages (*"install once per machine, load once per R session"*)
-
---
-
-* Use the `%>%` (*"dataframe first, dataframe once"*)
-
-
-
-
-
----
 
 ## Introducing `ggplot`
 
