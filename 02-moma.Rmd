@@ -326,7 +326,7 @@ moma %>%
 <div class="panel panel-success">
   <div class="panel-heading">Challenge #2:</div>
   <div class="panel-body">
-We'll do this together *(nothing to turn in)*: see [slides](https://apreshill.github.io/data-vis-labs-2018/slides/02-slides.html#16).
+We'll do this together *(nothing to turn in)*: see [slides](https://stevenbedrick.github.io/data-vis-labs-2021/slides/02-slides.html#16).
   </div>
 </div>
 
@@ -353,7 +353,7 @@ Things to consider:
 
 - You'll want to play around with setting an `alpha` value here- keep in mind that `0` is totally transparent and `1` is opaque. 
 - Try using `geom_abline()` to add the line in red (use the default intercept value of 0). The actual red line is difficult to recreate- here is what the authors say: "The red regression line shows the “modernizing” of MoMA’s collection — how quickly the museum has moved toward acquiring recent paintings."
-- Go back to [Lab 01](https://apreshill.github.io/data-vis-labs-2018/01-eda_hot_dogs.html) to review how to do the following:
+- Go back to [Lab 01](https://stevenbedrick.github.io/data-vis-labs-2021/01-eda_hot_dogs.html) to review how to do the following:
     - Change the x- and y-axis labels and the plot title to match the plot above
   </div>
 </div>
