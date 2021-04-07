@@ -1,16 +1,19 @@
 ---
-title: "Lab 02: MoMA Museum Tour"
-subtitle: "BMI 5/625"
+title: 'Lab 02: MoMA Museum Tour'
 author: "Alison Hill, with (slight) modifications by Steven Bedrick"
+subtitle: BMI 5/625
 output:
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
   html_document:
     theme: flatly
-    toc: TRUE
-    toc_float: TRUE
+    toc: yes
+    toc_float: yes
     toc_depth: 2
-    number_sections: TRUE
+    number_sections: yes
     code_folding: hide
-    code_download: true
+    code_download: yes
 ---
 ```{r setup, include = FALSE, cache = FALSE}
 knitr::opts_chunk$set(error = TRUE, comment = NA, warning = FALSE, errors = FALSE, message = FALSE, tidy = FALSE, cache = FALSE)
