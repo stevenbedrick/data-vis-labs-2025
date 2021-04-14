@@ -194,7 +194,7 @@ class: middle, center, inverse
 
 
 .pull-left[
-From DataCamp Chapter 3
+From previous:
 
 - `group_by`
 
@@ -524,6 +524,9 @@ http://r4ds.had.co.nz/transform.html#summarise-funs
 * See "Maths Functions" in the RStudio Base R Cheatsheet:
 https://github.com/rstudio/cheatsheets/blob/master/base-r.pdf
 
+* Any function that operates _on a vector_ can be used...
+
+
 ---
 class: inverse, middle, center
 
@@ -572,25 +575,17 @@ default_aes = aes(
 
 So, the default for `geom_point(shape = 19)`! This is important to remember: this shape only "understands" the *color* aesthetic, but not the *fill* aesthetic.
 
----
+--
+## Beyond `fill`/`color` aesthetics: "Scales"
 
-class: inverse, middle, center
+* For when we need to go beyond what `fill` and `color` can do for us...
 
-# 👇🏽
+* Like adding a `geom_*`, we can add a `scale_`
 
-## R Markdown:
+  * e.g. `scale_fill_discrete()`, etc.
+  
+  * Time to jump to the lab worksheet!
 
-https://www.markdowntutorial.com
-
-https://andrewbtran.github.io/NICAR/2018/workflow/docs/02-rmarkdown.html
-
-https://yihui.name/tinytex/ *(install!)*
-
-https://github.com/rstudio/cheatsheets/blob/master/rmarkdown-2.0.pdf
-
-https://rmarkdown.rstudio.com/html_document_format.html
-
-https://rmarkdown.rstudio.com/pdf_document_format.html
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
