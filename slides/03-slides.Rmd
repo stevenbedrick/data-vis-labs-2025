@@ -392,12 +392,13 @@ default_aes = aes(
 
 So, the default for `geom_point(shape = 19)`! This is important to remember: this shape only "understands" the *color* aesthetic, but not the *fill* aesthetic.
 
---
+
+---
 ## Beyond `fill`/`color` aesthetics: "Scales"
 
-* For when we need to go beyond what `fill` and `color` can do for us...
+For when we need to go beyond what `fill` and `color` can do for us...
 
-* Like adding a `geom_*`, we can add a `scale_`
+* Like adding multiple `geom_*` objects, we can add several `scale_`
 
   * e.g. `scale_fill_discrete()`, etc.
   
