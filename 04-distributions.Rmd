@@ -58,8 +58,14 @@ and kurtosis 30);
 library(SuppDists)
 # this is used later to generate the s and k distributions
 findParams <- function(mu, sigma, skew, kurt) {
-   value <- JohnsonFit(c(mu, sigma, skew, kurt), moment="find")  
+  # as of 2021, this code apparently doesn't work: 
+  #value <- JohnsonFit(c(mu, sigma, skew, kurt), moment="find")  
+  
+  # but this one does:
+  value <- JohnsonFit(c(mu, sigma, skew, kurt), moment="use")
     return(value)  
+  
+  # at one point suppdists made us work this way:
    # list(gamma = value$gamma, delta = value$delta, 
    #  xi = value$xi, lambda = value$lambda, 
    #  type = value$type)  
@@ -85,7 +91,7 @@ mm <- rnorm(250, rep(c(-1, 1), each = 50) * sqrt(0.9), sqrt(0.1))
 ```{r make_data_long}
 four <- data.frame(
   dist = factor(rep(c("n", "s", "k", "mm"), 
-                    each = 100),
+                    each = 250),
                 c("n", "s", "k", "mm")),
   vals = c(n, s, k, mm)
 )
