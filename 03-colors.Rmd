@@ -581,6 +581,16 @@ sound_traj +
   scale_color_economist()
 ```
 
+### `ggsci` Palettes
+
+[`ggsci`](https://nanx.me/ggsci/) provides color palettes designed to match with the aesthetics of a wide variety of scientific publishers:
+
+```{r}
+library(ggsci)
+
+sound_traj + scale_color_nejm()
+```
+
 
 ### Palettes from the Queen Bee
 
@@ -752,6 +762,7 @@ my_sound_traj <- sound_traj +
 View that figure after color-vision-deficiency simulation:
 
 ```{r}
+# remotes::install_github("clauswilke/colorblindr")
 library(colorblindr)
 cvd_grid(my_sound_traj)
 ```
