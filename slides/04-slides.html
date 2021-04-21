@@ -47,6 +47,7 @@ From `dplyr`:
 - `tally`
 - `pull`
 - `top_n`
+- `case_when`
 
 ]
 
@@ -56,16 +57,11 @@ From `dplyr`:
 Let's add from `dplyr`:
 
 - `select`
-- `rename`
-- `recode`
-- `case_when`
 
 From `tidyr`:
 
-- `gather`
-- `separate`
-- `spread`
-- `unite`
+- `pivot_longer`
+- `pivot_wider`
 
 Plus 1 other package:
 
@@ -176,8 +172,42 @@ cakes_untidy %&gt;%
 
 ```r
 cakes_tidy &lt;- cakes_untidy %&gt;% 
-  gather(bake_type, num_bakes, cake:pie_tart, 
-         factor_key = TRUE) %&gt;% 
+  pivot_longer(cake:pie_tart, 
+               names_to="bake_type", 
+               values_to="num_bakes") %&gt;% 
+  arrange(series)
+cakes_tidy
+```
+
+```
+# A tibble: 32 x 4
+   series challenge   bake_type num_bakes
+   &lt;fct&gt;  &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt;
+ 1 1      showstopper cake              5
+ 2 1      showstopper pie_tart          5
+ 3 1      signature   cake             12
+ 4 1      signature   pie_tart          4
+ 5 2      showstopper cake              8
+ 6 2      showstopper pie_tart         17
+ 7 2      signature   cake             21
+ 8 2      signature   pie_tart          7
+ 9 3      showstopper cake             12
+10 3      showstopper pie_tart         17
+# … with 22 more rows
+```
+
+
+---
+
+# What about changing types?
+
+
+```r
+cakes_tidy &lt;- cakes_untidy %&gt;% 
+  pivot_longer(cake:pie_tart, 
+               names_to="bake_type", 
+               names_transform = list(bake_type=as.factor),
+               values_to="num_bakes") %&gt;% 
   arrange(series)
 cakes_tidy
 ```
@@ -187,15 +217,15 @@ cakes_tidy
    series challenge   bake_type num_bakes
    &lt;fct&gt;  &lt;chr&gt;       &lt;fct&gt;         &lt;dbl&gt;
  1 1      showstopper cake              5
- 2 1      signature   cake             12
- 3 1      showstopper pie_tart          5
+ 2 1      showstopper pie_tart          5
+ 3 1      signature   cake             12
  4 1      signature   pie_tart          4
  5 2      showstopper cake              8
- 6 2      signature   cake             21
- 7 2      showstopper pie_tart         17
+ 6 2      showstopper pie_tart         17
+ 7 2      signature   cake             21
  8 2      signature   pie_tart          7
  9 3      showstopper cake             12
-10 3      signature   cake             24
+10 3      showstopper pie_tart         17
 # … with 22 more rows
 ```
 
@@ -215,9 +245,9 @@ glimpse(cakes_tidy)
 Rows: 32
 Columns: 4
 $ series    &lt;fct&gt; 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, …
-$ challenge &lt;chr&gt; "showstopper", "signature", "showstopper", "signature", "sho…
-$ bake_type &lt;fct&gt; cake, cake, pie_tart, pie_tart, cake, cake, pie_tart, pie_ta…
-$ num_bakes &lt;dbl&gt; 5, 12, 5, 4, 8, 21, 17, 7, 12, 24, 17, 12, 27, 11, 9, 15, 20…
+$ challenge &lt;chr&gt; "showstopper", "showstopper", "signature", "signature", "sho…
+$ bake_type &lt;fct&gt; cake, pie_tart, cake, pie_tart, cake, pie_tart, cake, pie_ta…
+$ num_bakes &lt;dbl&gt; 5, 5, 12, 4, 8, 17, 21, 7, 12, 17, 24, 12, 27, 9, 11, 15, 20…
 ```
 
 
@@ -428,11 +458,305 @@ ggplot(cakes_by_series, aes(x = series, y = n,
   expand_limits(y = 0)
 ```
 
-&lt;img src="04-slides_files/figure-html/unnamed-chunk-14-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: middle, inverse, center
 
+---
+
+# Selection Helpers
+
+`dplyr` gives us helpful syntax for selecting columns:
+
+
+```r
+cakes_raw %&gt;% head(4)
+```
+
+```
+# A tibble: 4 x 5
+  series episode baker     challenge cake 
+   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;
+1      1       1 Annetha   signature cake 
+2      1       1 David     signature cake 
+3      1       1 Edd       signature cake 
+4      1       1 Jasminder signature cake 
+```
+
+What if we only want _some_ of the columns?
+
+---
+
+# `dplyr::select()` to the rescue
+
+
+```r
+cakes_raw %&gt;% select(cake)
+```
+
+```
+# A tibble: 1,772 x 1
+   cake 
+   &lt;chr&gt;
+ 1 cake 
+ 2 cake 
+ 3 cake 
+ 4 cake 
+ 5 cake 
+ 6 cake 
+ 7 cake 
+ 8 cake 
+ 9 cake 
+10 &lt;NA&gt; 
+# … with 1,762 more rows
+```
+
+
+---
+
+# `dplyr::select()` to the rescue
+
+
+```r
+cakes_raw %&gt;% select(cake, baker) %&gt;% head(4)
+```
+
+```
+# A tibble: 4 x 2
+  cake  baker    
+  &lt;chr&gt; &lt;chr&gt;    
+1 cake  Annetha  
+2 cake  David    
+3 cake  Edd      
+4 cake  Jasminder
+```
+
+But this is only the beginning!
+
+---
+
+# ... All columns _other_ than `cake`
+
+
+```r
+cakes_raw %&gt;% select(!cake) %&gt;% head(4)
+```
+
+```
+# A tibble: 4 x 4
+  series episode baker     challenge
+   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;    
+1      1       1 Annetha   signature
+2      1       1 David     signature
+3      1       1 Edd       signature
+4      1       1 Jasminder signature
+```
+
+
+---
+
+# Columns that _start_ with a string?
+
+
+```r
+cakes_raw %&gt;% select(starts_with("c"))
+```
+
+```
+# A tibble: 1,772 x 2
+   challenge cake 
+   &lt;chr&gt;     &lt;chr&gt;
+ 1 signature cake 
+ 2 signature cake 
+ 3 signature cake 
+ 4 signature cake 
+ 5 signature cake 
+ 6 signature cake 
+ 7 signature cake 
+ 8 signature cake 
+ 9 signature cake 
+10 signature &lt;NA&gt; 
+# … with 1,762 more rows
+```
+
+---
+
+# The last column...
+
+
+```r
+cakes_raw %&gt;% select(last_col()) %&gt;% head(4)
+```
+
+```
+# A tibble: 4 x 1
+  cake 
+  &lt;chr&gt;
+1 cake 
+2 cake 
+3 cake 
+4 cake 
+```
+
+
+---
+
+# A _range_ of contiguous columns
+
+
+```r
+cakes_raw %&gt;% select(baker:cake) %&gt;% head(4)
+```
+
+```
+# A tibble: 4 x 3
+  baker     challenge cake 
+  &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;
+1 Annetha   signature cake 
+2 David     signature cake 
+3 Edd       signature cake 
+4 Jasminder signature cake 
+```
+
+---
+
+# There are many other helpers:
+
+Matching columns by name:
+* `starts_with()`/`ends_with()`
+* `contains()`
+* `num_range()` (for matching numerical ranges: think columns named for years, etc.)
+
+See the `select` help page for more examples...
+
+---
+
+# Many Tidyverse functions work with select helpers
+
+
+
+
+
+```r
+billboard %&gt;% glimpse
+```
+
+```
+Rows: 317
+Columns: 79
+$ artist       &lt;chr&gt; "2 Pac", "2Ge+her", "3 Doors Down", "3 Doors Down", "504 …
+$ track        &lt;chr&gt; "Baby Don't Cry (Keep...", "The Hardest Part Of ...", "Kr…
+$ date.entered &lt;date&gt; 2000-02-26, 2000-09-02, 2000-04-08, 2000-10-21, 2000-04-…
+$ wk1          &lt;dbl&gt; 87, 91, 81, 76, 57, 51, 97, 84, 59, 76, 84, 57, 50, 71, 7…
+$ wk2          &lt;dbl&gt; 82, 87, 70, 76, 34, 39, 97, 62, 53, 76, 84, 47, 39, 51, 6…
+$ wk3          &lt;dbl&gt; 72, 92, 68, 72, 25, 34, 96, 51, 38, 74, 75, 45, 30, 28, 5…
+$ wk4          &lt;dbl&gt; 77, NA, 67, 69, 17, 26, 95, 41, 28, 69, 73, 29, 28, 18, 4…
+$ wk5          &lt;dbl&gt; 87, NA, 66, 67, 17, 26, 100, 38, 21, 68, 73, 23, 21, 13, …
+$ wk6          &lt;dbl&gt; 94, NA, 57, 65, 31, 19, NA, 35, 18, 67, 69, 18, 19, 13, 3…
+$ wk7          &lt;dbl&gt; 99, NA, 54, 55, 36, 2, NA, 35, 16, 61, 68, 11, 20, 11, 34…
+$ wk8          &lt;dbl&gt; NA, NA, 53, 59, 49, 2, NA, 38, 14, 58, 65, 9, 17, 1, 29, …
+$ wk9          &lt;dbl&gt; NA, NA, 51, 62, 53, 3, NA, 38, 12, 57, 73, 9, 17, 1, 27, …
+$ wk10         &lt;dbl&gt; NA, NA, 51, 61, 57, 6, NA, 36, 10, 59, 83, 11, 17, 2, 30,…
+$ wk11         &lt;dbl&gt; NA, NA, 51, 61, 64, 7, NA, 37, 9, 66, 92, 1, 17, 2, 36, N…
+$ wk12         &lt;dbl&gt; NA, NA, 51, 59, 70, 22, NA, 37, 8, 68, NA, 1, 3, 3, 37, N…
+$ wk13         &lt;dbl&gt; NA, NA, 47, 61, 75, 29, NA, 38, 6, 61, NA, 1, 3, 3, 39, N…
+$ wk14         &lt;dbl&gt; NA, NA, 44, 66, 76, 36, NA, 49, 1, 67, NA, 1, 7, 4, 49, N…
+$ wk15         &lt;dbl&gt; NA, NA, 38, 72, 78, 47, NA, 61, 2, 59, NA, 4, 10, 12, 57,…
+$ wk16         &lt;dbl&gt; NA, NA, 28, 76, 85, 67, NA, 63, 2, 63, NA, 8, 17, 11, 63,…
+$ wk17         &lt;dbl&gt; NA, NA, 22, 75, 92, 66, NA, 62, 2, 67, NA, 12, 25, 13, 65…
+$ wk18         &lt;dbl&gt; NA, NA, 18, 67, 96, 84, NA, 67, 2, 71, NA, 22, 29, 15, 68…
+$ wk19         &lt;dbl&gt; NA, NA, 18, 73, NA, 93, NA, 83, 3, 79, NA, 23, 29, 18, 79…
+$ wk20         &lt;dbl&gt; NA, NA, 14, 70, NA, 94, NA, 86, 4, 89, NA, 43, 40, 20, 86…
+$ wk21         &lt;dbl&gt; NA, NA, 12, NA, NA, NA, NA, NA, 5, NA, NA, 44, 43, 30, NA…
+$ wk22         &lt;dbl&gt; NA, NA, 7, NA, NA, NA, NA, NA, 5, NA, NA, NA, 50, 40, NA,…
+$ wk23         &lt;dbl&gt; NA, NA, 6, NA, NA, NA, NA, NA, 6, NA, NA, NA, NA, 39, NA,…
+$ wk24         &lt;dbl&gt; NA, NA, 6, NA, NA, NA, NA, NA, 9, NA, NA, NA, NA, 44, NA,…
+$ wk25         &lt;dbl&gt; NA, NA, 6, NA, NA, NA, NA, NA, 13, NA, NA, NA, NA, NA, NA…
+$ wk26         &lt;dbl&gt; NA, NA, 5, NA, NA, NA, NA, NA, 14, NA, NA, NA, NA, NA, NA…
+$ wk27         &lt;dbl&gt; NA, NA, 5, NA, NA, NA, NA, NA, 16, NA, NA, NA, NA, NA, NA…
+$ wk28         &lt;dbl&gt; NA, NA, 4, NA, NA, NA, NA, NA, 23, NA, NA, NA, NA, NA, NA…
+$ wk29         &lt;dbl&gt; NA, NA, 4, NA, NA, NA, NA, NA, 22, NA, NA, NA, NA, NA, NA…
+$ wk30         &lt;dbl&gt; NA, NA, 4, NA, NA, NA, NA, NA, 33, NA, NA, NA, NA, NA, NA…
+$ wk31         &lt;dbl&gt; NA, NA, 4, NA, NA, NA, NA, NA, 36, NA, NA, NA, NA, NA, NA…
+$ wk32         &lt;dbl&gt; NA, NA, 3, NA, NA, NA, NA, NA, 43, NA, NA, NA, NA, NA, NA…
+$ wk33         &lt;dbl&gt; NA, NA, 3, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ wk34         &lt;dbl&gt; NA, NA, 3, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ wk35         &lt;dbl&gt; NA, NA, 4, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ wk36         &lt;dbl&gt; NA, NA, 5, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ wk37         &lt;dbl&gt; NA, NA, 5, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ wk38         &lt;dbl&gt; NA, NA, 9, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ wk39         &lt;dbl&gt; NA, NA, 9, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ wk40         &lt;dbl&gt; NA, NA, 15, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk41         &lt;dbl&gt; NA, NA, 14, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk42         &lt;dbl&gt; NA, NA, 13, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk43         &lt;dbl&gt; NA, NA, 14, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk44         &lt;dbl&gt; NA, NA, 16, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk45         &lt;dbl&gt; NA, NA, 17, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk46         &lt;dbl&gt; NA, NA, 21, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk47         &lt;dbl&gt; NA, NA, 22, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk48         &lt;dbl&gt; NA, NA, 24, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk49         &lt;dbl&gt; NA, NA, 28, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk50         &lt;dbl&gt; NA, NA, 33, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk51         &lt;dbl&gt; NA, NA, 42, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk52         &lt;dbl&gt; NA, NA, 42, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk53         &lt;dbl&gt; NA, NA, 49, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk54         &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk55         &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk56         &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk57         &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk58         &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk59         &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk60         &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk61         &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk62         &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk63         &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk64         &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk65         &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk66         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk67         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk68         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk69         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk70         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk71         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk72         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk73         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk74         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk75         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ wk76         &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+```
+
+---
+# Many Tidyverse functions work with select helpers
+
+
+```r
+billboard %&gt;% 
+  pivot_longer(cols=starts_with("wk"),
+               names_to = "week",
+               names_prefix = "wk",
+               values_to = "rank"
+  ) %&gt;% head(10)
+```
+
+```
+# A tibble: 10 x 5
+   artist track                   date.entered week   rank
+   &lt;chr&gt;  &lt;chr&gt;                   &lt;date&gt;       &lt;chr&gt; &lt;dbl&gt;
+ 1 2 Pac  Baby Don't Cry (Keep... 2000-02-26   1        87
+ 2 2 Pac  Baby Don't Cry (Keep... 2000-02-26   2        82
+ 3 2 Pac  Baby Don't Cry (Keep... 2000-02-26   3        72
+ 4 2 Pac  Baby Don't Cry (Keep... 2000-02-26   4        77
+ 5 2 Pac  Baby Don't Cry (Keep... 2000-02-26   5        87
+ 6 2 Pac  Baby Don't Cry (Keep... 2000-02-26   6        94
+ 7 2 Pac  Baby Don't Cry (Keep... 2000-02-26   7        99
+ 8 2 Pac  Baby Don't Cry (Keep... 2000-02-26   8        NA
+ 9 2 Pac  Baby Don't Cry (Keep... 2000-02-26   9        NA
+10 2 Pac  Baby Don't Cry (Keep... 2000-02-26   10       NA
+```
+
+
+---
 
 ## You have 2 challenges today!
 

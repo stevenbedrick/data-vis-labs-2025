@@ -49,6 +49,12 @@ knitr::include_url("slides/02-slides.html")
 knitr::include_url("slides/03-slides.html")
 ```
 
+### 04: Tidying
+```{r}
+knitr::include_url("slides/04-slides.html")
+```
+
+
 - R for Data Science, Data Visualization Chapter: http://r4ds.had.co.nz/data-visualisation.html
 
 - Modern Dive, Data Visualization Chapter: http://moderndive.com/3-viz.html

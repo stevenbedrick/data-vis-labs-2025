@@ -47,6 +47,7 @@ From `dplyr`:
 - `tally`
 - `pull`
 - `top_n`
+- `case_when`
 
 ]
 
@@ -56,16 +57,11 @@ From `dplyr`:
 Let's add from `dplyr`:
 
 - `select`
-- `rename`
-- `recode`
-- `case_when`
 
 From `tidyr`:
 
-- `gather`
-- `separate`
-- `spread`
-- `unite`
+- `pivot_longer`
+- `pivot_wider`
 
 Plus 1 other package:
 
@@ -131,8 +127,24 @@ cakes_untidy %>%
 
 ```{r}
 cakes_tidy <- cakes_untidy %>% 
-  gather(bake_type, num_bakes, cake:pie_tart, 
-         factor_key = TRUE) %>% 
+  pivot_longer(cake:pie_tart, 
+               names_to="bake_type", 
+               values_to="num_bakes") %>% 
+  arrange(series)
+cakes_tidy
+```
+
+
+---
+
+# What about changing types?
+
+```{r}
+cakes_tidy <- cakes_untidy %>% 
+  pivot_longer(cake:pie_tart, 
+               names_to="bake_type", 
+               names_transform = list(bake_type=as.factor),
+               values_to="num_bakes") %>% 
   arrange(series)
 cakes_tidy
 ```
@@ -223,6 +235,110 @@ ggplot(cakes_by_series, aes(x = series, y = n,
 ---
 class: middle, inverse, center
 
+---
+
+# Selection Helpers
+
+`dplyr` gives us helpful syntax for selecting columns:
+
+```{r}
+cakes_raw %>% head(4)
+```
+
+What if we only want _some_ of the columns?
+
+---
+
+# `dplyr::select()` to the rescue
+
+```{r}
+cakes_raw %>% select(cake)
+```
+
+
+---
+
+# `dplyr::select()` to the rescue
+
+```{r}
+cakes_raw %>% select(cake, baker) %>% head(4)
+```
+
+But this is only the beginning!
+
+---
+
+# ... All columns _other_ than `cake`
+
+```{r}
+cakes_raw %>% select(!cake) %>% head(4)
+```
+
+
+---
+
+# Columns that _start_ with a string?
+
+```{r}
+cakes_raw %>% select(starts_with("c"))
+```
+
+---
+
+# The last column...
+
+```{r}
+cakes_raw %>% select(last_col()) %>% head(4)
+```
+
+
+---
+
+# A _range_ of contiguous columns
+
+```{r}
+cakes_raw %>% select(baker:cake) %>% head(4)
+```
+
+---
+
+# There are many other helpers:
+
+Matching columns by name:
+* `starts_with()`/`ends_with()`
+* `contains()`
+* `num_range()` (for matching numerical ranges: think columns named for years, etc.)
+
+See the `select` help page for more examples...
+
+---
+
+# Many Tidyverse functions work with select helpers
+
+```{r, echo=FALSE}
+#install.packages("billboard")
+library(billboard)
+```
+
+
+```{r}
+billboard %>% glimpse
+```
+
+---
+# Many Tidyverse functions work with select helpers
+
+```{r}
+billboard %>% 
+  pivot_longer(cols=starts_with("wk"),
+               names_to = "week",
+               names_prefix = "wk",
+               values_to = "rank"
+  ) %>% head(10)
+```
+
+
+---
 
 ## You have 2 challenges today!
 
