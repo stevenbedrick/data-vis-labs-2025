@@ -386,7 +386,7 @@ ggplot(sounds, aes(x = age,
   labs(x = "Age (months)", 
        y = "Proportion of Children Producing", 
        color = "sound") +
-  scale_fill_manual(values = c("cornflowerblue", 
+  scale_fill_manual(values = c("cornflowerblue",
                                "seagreen", "coral"))
 ```
 
