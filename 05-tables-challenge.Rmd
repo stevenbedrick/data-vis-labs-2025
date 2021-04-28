@@ -1,7 +1,7 @@
 ---
 title: 'Lab 05: Tables & Fonts Challenge'
 author: "Steven Bedrick"
-date: "4/29/2020"
+date: "4/28/2020"
 output:
   html_document:
     theme: flatly
@@ -10,7 +10,7 @@ output:
 
 # Tables
 
-Using the data set from the reference lab of PNW flights, choose three analytical questions from the menu below, and design a  table for each one that answers it in a publication-ready format (using your choice of table library), including appropriate column names, etc. Unless otherwise specified, all questions should be explored for flights departing from Portland. Alternatively, please feel free to come up with your own analyses!
+Using the data set from the reference lab of PNW flights, choose three analytical questions from the menu below, and design a  table for each one that answers it in a publication-ready format (using your choice of table library), including appropriate column names, titles, captions, etc. Unless otherwise specified, all questions should be explored for flights departing from Portland. Alternatively, please feel free to come up with your own analyses!
 
 - Which airlines had the _best_ and _worst_ track records of on-time departures in each month? Is it different between PDX and SEA?
 - Which airlines _improved_ the most in terms of on-time departures over time, and on which routes? Which airlines got worse?
@@ -25,8 +25,9 @@ Using the data set from the reference lab of PNW flights, choose three analytica
   - the `air_time` column will be useful here
 - Time of Day: are some destinations from PDX "morning" destinations vs "evening" ones? 
 
+_Note:_ For some of these questions, you may need to make editorial/analytical choices about what data to include, how to define metrics, etc. For example, it may be the case that improvement/decline in timeliness may be tricky to measure, as naïve approachces may be easily skewed by outliers or by variation in the data. You may choose to exclude certain low-volume carriers, or only include routes that are present throughout the entire dataset, or something else altogether. Make sure your table includes sufficient information to guide the interpretation and comprehension of your analysis.
 
-Make sure to keep in mind the design principles that we discussed on Monday regarding spacing, use of rules, row-vs-column orientation, alignment, etc., and provide a short description of your design and its motivation.
+Make sure to keep in mind the design principles that we discussed on Monday regarding spacing, use of rules, row-vs-column orientation, alignment, etc. In addition to the table itself, provide a short description of your design and its motivation.
 
 # Fonts
 

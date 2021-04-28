@@ -57,7 +57,7 @@ The workhorse for making tables in R Markdown documents is the `knitr` package's
 
 ## `kable` all tables everywhere
 
-Update the YAML of your document. For HTML:
+In order to tell RMarkdown to use `kable` to format all tabular output, update the YAML of your document. For HTML:
 
 ```{r eval = FALSE}
 ---
@@ -79,17 +79,23 @@ options(scipen = 1, digits = 2)
 
 ## `kable` table in a chunk
 
-For HTML:
+For HTML output:
 
 ```{r}
 head(mazes) %>% 
   kable(format = "html")
 ```
 
+Note that this is a bit rough-looking. We will use various features of `kable` to improve our output.
+
+For starters, we can add a caption:
+
 ```{r}
 head(mazes) %>% 
   kable(format = "html", digits = 2, caption = "A table produced by kable.")
 ```
+
+We can also manually specify human-readable column names:
 
 ```{r}
 my_maze_names <- c("Participant", "Age", "Verbal\nIQ", "Group", "Activity", "Content\nMaze", "Filler\nMaze", "Repetition", "Revision", "False\nStart", "Cued", "Not\nCued")
@@ -101,7 +107,7 @@ head(mazes) %>%
 
 ## Styled `kable` tables in a chunk
 
-Solution: apply some Bootstrap CSS styling using the `kableExtra` package.
+To improve the visual layout of the table, we can use the `kableExtra` package, which provides the `kable_styling()` function:
 
 ```{r}
 head(mazes) %>% 
@@ -110,8 +116,7 @@ head(mazes) %>%
   kable_styling()
 ```
 
-Lots of printing options:
-https://haozhu233.github.io/kableExtra/awesome_table_in_html.html
+There are lots of printing options: https://haozhu233.github.io/kableExtra/awesome_table_in_html.html
 
 ```{r}
 head(mazes) %>% 
@@ -124,6 +129,17 @@ head(mazes) %>%
 head(mazes) %>% 
   kable(format = "html", digits = 2, caption = "Over here!") %>% 
   kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+```
+
+## Controlling column appearance
+
+We can control the formatting of individual columns using the `column_spec()` function:
+
+```{r}
+head(mazes) %>% 
+  kable(format = "html", digits = 2, caption = "Over here!") %>% 
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left") %>% 
+  column_spec(4, width="3cm", background="lightblue", border_right=TRUE)
 ```
 
 ## `kable` + `kableExtra` + `formattable`
@@ -326,6 +342,8 @@ If you want to make tables that include R output (like output from functions lik
 
 This section covers (1). But, although there are some nice options for (2) within R Markdown via various packages, I am not dogmatic about doing *everything* in R Markdown, especially things like (2).
 
+Note that many of the tidying techniques we'll be using are ones we've seen before; you'll be using them in the challenge assignment this week on this dataset, so hopefully this walk-through will give you some ideas.
+
 ## `dplyr`
 
 We'll use the `pnwflights14` package to practice our `dplyr` skills. We need to download the package from github using `devtools`.
@@ -346,7 +364,7 @@ data("flights", package = "pnwflights14")
 
 ### `dplyr::select`
 
-Use select to specify which columns in a dataframe you'd like to keep **by name**. Heretofore, this was not possible in base R! In base R, this can only be achieved using numeric variable positions. But most of the time, you keep track of your variables by name (like `carrier`) rather than position (the 8th column).
+Recall that we use select to specify which columns in a dataframe you'd like to keep **by name**:
 
 ```{r use-dplyr-select}
 # keep these 2 cols
@@ -430,6 +448,7 @@ glimpse(flights3)
 
 ### `dplyr::filter`
 
+As we have previously seen, `filter` has many flexible uses:
 
 
 ```{r dplyr-filter}
@@ -515,12 +534,14 @@ head(from_pdx)
 
 ### `dplyr::mutate`
 
+`mutate` is used to transform existing variables or create new ones; here, we are using it to create an indicator variable that identifies flights that were entirely on-time.
+
 ```{r}
 # add total delay variable
 flights %>%
   mutate(tot_delay = dep_delay + arr_delay) %>%
   select(origin, dest, ends_with("delay"), everything()) %>% 
-  head(n=100)
+  head
 
 # flights that were delayed at departure had on time or early arrivals?
 arrivals <- flights %>%
@@ -537,11 +558,16 @@ arrivals %>%
 
 ### `dplyr::summarise` (or `dplyr::summarize`)
 
+We have seen `summarise` used to calculate summary statistics, like so:
 
 ```{r}
 flights %>%
   summarise(mean(dep_delay, na.rm = TRUE))
+```
 
+But this can get tedious when we want to compute several summary statistics, like so:
+
+```{r}
 # we can also name that variable, and summarise multiple variables
 flights %>%
   summarise(mean_delay = mean(dep_delay, na.rm = TRUE),
@@ -549,7 +575,8 @@ flights %>%
             median_delay = median(dep_delay, na.rm = TRUE))
 ```
 
-But this can get tedious with multiple summaries...
+`summarise_each` lets us automate this process a bit:
+
 
 ```{r}
 flights %>%
@@ -566,10 +593,10 @@ flights %>%
 flights %>%
   filter(!is.na(dep_delay)) %>%
   summarise_each(lst(mean, stdev = sd, median), dep_delay) %>%
-  gather(delay_stat, value)
+  pivot_longer(everything(), names_to="delay_stat", values_to="value")
 ```
 
-Using aggregating functions in `summarise`
+We can use aggregating functions in `summarise`
 
 ```{r}
 # how many unique destinations?
@@ -581,15 +608,27 @@ summary_table <- flights %>%
             tot_origins = n_distinct(origin))
 
 summary_table
+```
 
+The resulting table is a bit messy; we can reprocess using `pivot_longer` and `separate`:
+
+```{r}
 # chain with tidyr functions
 summary_table %>% 
-  gather(key, value) %>% 
+  pivot_longer(everything(), names_to="key", values_to="value") %>% 
   separate(key, into = c("tot", "entity")) %>% 
   select(-tot, total = value)
 ```
+Or we can do it in a single call to `pivot_longer()`:
 
-
+```{r}
+summary_table %>% 
+  pivot_longer(
+    everything(), # grab all columns
+    names_to="entity", # make a new column called "entity" to store the old column names
+    names_prefix="tot_", # remove the "tot_" prefix from the old column names
+    values_to="total") # put the values in a column called "total"
+```
 
 
 ## `tidyr`
@@ -615,22 +654,15 @@ head(df)
 glimpse(df)
 ```
 
-### `tidyr::gather`
+### `tidyr::pivot_longer`
 
-First, let's gather...
+First, let's pivot...
 ```{r}
 df_tidy <- df %>%
-  gather(key, value, q1_m1_w1:q2_m2_w2)
+  pivot_longer(q1_m1_w1:q2_m2_w2, names_to="key", values_to="value")
 head(df_tidy)
 ```
 
-
-Now let's gather using subtraction...
-```{r}
-df_tidy <- df %>%
-  gather(key, value, -id, -date)
-head(df_tidy)
-```
 
 ### `tidyr::separate`
 
@@ -656,7 +688,11 @@ stringr vs. tidyr separate by regular expression
 df_ext <- df_sep2 %>%
   extract(period, into = "month")
 head(df_ext)
+```
 
+We can see that, by default, it's taking the first alphanumeric chunk of the value, and `extract`ing it. We can specify much more complex patterns: 
+
+```{r}
 # this gives us same output as separate
 df_ext <- df_sep2 %>%
   extract(period, into = c("month", "week"), 
@@ -665,6 +701,8 @@ head(df_ext)
 ```
 
 ### `tidyr::unite`
+
+The `unite()` function lets us reverse the process:
 
 ```{r}
 # let's say we want to combine quarter and month with an underscore
@@ -683,25 +721,21 @@ head(df_uni)
 ```{r}
 # finally let's spread
 df_spread <- df_uni %>%
-  spread(week, value) # fill = NA is default arg
+  pivot_wider(names_from=week, values_from=value)  # fill = NA is default arg
 head(df_spread)
 ```
 
-### Gather multiple sets of columns (`gather() %>% separate() %>% spread()`)
+### Putting it all together (`pivot_longer() %>% separate() %>% pivot_wider()`)
 
-[Gather multiple sets of columns](http://stackoverflow.com/questions/25925556/gather-multiple-sets-of-columns-with-tidyr)
-
-All in one, if we had wanted to essentially "gather" three sets of columns (here, one for each week)...
+All in one, if we had wanted to end up with one row per month:
 
 ```{r}
-df_tidiest <- df %>%
-  gather(key, value, -id, -date) %>%
-  separate(key, into = c("quarter", "month", "week")) %>%
-  spread(week, value)
+df_tidiest <- df %>% 
+  pivot_longer(q1_m1_w1:q2_m2_w2, names_to="key", values_to="value") %>% 
+  separate(key, into = c("quarter", "month", "week")) %>% 
+  pivot_wider(names_from=week, values_from=value)
 head(df_tidiest)
 ```
-
-
 
 ## `broom`
 
@@ -798,81 +832,58 @@ Vignette: https://cran.r-project.org/web/packages/tableone/vignettes/introductio
 library(tableone)
 ```
 
+By default, its output is probably not what we want (though we can see hints of it down at the bottom)...
+
 ```{r}
 CreateTableOne(data = mazes)
 ```
 
+We need to tell it a bit about what we are looking for:
+
 ```{r}
-my_maze_names <- c("Participant", "Age", "Verbal\nIQ", "Group", "Activity", "Content\nMaze", "Filler\nMaze", "Repetition", "Revision", "False\nStart", "Cued", "Not\nCued")
+
 ## Vector of variables to summarize
 my_num_vars <- c("ca", "viq", "content", "filler", "rep", "rev", "fs", "cued", "not_cued")
+
 ## Vector of categorical variables that need transformation
 my_cat_vars <- c("dx", "activity")
+
 ## Create a TableOne object
 tab2 <- CreateTableOne(vars = my_num_vars, data = mazes, factorVars = my_cat_vars)
 print(tab2, showAllLevels = TRUE)
+```
 
+If we want the summary statistics to be computed on a per-strata basis, we can ask for that:
+
+```{r}
+# Another 
 tab3 <- CreateTableOne(vars = my_num_vars, strata = "dx" , data = mazes)
 tab3
 ```
-
-
-
 ## The `DT` package
 
+`DT` lets us produce interactive data tables for use in HTML reports that go far beyond `kable`'s capabilities.
+
 An excellent tutorial on DT is available at https://rstudio.github.io/DT/.
+
+"Out of the box", `datatable` gives us a very usable table:
 
 ```{r}
 datatable(mazes)
 ```
 
 
-## `xtable` (best for html)
-
-The xtable is a solution that delivers both HTML and LaTeX. The syntax is very similar to kable:
-
-```{r}
-output <- 
-  matrix(sprintf("Content %s", LETTERS[1:4]),
-         ncol=2, byrow=TRUE)
-colnames(output) <- 
-  c("1st header", "2nd header")
-rownames(output) <- 
-  c("1st row", "2nd row")
-
-print(xtable(output, 
-             caption="A test table", 
-             align = c("l", "c", "r")), 
-      type="html")
-```
-
-Note that to make it `knit`, you need to specify a chunk option: `results = 'asis'`
-```{r results = 'asis'}
-print(xtable(output, 
-             caption="A test table", 
-             align = c("l", "c", "r")), 
-      type="html")
-```
-
-
-
-```{r results = 'asis'}
-print(xtable(head(iris)), type = 'html', html.table.attributes = '')
-```
-
 
 ## `pixiedust` (best for PDF)
 
-Remember that `broom` package we used earlier? We can make this table better...
+`Pixiedust` is a ggplot-inspired table package that includes a lot of flexibility and works well for PDF-based output. We can illustrate its use by making a regression table.
+
+Remember that `broom` package we used earlier? Here is what the model parameters look like; this is obviously not what a publicatio-ready version of the table would look like:
 
 ```{r}
 tidy(fit)
 ```
-
-
-https://cran.r-project.org/web/packages/pixiedust/vignettes/pixiedust.html
-
-http://www.suchanutter.net/pixiedust/index.html
+Pixiedust gives us many controls for things like column names, row values, formatting for columns, etc.:
 
 ```{r}
 dust(fit) %>% 
@@ -884,6 +895,11 @@ dust(fit) %>%
   sprinkle(cols = "p.value", fn = quote(pvalString(value))) %>% 
   sprinkle_colnames("Term", "Coefficient", "SE", "T-statistic", "P-value")
 ```
+For more information about Pixiedust, consult:
+
+  - https://cran.r-project.org/web/packages/pixiedust/vignettes/pixiedust.html
+  - http://www.suchanutter.net/pixiedust/index.html
+
 
 # Finally, fonts!
 
@@ -896,7 +912,7 @@ library(extrafont)
 ```
 
 
-Note: Follow all installation instructions from `github`!
+Note: Make sure to follow _all_ installation instructions from `github`!
 
 You can access fonts on your local system in `ggplot` by using the `theme()` function to set the relevant properties of your figure.
 
@@ -907,6 +923,8 @@ demo_plt <- ggplot(iris, aes(Sepal.Length, Sepal.Width, color=Species)) +
   labs(x="Sepal Length (cm)", y="Sepal Width (cm)", title="Fisher's Irises") 
 demo_plt
 ```
+
+In `ggplot`, the `theme()` function lets us control the appearance of various aspects of the plot. There are [many, many properties](https://ggplot2.tidyverse.org/reference/theme.html) we can tweak; we will begin by setting the global `text` property for all text on the entire plot.
 
 Let's try changing that font a bit:
 
@@ -943,12 +961,32 @@ fonttable() %>% select(FamilyName) %>% distinct()
 ```
 
 
-You'll want to use the value in `FamilyName`.
+Long story short, you'll want to use the value in `FamilyName` to refer to your font of interest.
+
+What if we wanted to have a different font for the title? The `plot.title` property is where we would want to look:
+
+```{r}
+demo_plt + theme(
+  text=element_text(family="Palatino"),
+  plot.title=element_text(family="Zapfino")
+  )
+```
+
+We can follow this pattern to change anything we like about the text in different parts of the plot:
+
+```{r}
+demo_plt + theme(
+  text=element_text(family="Palatino"),
+  plot.title=element_text(family="Zapfino", size=8, color="blue"),
+  axis.title.x = element_text(family="Optima", size=24)
+  )
+```
+
 
 ## Installing new fonts
 
 This part is a bit beyond the scope of this class, but the upshot is that after you install new fonts in your computer, you should tell `extrafont` about it using the `font_import()` command.
 
-## Caveats
+### Caveats
 
 `extrafont` only knows about TrueType fonts (ones whose file ends in `.ttf`). If you have an OpenType font you want to use with R, your best bet probably involves the [`showtext` package](https://cran.rstudio.com/web/packages/showtext/vignettes/introduction.html).
