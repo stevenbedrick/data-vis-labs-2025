@@ -56,7 +56,7 @@ knitr::include_url("slides/04-slides.html")
 
 ### 06: Blogdown
 ```{r}
-knitr::include_url("slides/06-slides.html")
+knitr::include_url("slides/06-slides_blogdown.html")
 ```
 
 
