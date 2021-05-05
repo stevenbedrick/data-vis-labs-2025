@@ -589,7 +589,7 @@ flights %>%
   filter(!is.na(dep_delay)) %>%
   summarise_each(lst(mean, sd, median), dep_delay)
 
-# combine with gather, change names too
+# combine with pivot_longer, change names too
 flights %>%
   filter(!is.na(dep_delay)) %>%
   summarise_each(lst(mean, stdev = sd, median), dep_delay) %>%
@@ -716,7 +716,7 @@ df_uni <- df_sep %>%
 head(df_uni)
 ```
 
-### `tidyr::spread`
+### `tidyr::pivot_wider`
 
 ```{r}
 # finally let's spread
