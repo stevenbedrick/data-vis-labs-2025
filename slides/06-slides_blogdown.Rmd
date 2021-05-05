@@ -1,7 +1,7 @@
 ---
 title: "Lab 06: BMI 5/625"
 subtitle: "Making a Site in the Tada!-verse <br> Part One: Build a Site"
-author: "Alison Hill"
+author: "Alison Hill (with mods by Steven Bedrick)"
 output:
   xaringan::moon_reader:
     css: ["default", "css/ohsu.css", "css/ohsu-fonts.css"]
@@ -24,14 +24,6 @@ library(knitr)
 
 
 class: center, middle, inverse
-
-# First:
-
-## Slides with `xaringan`
-
---
-
-# NOW!:
 
 ## Sites with `blogdown`
 
