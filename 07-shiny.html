@@ -462,7 +462,7 @@ shinyApp(ui = ui, server = server)</code></pre>
   &lt;dbl&gt; &lt;chr&gt; &lt;int&gt;     &lt;dbl&gt;
 1  1955 M     37816 0.0181   
 2  1979 F       137 0.0000795</code></pre>
-<p>As you might be suspecting, Shiny has an <code>tableOutput()</code>/<code>renderTable()</code> pair:</p>
+<p>As you might imagine, Shiny has an <code>tableOutput()</code>/<code>renderTable()</code> pair:</p>
 <pre class='prettyprint'><code>library(shiny)<br>library(babynames)<br><br>ui <- fluidPage(<br>&nbsp;&nbsp;titlePanel("Name Measurement"),<br>&nbsp;&nbsp;textInput("name", label="What is your name?", value="Steven"),<br>&nbsp;&nbsp;plotOutput("namePlot"),<br>&nbsp;&nbsp;<span style="background-color:#ffff7f">tableOutput</span>("<span style="background-color:#ffff7f">nameTable</span>")<br>)<br><br>server <- function(input, output, session) {<br>&nbsp;&nbsp;&nbsp;&nbsp;output$namePlot <- renderPlot({<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;babynames %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter(name==input$name) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ggplot(mapping=aes(x=year, y=prop, color=sex)) + <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;geom_line() + <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ggtitle(paste0("Name Frequency: ", input$name)) <br>&nbsp;&nbsp;&nbsp;&nbsp;})<br>&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;output$<span style="background-color:#ffff7f">nameTable</span> <- <span style="background-color:#ffff7f">renderTable</span>({<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;babynames %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter(name==input$name) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;group_by(sex) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arrange(year) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;top_n(1, prop) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;select(-name) <br><br>&nbsp;&nbsp;&nbsp;&nbsp;})<br>}<br><br>shinyApp(ui = ui, server = server)</code></pre>
 <p><img src="07-shiny_files/figure-html/withTableToDisplay-1.png" width="672" /></p>
 <p>This is kind of basic-looking, but can be customized as much as one might wish, using any of the table formatting techniques we discussed earlier in the term. Notably, the <code>gt</code> package includes some special Shiny-related functions. Here’s a fancier version of the table from above:</p>
@@ -478,12 +478,12 @@ shinyApp(ui = ui, server = server)</code></pre>
     fmt_number(columns=c(prop), decimals=5) %&gt;% 
     tab_header(title=&quot;Year of Maximum Steven, by sex&quot;)  %&gt;% 
     tab_source_note(md(&quot;From `babynames` package&quot;))</code></pre>
-<div id="glljwnbouh" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="lldtcshiza" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#glljwnbouh .gt_table {
+#lldtcshiza .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -508,7 +508,7 @@ shinyApp(ui = ui, server = server)</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#glljwnbouh .gt_heading {
+#lldtcshiza .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -520,7 +520,7 @@ shinyApp(ui = ui, server = server)</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#glljwnbouh .gt_title {
+#lldtcshiza .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -530,7 +530,7 @@ shinyApp(ui = ui, server = server)</code></pre>
   border-bottom-width: 0;
 }
 
-#glljwnbouh .gt_subtitle {
+#lldtcshiza .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -540,13 +540,13 @@ shinyApp(ui = ui, server = server)</code></pre>
   border-top-width: 0;
 }
 
-#glljwnbouh .gt_bottom_border {
+#lldtcshiza .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#glljwnbouh .gt_col_headings {
+#lldtcshiza .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -561,7 +561,7 @@ shinyApp(ui = ui, server = server)</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#glljwnbouh .gt_col_heading {
+#lldtcshiza .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -581,7 +581,7 @@ shinyApp(ui = ui, server = server)</code></pre>
   overflow-x: hidden;
 }
 
-#glljwnbouh .gt_column_spanner_outer {
+#lldtcshiza .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -593,15 +593,15 @@ shinyApp(ui = ui, server = server)</code></pre>
   padding-right: 4px;
 }
 
-#glljwnbouh .gt_column_spanner_outer:first-child {
+#lldtcshiza .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#glljwnbouh .gt_column_spanner_outer:last-child {
+#lldtcshiza .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#glljwnbouh .gt_column_spanner {
+#lldtcshiza .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -613,7 +613,7 @@ shinyApp(ui = ui, server = server)</code></pre>
   width: 100%;
 }
 
-#glljwnbouh .gt_group_heading {
+#lldtcshiza .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -635,7 +635,7 @@ shinyApp(ui = ui, server = server)</code></pre>
   vertical-align: middle;
 }
 
-#glljwnbouh .gt_empty_group_heading {
+#lldtcshiza .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -650,15 +650,15 @@ shinyApp(ui = ui, server = server)</code></pre>
   vertical-align: middle;
 }
 
-#glljwnbouh .gt_from_md > :first-child {
+#lldtcshiza .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#glljwnbouh .gt_from_md > :last-child {
+#lldtcshiza .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#glljwnbouh .gt_row {
+#lldtcshiza .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -677,7 +677,7 @@ shinyApp(ui = ui, server = server)</code></pre>
   overflow-x: hidden;
 }
 
-#glljwnbouh .gt_stub {
+#lldtcshiza .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -689,7 +689,7 @@ shinyApp(ui = ui, server = server)</code></pre>
   padding-left: 12px;
 }
 
-#glljwnbouh .gt_summary_row {
+#lldtcshiza .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -699,7 +699,7 @@ shinyApp(ui = ui, server = server)</code></pre>
   padding-right: 5px;
 }
 
-#glljwnbouh .gt_first_summary_row {
+#lldtcshiza .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -709,7 +709,7 @@ shinyApp(ui = ui, server = server)</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#glljwnbouh .gt_grand_summary_row {
+#lldtcshiza .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -719,7 +719,7 @@ shinyApp(ui = ui, server = server)</code></pre>
   padding-right: 5px;
 }
 
-#glljwnbouh .gt_first_grand_summary_row {
+#lldtcshiza .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -729,11 +729,11 @@ shinyApp(ui = ui, server = server)</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#glljwnbouh .gt_striped {
+#lldtcshiza .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#glljwnbouh .gt_table_body {
+#lldtcshiza .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -742,7 +742,7 @@ shinyApp(ui = ui, server = server)</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#glljwnbouh .gt_footnotes {
+#lldtcshiza .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -756,13 +756,13 @@ shinyApp(ui = ui, server = server)</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#glljwnbouh .gt_footnote {
+#lldtcshiza .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#glljwnbouh .gt_sourcenotes {
+#lldtcshiza .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -776,41 +776,41 @@ shinyApp(ui = ui, server = server)</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#glljwnbouh .gt_sourcenote {
+#lldtcshiza .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#glljwnbouh .gt_left {
+#lldtcshiza .gt_left {
   text-align: left;
 }
 
-#glljwnbouh .gt_center {
+#lldtcshiza .gt_center {
   text-align: center;
 }
 
-#glljwnbouh .gt_right {
+#lldtcshiza .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#glljwnbouh .gt_font_normal {
+#lldtcshiza .gt_font_normal {
   font-weight: normal;
 }
 
-#glljwnbouh .gt_font_bold {
+#lldtcshiza .gt_font_bold {
   font-weight: bold;
 }
 
-#glljwnbouh .gt_font_italic {
+#lldtcshiza .gt_font_italic {
   font-style: italic;
 }
 
-#glljwnbouh .gt_super {
+#lldtcshiza .gt_super {
   font-size: 65%;
 }
 
-#glljwnbouh .gt_footnote_marks {
+#lldtcshiza .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 65%;
