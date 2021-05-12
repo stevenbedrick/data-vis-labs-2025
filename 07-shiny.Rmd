@@ -123,10 +123,16 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 ```
 
-There are a few new pieces here. We have added a `textOutput` element to our UI, and in the `server` function are calling `renderText()` to populate it:
+There are a few new pieces here:
+
+1. We have added a `textOutput` element to our UI;
+2. Assigned it the name `timestamp`, and
+3. In the `server` function, we are calling `renderText()` to populate it:
 
 ```{r, echo=FALSE}
-decorate("firstServerSide", eval=FALSE) %>% flair("textOutput") %>% flair("renderText")
+decorate("firstServerSide", eval=FALSE) %>% 
+  flair("textOutput") %>% 
+  flair("renderText")
 ```
 
 There are corresponding `*Output` elements (and `render*()` functions) for images, plots, tables, etc. We'll see examples of that as we move forward.
@@ -180,6 +186,7 @@ When we run this application, we should see something like this:
 
 ```{r, eval=TRUE, echo=FALSE}
 library(shiny)
+library(tidyverse)
 
 ui <- fluidPage(
   titlePanel("Name Measurement"),
@@ -193,7 +200,7 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 ```
 
-How might we _access_ the value of our `name` field from the back-end? To _set_ a value in the UI, we used the `output` variable; to _get_ a value _from_  the UI, we use the `input` variable:
+How might we _access_ the value of our `name` field from the back-end? To _set_ a value in the UI, we used the `output` variable; to _get_ a value _from_  the UI, we use the `input` variable. We will use `stringr`'s `str_length()` function, and send its output back via `renderText()`:
 
 ```{r firstInput, echo=FALSE, eval=FALSE}
 server <- function(input, output, session) {
@@ -210,6 +217,7 @@ Try adding this line to your server function, and run the application. You shoul
 
 ```{r, echo=FALSE}
 library(shiny)
+library(tidyverse)
 
 ui <- fluidPage(
   titlePanel("Name Measurement"),
@@ -230,6 +238,7 @@ What happens if you type your name in the text box?
 
 ```{r, echo=FALSE}
 library(shiny)
+library(tidyverse)
 
 ui <- fluidPage(
   titlePanel("Name Measurement"),
@@ -247,6 +256,8 @@ shinyApp(ui = ui, server = server)
 ```
 
 Note that the contents of the UI automatically updates when fields change. Shiny uses a _reactive_ programming model, in which elements on the page automatically react to one another.
+
+Another thing to note here is that we are providing `textInput` with a default value ("Steven", in this case). What happens if we _don't_ do this?
 
 ## Including a plot
 
@@ -309,7 +320,7 @@ babynames %>%
   select(-name) 
 ```
 
-As you might be suspecting, Shiny has an `tableOutput()`/`renderTable()` pair:
+As you might imagine, Shiny has an `tableOutput()`/`renderTable()` pair:
 
 ```{r withTable, eval=F, echo=F}
 library(shiny)
@@ -344,11 +355,46 @@ server <- function(input, output, session) {
 
 shinyApp(ui = ui, server = server)
 ```
+
 ```{r, echo=FALSE}
 decorate("withTable", eval=FALSE) %>% flair("tableOutput") %>% flair("renderTable") %>% flair("nameTable")
 ```
 
-This is kind of basic-looking, but can be customized as much as one might wish. Additionallty, the `gt` package includes some special Shiny-related functions. Here's a fancier version of the table from above:
+```{r withTableToDisplay, eval=T, echo=F}
+library(shiny)
+library(babynames)
+
+ui <- fluidPage(
+  titlePanel("Name Measurement"),
+  textInput("name", label="What is your name?", value="Steven"),
+  plotOutput("namePlot"),
+  tableOutput("nameTable")
+)
+
+server <- function(input, output, session) {
+    output$namePlot <- renderPlot({
+        babynames %>% 
+            filter(name==input$name) %>% 
+            ggplot(mapping=aes(x=year, y=prop, color=sex)) + 
+            geom_line() + 
+            ggtitle(paste0("Name Frequency: ", input$name)) 
+    })
+    
+    output$nameTable <- renderTable({
+      babynames %>% 
+        filter(name==input$name) %>% 
+        group_by(sex) %>% 
+        arrange(year) %>% 
+        top_n(1, prop) %>% 
+        select(-name) 
+
+    })
+}
+
+shinyApp(ui = ui, server = server)
+```
+
+This is kind of basic-looking, but can be customized as much as one might wish, using any of the table formatting techniques we discussed earlier in the term. Notably, the `gt` package includes some special Shiny-related functions. Here's a fancier version of the table from above:
 
 ```{r}
 babynames %>% 
@@ -360,7 +406,7 @@ babynames %>%
         arrange(sex) %>% 
   gt() %>% 
     cols_label(sex="Sex", year="Year", prop="Proportion") %>% 
-    fmt_number(columns=vars(prop), decimals=5) %>% 
+    fmt_number(columns=c(prop), decimals=5) %>% 
     tab_header(title="Year of Maximum Steven, by sex")  %>% 
     tab_source_note(md("From `babynames` package"))
 ```
@@ -398,7 +444,7 @@ server <- function(input, output, session) {
         arrange(sex) %>% 
     gt() %>% 
       cols_label(sex="Sex", year="Year", prop="Proportion") %>% 
-      fmt_number(columns=vars(prop), decimals=5) %>% 
+      fmt_number(columns=c(prop), decimals=5) %>% 
       tab_header(title=paste0("Year of Maximum ", input$name, ", by sex"))  %>% 
       tab_source_note(md("From `babynames` package"))
 
@@ -411,9 +457,64 @@ shinyApp(ui = ui, server = server)
 decorate("withGtTable", eval=FALSE) %>% flair("render_gt") %>% flair("gt_output") %>% flair("nameTable")
 ```
 
+# Organizing our app
+
+At this point, our `server` function is getting a bit unruly. A good practice is to _encapsulate_ various parts of the display into separate functions, like so:
+
+```{r encapsulatingFunctions, eval=F, echo=F}
+library(shiny)
+library(babynames)
+library(gt)
+
+makePlot <- function(nameToUse) {
+  babynames %>% 
+            filter(name==nameToUse) %>% 
+            ggplot(mapping=aes(x=year, y=prop, color=sex)) + 
+            geom_line() + 
+            ggtitle(paste0("Name Frequency: ", nameToUse))
+}
+
+makeTable <- function(nameToUse) {
+  babynames %>% 
+        filter(name==nameToUse) %>% 
+        group_by(sex) %>% 
+        arrange(year) %>% 
+        top_n(1, prop) %>% 
+        select(-name) %>% ungroup() %>% select(sex, year, prop) %>% 
+        arrange(sex) %>% 
+    gt() %>% 
+      cols_label(sex="Sex", year="Year", prop="Proportion") %>% 
+      fmt_number(columns=c(prop), decimals=5) %>% 
+      tab_header(title=paste0("Year of Maximum ", nameToUse, ", by sex"))  %>% 
+      tab_source_note(md("From `babynames` package"))
+}
+
+ui <- fluidPage(
+  titlePanel("Name Measurement"),
+  textInput("name", label="What is your name?", value="Steven"),
+  plotOutput("namePlot"),
+  gt_output("nameTable")
+)
+
+server <- function(input, output, session) {
+    output$namePlot <- renderPlot(makePlot(input$name))
+    
+    output$nameTable <- render_gt(makeTable(input$name))
+}
+
+shinyApp(ui = ui, server = server)
+```
+```{r, echo=FALSE}
+decorate("encapsulatingFunctions", eval=FALSE) %>% flair("makePlot") %>% flair("makeTable")
+```
+
+Note that the functions that make the plot and the table do not directly reference the `input` variable provided by Shiny- they would work just fine "one their own", independent of whether we  were using Shiny or not. Similarly, the parts of the application  responsible for handling input and output via Shiny (i.e., `textInput`, `renderPlot`) do not need to concern themselves with the details of what might be involved in generating the plots, etc.
+
+This is an example of _decoupling_ the different parts of our application from one another: the code to generate the tables and plots can be written and tested independently of the parts of the program that are , and as a result changes that we make to one part will (hopefully) not have any impact on the other parts. 
+
 # Customizing the layout
 
-Our page is starting to get a bit long; what if we wanted to arrange it so that the plot and the table were side-by-side? Shiny gives us many options for controlling the layout; the simplest is to arrange things in _rows_ and _columns_. Shiny uses the "Bootstrap" CSS library, which is built around a 12-column layout. We can use the `fluidRow()` and `column()` functions to set things up a bit differently:
+Visually, the layout of our page is starting to get a bit long; what if we wanted to arrange it so that the plot and the table were side-by-side? Shiny gives us many options for controlling the layout; the simplest is to arrange things in _rows_ and _columns_. Shiny uses the "Bootstrap" CSS library, which is built around a 12-column layout. We can use the `fluidRow()` and `column()` functions to set things up a bit differently:
 
 ```{r origCols, eval=F, echo=F}
 ui <- fluidPage(
@@ -429,7 +530,79 @@ ui <- fluidPage(
 decorate("origCols", eval=FALSE) %>% flair("fluidRow") %>% flair("column")
 ```
 
-Between `fluidRow()` and `column()`, you can put together pretty much any layout you might want, but a useful shortcut may be to use the `sidebarLayout()` function.
+Between `fluidRow()` and `column()`, you can put together pretty much any layout you might want, but a useful shortcut may be to use the `sidebarLayout()` function:
+
+```{r sidebarLayoutExample, eval=F, echo=F}
+ui <- fluidPage(
+  titlePanel("Name Plot"),
+  sidebarLayout(
+    sidebarPanel(
+      textInput("name", label="What is your name?", value="Steven")
+    ),
+    mainPanel(
+      plotOutput("namePlot"),
+      gt_output("nameTable")
+    )
+  )
+)
+```
+```{r, echo=FALSE}
+decorate("sidebarLayoutExample", eval=FALSE) %>% flair("sidebarLayout") %>% flair("sidebarPanel") %>% flair("mainPanel")
+```
+
+`sidebarLayout()` is one of several built-in layout helper functions in Shiny, and can be used to quickly build a more complex interface. Note that in the screenshot below, our "sidebar" is actually being placed _above_ the plot; in reality, pages using `sidebarLayout` will be _responsive_ to the window size in which they are viewed. In a narrower window (or on a phone) it will automatically reflow to a vertical layout.
+
+```{r, echo=F}
+library(shiny)
+library(babynames)
+library(gt)
+
+makePlot <- function(nameToUse) {
+  babynames %>% 
+    filter(name==nameToUse) %>% 
+    ggplot(mapping=aes(x=year, y=prop, color=sex)) + 
+    geom_line() + 
+    ggtitle(paste0("Name Frequency: ", nameToUse))
+}
+
+makeTable <- function(nameToUse) {
+  babynames %>% 
+    filter(name==nameToUse) %>% 
+    group_by(sex) %>% 
+    arrange(year) %>% 
+    top_n(1, prop) %>% 
+    select(-name) %>% ungroup() %>% select(sex, year, prop) %>% 
+    arrange(sex) %>% 
+    gt() %>% 
+    cols_label(sex="Sex", year="Year", prop="Proportion") %>% 
+    fmt_number(columns=c(prop), decimals=5) %>% 
+    tab_header(title=paste0("Year of Maximum ", nameToUse, ", by sex"))  %>% 
+    tab_source_note(md("From `babynames` package"))
+}
+
+
+ui <- fluidPage(
+  titlePanel("Name Plot"),
+  sidebarLayout(
+    sidebarPanel(
+      textInput("name", label="What is your name?", value="Steven")
+    ),
+    mainPanel(
+      plotOutput("namePlot"),
+      gt_output("nameTable")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  output$namePlot <- renderPlot(makePlot(input$name))
+  
+  output$nameTable <- render_gt(makeTable(input$name))
+}
+
+shinyApp(ui = ui, server = server)
+```
+
 
 # Other controls
 
@@ -458,7 +631,7 @@ Of course, there's nothing saying that this list has to be manually-entered! Ima
 topNames <- babynames %>% 
   filter(year==2017) %>% 
   group_by(sex) %>% 
-  arrange(prop) %>% top_n(5) %>% 
+  arrange(prop) %>% top_n(5) %>% # top 5 names from m/f, so 10 in total
   ungroup() %>% select(name)
 
 ui <- fluidPage(
@@ -493,7 +666,7 @@ ui <- fluidPage(
 decorate("firstReactiveUI") %>% flair("numericInput") %>% flair("c()")
 ```
 
-We've added a new input control, which will only allow numeric input that is within a certain range. We've also stopped manualy specifying our select box options. Now let's consider the server:
+We've added a new input control, which will only allow numeric input that is within a certain range. We've also stopped manually specifying our select box options, since we want the list to be dynamic: it should contain the top ten names _for the selected year_. We need to somehow connect the `numericInput` box that we have created to the `selectInput`. We'll do this in the server function:
 
 ```{r firstReactiveServer, eval=F, echo=F}
 server <- function(input, output, session) {
@@ -523,7 +696,9 @@ decorate("firstReactiveServer") %>% flair("reactive") %>% flair("observeEvent")
 
 There are two new things here. First is the use of the `reactive()` function, which sets up a new variable that Shiny will be in charge of. Any R variable that we want to either _use_ or _be used by_ a Shiny component must be wrapped in a `reactive()` call. In this case, our list of names depends on (i.e., is using) `input$year`, so we have to make it reactive.
 
-Once it's been made reactive, we can wire it up to other parts of the UI via `observeEvent()`. Code inside `observeEvent()` is run whenever the variable that it is connected to changes; in this case, `upateSelectInput()` will be run when a new year is entered. Pretty neat!
+**Try it out**: What happens if we _don't_ wrap our code here in `reactive()`?
+
+Once our list of common names has been made reactive, we can wire it up to other parts of the UI via `observeEvent()`. Code inside `observeEvent()` is run whenever the variable that it is connected to changes; in this case, `upateSelectInput()` will be run when a new year is entered. Pretty neat!
 
 # Deployment
 
@@ -531,4 +706,6 @@ See the [shinyapps.io user guide](https://docs.rstudio.com/shinyapps.io/) for in
 
 # Deliverable
 
-For this week, you will construct and deploy a Shiny app that will let the user explore Kieran Healy's [`covdata` package](https://kjhealy.github.io/covdata/) containing up-to-date covid19 data. There are a variety of interesting data sets in this package; feel free to draw inspiration from some of his blog posts (under "Articles" on the `covdata` home page). I strongly recommend referring to the [Shiny links on the syllabus](https://cslu.ohsu.edu/~bedricks/courses/bmi525/syllabus/7-seventh.html) for additional information and ideas!
+For this week, you will construct and deploy a Shiny app that will let the user explore Kieran Healy's [`covdata` package](https://kjhealy.github.io/covdata/) containing up-to-date COVID-19 data. There are a variety of interesting data sets in this package, including ; feel free to draw inspiration from some of his blog posts (under "Articles" on the `covdata` home page). Think about the kinds of visualization and analysis tasks that are well-supported by interactivity, and recall Shneiderman's mantra ("Overview first, zoom and filter, then details on demand") as you work.
+
+I strongly recommend referring to the [Shiny links on the syllabus](https://cslu.ohsu.edu/~bedricks/courses/bmi525/syllabus/7-seventh.html) for additional information and ideas!
