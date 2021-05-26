@@ -44,7 +44,7 @@ The data sets we will be using today are:
 
 In GIS-speak, these data sets are all _vector_ data sets, meaning that their contents are sets of x-y coordinates that define a _feature_ of some kind: a point (e.g., a specific grocery store), a line or set of line segments (e.g., a road), or a polygon (e.g., the outline of a neighborhood, or the shape of the bank of a river). Each feature can have some number of _attributes_; what those attributes are will depend on the specific data set.
 
-In contrast to _vector_ formats are _raster_ formats (sometimes called _bitmap_ formats). Raster files consist of a uniform grid of numbers (pixels), whose value contain whatever information is being captured. One example of a raster image is a digital photograph (perhaps taken from an airplane or satellite), but that is only one form. Many kinds of remote sensing devices capture raster images, and in fact there is no requirement that the values of each pixel correspond to a sensor value at all- it can be a logical (categorical) value, as well. 
+In contrast to _vector_ formats are _raster_ formats (sometimes called _bitmap_ formats). Raster files consist of a uniform grid of numbers (pixels), whose value contain whatever information is being captured. One example of a raster image is a digital photograph (perhaps taken from an airplane or satellite), in which the pixel's value corresponds to the intensity of light captured at that exact point in the sensor's field of view. but that is only one form. Many kinds of remote sensing devices capture raster images, and in fact there is no requirement that the values of each pixel correspond to a sensor value at all- it can be a logical (categorical) value, as well. 
 
 Crucially, raster images often contain multiple _channels_ (sometimes called _bands_), representing different sets of spatially-aligned data. One example of this would be a visible-spectrum true-color image, consisting of three bands (one for red, green, and blue). Another example might be bands for sensors capturing at different infrared wavelengths, or for different layers of data. 
 
@@ -80,7 +80,7 @@ These clearly refer to some sort of spatial coordinates, and by convention we ca
 The Portland Maps Open Data site allows us to download data in ESRI's format; let's take a look, using the `sf` package's `st_read` function:
 
 ```{r loading trees shapefile}
-trees_shape <- st_read("/Users/bedricks/Downloads/Parks_Tree_Inventory-shp")
+trees_shape <- st_read("data/lab08/Parks_Tree_Inventory-shp")
 ```
 
 Shapefiles, among other things, contain information about the coordinate reference system (CRS) that they are using:
@@ -122,11 +122,19 @@ glimpse(pdx_boundaries)
 
 We see that in addition to the geometry of the boundaries themselves, we also have other columns containing information about each neighborhood. Notably, one of these is called `MAPLABEL`- let's take that as a suggestion and try labeling our regions:
 
-```{r labeling regions}
+```{r labeling regions, eval=FALSE}
 pdx_boundaries %>% ggplot() + geom_sf() + geom_sf_label(aes(label=MAPLABEL))
 ```
 
-That's not especially useful, but perhaps if we zoom in a bit? We can modify our map's viewport by using `coord_sf`
+Note what is happening, here: `geom_sf_label()` provides a new `ggplot` aesthetic to map (`label`), and we are mapping it to a data value just like we would in any other geom.
+
+Let's look at the resulting map:
+
+```{r, echo=FALSE}
+pdx_boundaries %>% ggplot() + geom_sf() + geom_sf_label(aes(label=MAPLABEL))
+```
+
+This map on its own is not especially useful, due to all of the overlap, but perhaps if we zoom in a bit? We can modify our map's viewport by using `coord_sf`
 
 ```{r changing our viewport}
 pdx_boundaries %>% ggplot() + geom_sf() + 
@@ -137,7 +145,7 @@ pdx_boundaries %>% ggplot() + geom_sf() +
 
 ```
 
-Note that the coordinates here are in the same CRS as the original shapefile, but that the map itself is being projected into a geographic form. We'll see shortly how we might convert coordinates between the two CRSs. In the meantime, let's zoom in some more:
+Note that the units here are in the same CRS as the original shapefile, but that the map itself is being displayed with latitude/longitude tick marks. We'll see shortly how we might convert coordinates between the two CRSs, and also discuss what these numbers mean. In the meantime, let's zoom in some more (by specifying a narrower range):
 
 ```{r really zooming in}
 pdx_boundaries %>% ggplot() + geom_sf() + 
@@ -164,7 +172,7 @@ There's something missing from our map: the two lovely rivers that define our ci
 river_boundaries %>% glimpse()
 ```
 
-Unlike the `pdx_boundaries` data set, there's not a lot of additional information in this one beyond the geometry (the Portland Maps site has additional data sets including bathymetric and other data). What does this geometry look like?
+Unlike the `pdx_boundaries` data set, there's not a lot of additional information in this one beyond the raw geometry of the river (the Portland Maps site does ahve additional data sets available that include bathymetric and other data). What does this geometry look like?
 
 ```{r just river}
 river_boundaries %>% ggplot() + geom_sf()
@@ -211,22 +219,33 @@ pdx_boundaries %>% ggplot() +
 
 # Converting between geographic coordinates and projection coordinates
 
-The coordinates that the Portland Maps data are using are not in lat/long, but rather in meters. If you'd rather work with latitude and longitude, you can convert back and forth using `sf_project()`. The key is knowing how to tell it which CRS to use. 
+The coordinates that the Portland Maps data are using are not in lat/long, but rather in meters (as can be seen by closely examining the output of `st_crs`). If you'd rather work with latitude and longitude, or if you need to get them to line up with data from a different source, you can convert back and forth between CRSs using `sf_project()`. The key is knowing how to tell `sf_project()` which CRS to use. 
 
 One option would be to give it all of the extensive and detailed information about the projection and datum that is found using `st_crs()`; fortunately, there exists a standardized registry of spatial reference systems, the [EPSG Geodetic Parameter Dataset](https://en.wikipedia.org/wiki/EPSG_Geodetic_Parameter_Dataset), and we can look up CRS configurations using their EPSG reference number. 
 
-```{r projection example}
-p1 <- data.frame(lon=c(-122.65), lat=c(45.5))
- # 4326 is WGS84, 3857 is the one that Portland Maps is using
-# Interestingly, 3857 is basically WGS84, Mercator projected, and converted to use meters as units and easting/northing as its direction system (instead of lat/long)
-# It is used by a variety of mapping software packages, hence why it's what Portland Maps gives.
+Let's walk through how to use `sf_project()`. First, we'll need a point in WGS84-space:
 
+```{r}
+p1 <- data.frame(lon=c(-122.65), lat=c(45.5))
+```
+
+Next, we figure out the EPSG numbers for our source and target CRS. Our source CRS is WGS84, whose CRS number is 4326; let's say that we wanted to project it into the space that the Portland Maps data is using, so that we could overlay the points or do some sort of distance calculation. The Portland Maps dataset uses EPSG 3857, also known as "Web Mercator". This is basically WGS84, but it has been "quasi-Mercator projected," and converted to use meters as units and easting/northing as its direction system (instead of lat/long). 
+
+Web Mercator is used by a variety of mapping software packages (including Google Maps, etc.), hence why it's what Portland Maps gives. The motivation behind Web Mercator is that it depends on a spherical projection geometry (rather than the ellipsoidal projection used by vanilla Mercator). This makes it vastly simpler to work with from a computational perspective... at the cost of substantially decreased accuracy at northern latitudes, even by Mercator standards. 
+
+Now that we know which CRS systems are in play, we can use `sf_project()`:
+
+```{r projection example}
 sf_project(
   sf::st_crs(4326), # from: default datum used by geom_sf
   sf::st_crs(3857), # to: datum used by Portland Maps data
   p1
 )
+```
 
+The process works in reverse:
+
+```{r}
 p2 <- data.frame(lon=c(-13653336), lat=c(5700583))
 sf_project(
   sf::st_crs(3857), # from: datum used by Portland Maps data
@@ -337,7 +356,7 @@ pdx_boundaries %>% ggplot() +geom_sf() +
 
 Note that for exploring this part of the data, we may wish to bring in additional layers- perhaps the routes of I-5 and I-205. Other major arterial roads may also be important (Foster, Powell, and 82nd on the East side come to mind, as does Barbur and Capitol Highway on the West side). 
 
-With this many data points, it may begin to make sense to look not at discrete points but rather at a density or contour plot. Making this is a tiny bit more complicated, since the `X` and `Y` columns in this particular data set do not seem to be in the same coordinate system, and it is not entirely obvious from the Portland Maps site what system those columns are in. 😣 Fortunately, the points in the `$geometry` column are just fine, and we can extract those using `st_coordinates`:
+With this many data points, it may begin to make sense to look not at discrete points but rather at a density or contour plot. Making this is a tiny bit more complicated, since the `X` and `Y` columns in this particular data set do not seem to be in the same coordinate system, and it is not entirely obvious from the Portland Maps site what system those columns are in. 😣 Fortunately, the points in the `$geometry` column are just fine, and we can extract those using `st_coordinates` for use by `stat_density_2d`:
 
 ```{r grocery contour}
 pdx_boundaries %>% ggplot() +
