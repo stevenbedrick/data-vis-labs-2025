@@ -14,8 +14,8 @@
 
 <title>Lab 09: Tableau</title>
 
-<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -238,7 +238,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2021</a>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2022</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -249,7 +249,7 @@ $(document).ready(function () {
   <a href="data-vis-resources.html">Resources</a>
 </li>
 <li>
-  <a href="https://sakai.ohsu.edu/portal/site/CS-631-1-31934-Sp20">Sakai</a>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AJ-Sp22">Sakai</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -272,8 +272,15 @@ $(document).ready(function () {
 </div>
 
 
-<p>You’ll want to install Tableau Desktop; you can <a href="https://www.tableau.com/academic/students">sign up for a free student license</a>. You’ll also want to sign up for a <a href="https://www.tableau.com/products/cloud-bi?utm_medium=Product&amp;utm_source=Tableau+Desktop#form">“Tableau Online” account</a>, which you can try out for free.</p>
-<p>In this lab, we will get our feet wet with the <code>babynames</code> dataset, and then create a small COVID-19 dashboard in the spirit of <a href="https://public.tableau.com/profile/oregon.health.authority.covid.19#!/vizhome/OregonCOVID-19PublicHealthIndicators/COVID-19Burden">Oregon Health Authority’s dashboard</a>.</p>
+<p>You’ll want to install Tableau Desktop; you can <a
+href="https://www.tableau.com/academic/students">sign up for a free
+student license</a>. You’ll also want to sign up for a <a
+href="https://www.tableau.com/products/cloud-bi?utm_medium=Product&amp;utm_source=Tableau+Desktop#form">“Tableau
+Online” account</a>, which you can try out for free.</p>
+<p>In this lab, we will get our feet wet with the <code>babynames</code>
+dataset, and then create a small COVID-19 dashboard in the spirit of <a
+href="https://public.tableau.com/profile/oregon.health.authority.covid.19#!/vizhome/OregonCOVID-19PublicHealthIndicators/COVID-19Burden">Oregon
+Health Authority’s dashboard</a>.</p>
 <p>First, export two specific data sets from R:</p>
 <pre class="r"><code>library(babynames)
 library(covdata)
@@ -282,8 +289,15 @@ library(covdata)
 
 write.csv(nytcovcounty, file=...)
 write.csv(babynames, file=...)</code></pre>
-<p>Then, download <a href="https://www.census.gov/data/datasets/time-series/demo/popest/2010s-counties-total.html">county-level population data</a> from the Census Bureau. There are several data sets at this address; I used <a href="https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/counties/totals/co-est2019-alldata.csv">this one</a>.</p>
-<p>Finally, download the <a href="https://public.tableau.com/profile/oregon.health.authority.covid.19#!/vizhome/OregonHealthAuthorityCOVID-19DataDashboard/COVID-19EPICases?:display_count=y&amp;:toolbar=n&amp;:origin=viz_share_link&amp;:showShareOptions=false">daily case counts</a> from the OHA.</p>
+<p>Then, download <a
+href="https://www.census.gov/data/datasets/time-series/demo/popest/2010s-counties-total.html">county-level
+population data</a> from the Census Bureau. There are several data sets
+at this address; I used <a
+href="https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/counties/totals/co-est2019-alldata.csv">this
+one</a>.</p>
+<p>Finally, download the <a
+href="https://public.tableau.com/profile/oregon.health.authority.covid.19#!/vizhome/OregonHealthAuthorityCOVID-19DataDashboard/COVID-19EPICases?:display_count=y&amp;:toolbar=n&amp;:origin=viz_share_link&amp;:showShareOptions=false">daily
+case counts</a> from the OHA.</p>
 
 <p>
 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">

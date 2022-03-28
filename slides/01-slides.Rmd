@@ -147,10 +147,7 @@ my_names
 
 ## What to name objects?
 
-```{r}
-?make.names
-```
-
+--
 
 .pull-left[
 Object names cannot:
@@ -168,6 +165,28 @@ Object names must:
 - Start with a letter
 - Contain letters, numbers, `_` and `.`
 ]
+
+--
+
+```{r}
+?make.names
+```
+
+--
+
+```{r, eval=FALSE}
+some_things <- c("Kilroy was here", "2 legit to quit")
+make.names(some_things)
+```
+
+--
+
+```{r, echo=FALSE}
+some_things <- c("Kilroy was here", "2 legit to quit")
+make.names(some_things)
+```
+
+
 
 ---
 
@@ -214,7 +233,13 @@ class: center, middle, inverse
 
 ```{r}
 typeof(num_labs) # numeric
+```
+--
+```{r}
 typeof(mood) # "yippee" is a character
+```
+--
+```{r}
 typeof(mood == "yippee") # is mood equal to "yippee"- T or F?
 ```
 
@@ -245,6 +270,7 @@ typeof(my_things)
 
 ```{r missing-values-in-vector}
 num_labs <- c(num_labs, NA) 
+num_labs
 ```
 
 --
@@ -582,9 +608,23 @@ babynames %>% filter(sex == "M") %>% slice(1)
 ---
 class: inverse, middle, center
 
+.pull-left[
+
 ```{r out.width = '50%', echo = FALSE}
-knitr::include_graphics("https://www.rstudio.com/wp-content/uploads/2014/04/magrittr.png")
+knitr::include_graphics("https://magrittr.tidyverse.org/logo.png")
 ```
+]
+
+--
+
+.pull-right[
+
+```{r out.width = '50%', echo = FALSE}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/en/b/b9/MagrittePipe.jpg")
+```
+]
+
+--
 
 ## "dataframe first, dataframe once" 
 
@@ -646,34 +686,4 @@ http://moderndive.com/2-getting-started.html
 https://bookdown.org/chesterismay/rbasics/3-rstudiobasics.html
 
 https://github.com/rstudio/cheatsheets/blob/master/rstudio-ide.pdf
-
----
-
-## Install & load multiple R packages
-
-
-This can get to be a long list if we want to use a lot of new packages in our work session. We can make a function to load a *list* of packages, and install them if not already installed (more on functions later).
-
-```{r package-list-to-load}
-pkgs <- c("readr", "dplyr", "tidyr") # list packages needed
-```
-
---
-
-```{r}
-ipak <- function(pkg){
-    new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
-    if (length(new.pkg)) 
-        install.packages(new.pkg, dependencies = TRUE)
-    sapply(pkg, require, character.only = TRUE)
-}
-```
-
---
-
-```{r run-pkg-function, eval = FALSE}
-ipak(pkgs) # take function, and give it that list
-```
-
-Function from: https://gist.github.com/stevenworthington/3178163
 

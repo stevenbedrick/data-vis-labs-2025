@@ -14,8 +14,8 @@
 
 <title>Lab 04: Exploratory Data Analysis</title>
 
-<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -238,7 +238,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2021</a>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2022</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -249,7 +249,7 @@ $(document).ready(function () {
   <a href="data-vis-resources.html">Resources</a>
 </li>
 <li>
-  <a href="https://sakai.ohsu.edu/portal/site/CS-631-1-31934-Sp20">Sakai</a>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AJ-Sp22">Sakai</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -273,49 +273,94 @@ $(document).ready(function () {
 
 
 <div id="overview" class="section level1" number="1">
-<h1 number="1"><span class="header-section-number">1</span> Overview</h1>
-<p>Both challenges are due by noon via Sakai on Wednesday May 2. For the first tidy challenge, you’ll want to refer back to our <a href="slides/04-slides.html">slides</a>. For the second challenge, you’ll want to refer to the <a href="04-distributions.html">reference lab</a>.</p>
+<h1><span class="header-section-number">1</span> Overview</h1>
+<p>Both challenges are due by noon via Sakai on Wednesday May 2. For the
+first tidy challenge, you’ll want to refer back to our <a
+href="slides/04-slides.html">slides</a>. For the second challenge,
+you’ll want to refer to the <a href="04-distributions.html">reference
+lab</a>.</p>
 <ol style="list-style-type: decimal">
-<li><p>Tidy challenge: Tidy the “Lord of the Rings” data <em>(Advice: read in each csv file using <code>read_csv()</code>, then use <code>dplyr::bind_rows</code> to stack them together pre-tidying.)</em></p>
+<li><p>Tidy challenge: Tidy the “Lord of the Rings” data <em>(Advice:
+read in each csv file using <code>read_csv()</code>, then use
+<code>dplyr::bind_rows</code> to stack them together
+pre-tidying.)</em></p>
 <ul>
-<li><a href="http://bit.ly/cs631-lotr-fship" class="uri">http://bit.ly/cs631-lotr-fship</a></li>
-<li><a href="http://bit.ly/cs631-lotr-ttow" class="uri">http://bit.ly/cs631-lotr-ttow</a></li>
-<li><a href="http://bit.ly/cs631-lotr-rking" class="uri">http://bit.ly/cs631-lotr-rking</a></li>
-<li>The columns <code>male</code> and <code>female</code> are <em>number of words spoken</em></li>
+<li><a href="http://bit.ly/cs631-lotr-fship"
+class="uri">http://bit.ly/cs631-lotr-fship</a></li>
+<li><a href="http://bit.ly/cs631-lotr-ttow"
+class="uri">http://bit.ly/cs631-lotr-ttow</a></li>
+<li><a href="http://bit.ly/cs631-lotr-rking"
+class="uri">http://bit.ly/cs631-lotr-rking</a></li>
+<li>The columns <code>male</code> and <code>female</code> are <em>number
+of words spoken</em></li>
 </ul></li>
 <li><p>Gapminder challenge: Read on…</p></li>
 </ol>
-<p>Install and load the <code>gapminder</code> data package. This is the same data that was used in your Datacamp “Introduction to the Tidyverse” course!</p>
+<p>Install and load the <code>gapminder</code> data package. This is the
+same data that was used in your Datacamp “Introduction to the Tidyverse”
+course!</p>
 <pre class="r"><code>install.packages(&quot;gapminder&quot;)
 library(gapminder)
 ?gapminder</code></pre>
-<p>Pick at least <strong>two</strong> of the tasks below from the task menu and approach each with a table and figure.</p>
+<p>Pick at least <strong>two</strong> of the tasks below from the task
+menu and approach each with a table and figure.</p>
 <ul>
 <li><code>dplyr</code> should be your main data manipulation tool</li>
 <li><code>ggplot2</code> should be your main visualization tool</li>
 </ul>
-<p>Make observations about what your tables/figures show and about the process. If you want to do something comparable but different, i.e. swap one quantitative variable for another- go for it!</p>
-<p>You do not have to use <code>tidyr</code> or otherwise worry about reshaping your tables. Many of your tables may not be formatted perfectly in the report. Simply printing <code>dplyr</code> tabular output is fine. For all things, graphical and tabular, if you’re dissatisfied with a result, discuss the problem, what you tried to do to fix it, and move on.</p>
+<p>Make observations about what your tables/figures show and about the
+process. If you want to do something comparable but different, i.e. swap
+one quantitative variable for another- go for it!</p>
+<p>You do not have to use <code>tidyr</code> or otherwise worry about
+reshaping your tables. Many of your tables may not be formatted
+perfectly in the report. Simply printing <code>dplyr</code> tabular
+output is fine. For all things, graphical and tabular, if you’re
+dissatisfied with a result, discuss the problem, what you tried to do to
+fix it, and move on.</p>
 <div id="task-menu" class="section level3" number="1.0.1">
-<h3 number="1.0.1"><span class="header-section-number">1.0.1</span> Task menu</h3>
+<h3><span class="header-section-number">1.0.1</span> Task menu</h3>
 <ul>
-<li><p>Get the maximum and minimum of GDP per capita for all continents.</p></li>
-<li><p>Look at the spread of GDP per capita across countries within the continents.</p></li>
-<li><p>How does life expectancy vary across different continents?</p></li>
-<li><p>Report the absolute and/or relative abundance of countries with low life expectancy over time by continent: Compute some measure of worldwide life expectancy - you decide - a mean or median or some other quantile or perhaps your current age. Then determine how many countries on each continent have a life expectancy less than this benchmark, for each year.</p></li>
+<li><p>Get the maximum and minimum of GDP per capita for all
+continents.</p></li>
+<li><p>Look at the spread of GDP per capita across countries within the
+continents.</p></li>
+<li><p>How does life expectancy vary across different
+continents?</p></li>
+<li><p>Report the absolute and/or relative abundance of countries with
+low life expectancy over time by continent: Compute some measure of
+worldwide life expectancy - you decide - a mean or median or some other
+quantile or perhaps your current age. Then determine how many countries
+on each continent have a life expectancy less than this benchmark, for
+each year.</p></li>
 <li><p>Make up your own!</p></li>
 </ul>
 </div>
 <div id="companion-graphs" class="section level3" number="1.0.2">
-<h3 number="1.0.2"><span class="header-section-number">1.0.2</span> Companion graphs</h3>
-<p>For each table, make sure to include a relevant figure. One tip for starting is to draw out on paper what you want your x- and y-axis to be first and what your <code>geom</code> is; that is, start by drawing the plot you want <code>ggplot</code> to give you. Your figure does not have to depict every single number present in the table. Use your judgement. It just needs to complement the table, add context, and allow for some sanity checking.</p>
-<p>Notice which figures are easy/hard to make, and whether the visualization adds clarity, detracts from, or is completely redundant (and therefore probably unnecessary) with respect to the tabular display.</p>
+<h3><span class="header-section-number">1.0.2</span> Companion
+graphs</h3>
+<p>For each table, make sure to include a relevant figure. One tip for
+starting is to draw out on paper what you want your x- and y-axis to be
+first and what your <code>geom</code> is; that is, start by drawing the
+plot you want <code>ggplot</code> to give you. Your figure does not have
+to depict every single number present in the table. Use your judgement.
+It just needs to complement the table, add context, and allow for some
+sanity checking.</p>
+<p>Notice which figures are easy/hard to make, and whether the
+visualization adds clarity, detracts from, or is completely redundant
+(and therefore probably unnecessary) with respect to the tabular
+display.</p>
 </div>
 <div id="report-your-process" class="section level2" number="1.1">
-<h2 number="1.1"><span class="header-section-number">1.1</span> Report your process</h2>
-<p>You’re encouraged to reflect on what was hard/easy, problems you solved, helpful tutorials you read, etc.</p>
+<h2><span class="header-section-number">1.1</span> Report your
+process</h2>
+<p>You’re encouraged to reflect on what was hard/easy, problems you
+solved, helpful tutorials you read, etc.</p>
 <div class="jumbotron">
-<p>Gapminder EDA ideas from <a href="http://stat545.com/hw03_dplyr-and-more-ggplot2.html">Jenny Bryan</a>, author and creator of the <a href="https://cran.r-project.org/web/packages/gapminder/index.html">Gapminder package</a>.</p>
+<p>Gapminder EDA ideas from <a
+href="http://stat545.com/hw03_dplyr-and-more-ggplot2.html">Jenny
+Bryan</a>, author and creator of the <a
+href="https://cran.r-project.org/web/packages/gapminder/index.html">Gapminder
+package</a>.</p>
 </div>
 </div>
 </div>

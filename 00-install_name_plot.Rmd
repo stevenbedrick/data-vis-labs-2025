@@ -120,7 +120,7 @@ citation("ggplot2")
 
 # Make a name plot
 
-We can do everything we need to directly from the console, but it is often a lot easier to work in a more traditional editing environment. Open a new R script in RStudio by going to `File --> New File --> R Script`. For this first foray into R, I'll give you the code, so sit back and relax and feel free to copy and paste my code with some small tweaks. Don't worry if you're not familiar with the commands and functions that we are using; as the course goes on, you will learn more about all of these. 
+We can do everything we need to directly from the console, but it is often a lot easier to work in a more traditional editing environment. Open a new **R script** in RStudio by going to `File --> New File --> R Script`. For this first foray into R, I'll give you the code, so sit back and relax and feel free to copy and paste my code with some small tweaks. Don't worry if you're not familiar with the commands and functions that we are using; as the course goes on, you will learn more about all of these. 
 
 First load the packages:
 
@@ -130,13 +130,13 @@ library(dplyr) # for manipulating data
 library(ggplot2) # for plotting data
 ```
 
-In an RStudio editor window, you _run_ code by either clicking the buton marked "Run", or (more frequently) by using the "run line/selection" keyboard shortcut. On a Mac, this is "command+enter", on Windows or Linux it's "control+enter". If no text is selected, this will run the current line; if you've selected more than one line, your entire selection will be run. Depending on how your screen is laid out, you may see your selection (or line) be copied automatically down into the Console tab.
+In an RStudio editor window, you _run_ code by either clicking the button marked "Run", or (more frequently) by using the "run line/selection" keyboard shortcut. On a Mac, this is "command+enter", on Windows or Linux it's "control+enter". If no text is selected, this will run the current line; if you've selected more than one line, your entire selection will be run. Depending on how your screen is laid out, you may see your selection (or line) be copied automatically down into the Console tab.
 
 Begin by executing the three `library()` calls:
 
 ![](./images/lab_00/08_library_calls.png)
 
-Next, we'll follow [best practices for inspecting a freshly read dataset](https://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf). Also, see ["What I do when I get a new data set as told through tweets"](http://simplystatistics.org/2014/06/13/what-i-do-when-i-get-a-new-data-set-as-told-through-tweets/) for more ideas about exploring a new dataset. Here are some critical commands to obtain a high-level overview (HLO) of your freshly read dataset in R. We'll call it saying hello to your dataset:
+Next, we'll follow [best practices for inspecting a freshly read dataset](https://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf). Also, see ["What I do when I get a new data set as told through tweets"](http://simplystatistics.org/2014/06/13/what-i-do-when-i-get-a-new-data-set-as-told-through-tweets/) for more ideas about exploring a new dataset. Here are some critical commands to obtain a _high-level overview_ (HLO) of your freshly read dataset in R. We'll call it saying hello to your dataset:
 
 ```{r hlo_dataset}
 glimpse(babynames) # dplyr
@@ -145,6 +145,15 @@ tail(babynames) # same
 names(babynames) # same
 ```
 
+Here are some of the kinds of questions we might want to be asking about our dataset at this point:
+
+1. How many _rows_ (instances, cases, etc.) are there? Is the answer in the ballpark of what we expected?
+2. How many _columns_ (variables) are there? Are they the ones we were expecting? Are any _missing_?
+3. What are the _types_ of our columns? Are the ones we expected to be numeric actually numeric? What about dates?
+4. If we have _times_ in any of our columns, what time zone are they in? Is that what we expected?
+5. If we have _factors_ in our columns, what are their different levels? Are they levels what we expect? Are any missing?
+6. Are there _missing values_ (`NA`, etc.) in any of the columns? Is that what we were expecting?
+7. Looking at a few of the actual rows of data, do the right values appear to have ended up in the right columns?
 
 If you have done the above and produced sane-looking output, you are ready for the next bit. Use the code below to create a new data frame called `alison`.
 
@@ -154,9 +163,9 @@ alison <- babynames %>%
   filter(sex == "F") 
 ```
 
-* The first bit makes a new dataset called `alison` that is a copy of the `babynames` dataset- the `%>%` tells you we are doing some other stuff to it later.
+* The first line makes a new dataset called `alison`, whose "life" begins with a copy of the `babynames` dataset- the `%>%` tells you we are doing some other stuff to it later.
 
-* The second bit `filters` our `babynames` to only keep rows where the `name` is either Alison or Allison (read `|` as _"or"_.) 
+* The second line `filters` our `babynames` to only keep rows where the `name` is either "Alison" or "Allison" (read `|` as _"or"_.) 
 
 * The third bit applies another `filter` to keep only those where sex is female.
 
@@ -171,6 +180,8 @@ Let's check out the data.
 alison
 glimpse(alison)
 ```
+
+You should see that the structure of the `alison` dataframe looks just like that of the `babynames` dataframe, but with many fewer rows.
 
 Again, if you have sane-looking output here, move along to plotting the data!
 
@@ -233,4 +244,3 @@ Upload this exported plot to Sakai before Wednesday at noon.
 - https://www.rstudio.com/resources/cheatsheets/
 
 - https://rweekly.org
-

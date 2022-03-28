@@ -166,7 +166,7 @@ my_names
 ```
 
 ```
-# A tibble: 1,924,665 x 5
+# A tibble: 1,924,665 × 5
     year sex   name          n   prop
    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt;
  1  1880 F     Mary       7065 0.0724
@@ -187,11 +187,7 @@ my_names
 
 ## What to name objects?
 
-
-```r
-?make.names
-```
-
+--
 
 .pull-left[
 Object names cannot:
@@ -209,6 +205,30 @@ Object names must:
 - Start with a letter
 - Contain letters, numbers, `_` and `.`
 ]
+
+--
+
+
+```r
+?make.names
+```
+
+--
+
+
+```r
+some_things &lt;- c("Kilroy was here", "2 legit to quit")
+make.names(some_things)
+```
+
+--
+
+
+```
+[1] "Kilroy.was.here"  "X2.legit.to.quit"
+```
+
+
 
 ---
 
@@ -262,6 +282,7 @@ typeof(num_labs) # numeric
 ```
 [1] "integer"
 ```
+--
 
 ```r
 typeof(mood) # "yippee" is a character
@@ -270,6 +291,7 @@ typeof(mood) # "yippee" is a character
 ```
 [1] "character"
 ```
+--
 
 ```r
 typeof(mood == "yippee") # is mood equal to "yippee"- T or F?
@@ -319,6 +341,11 @@ typeof(my_things)
 
 ```r
 num_labs &lt;- c(num_labs, NA) 
+num_labs
+```
+
+```
+ [1]  1  2  3  4  5  6  7  8  9 10 NA
 ```
 
 --
@@ -532,9 +559,9 @@ babynames %&gt;% count(sex) # count is from dplyr
 ```
 
 ```
-# A tibble: 2 x 2
+# A tibble: 2 × 2
   sex         n
-* &lt;chr&gt;   &lt;int&gt;
+  &lt;chr&gt;   &lt;int&gt;
 1 F     1138293
 2 M      786372
 ```
@@ -701,7 +728,7 @@ slice(babynames, 1)
 ```
 
 ```
-# A tibble: 1 x 5
+# A tibble: 1 × 5
    year sex   name      n   prop
   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;  &lt;dbl&gt;
 1  1880 F     Mary   7065 0.0724
@@ -723,7 +750,7 @@ babynames %&gt;% slice(1)
 ```
 
 ```
-# A tibble: 1 x 5
+# A tibble: 1 × 5
    year sex   name      n   prop
   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;  &lt;dbl&gt;
 1  1880 F     Mary   7065 0.0724
@@ -746,7 +773,7 @@ slice(filter(babynames, sex == "M"), 1)
 ```
 
 ```
-# A tibble: 1 x 5
+# A tibble: 1 × 5
    year sex   name      n   prop
   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;  &lt;dbl&gt;
 1  1880 M     John   9655 0.0815
@@ -764,7 +791,7 @@ babynames %&gt;% filter(sex == "M") %&gt;% slice(1)
 ```
 
 ```
-# A tibble: 1 x 5
+# A tibble: 1 × 5
    year sex   name      n   prop
   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;  &lt;dbl&gt;
 1  1880 M     John   9655 0.0815
@@ -774,7 +801,19 @@ babynames %&gt;% filter(sex == "M") %&gt;% slice(1)
 ---
 class: inverse, middle, center
 
-&lt;img src="https://www.rstudio.com/wp-content/uploads/2014/04/magrittr.png" width="50%" style="display: block; margin: auto;" /&gt;
+.pull-left[
+
+&lt;img src="https://magrittr.tidyverse.org/logo.png" width="50%" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+.pull-right[
+
+&lt;img src="https://upload.wikimedia.org/wikipedia/en/b/b9/MagrittePipe.jpg" width="50%" style="display: block; margin: auto;" /&gt;
+]
+
+--
 
 ## "dataframe first, dataframe once" 
 
@@ -787,7 +826,7 @@ babynames %&gt;% filter(sex == "M") %&gt;% slice(1)
 ```
 
 ```
-# A tibble: 1 x 5
+# A tibble: 1 × 5
    year sex   name      n   prop
   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;  &lt;dbl&gt;
 1  1880 M     John   9655 0.0815
@@ -805,7 +844,7 @@ babynames %&gt;% filter(.data = ., sex == "M") %&gt;% slice(.data = ., 1)
 ```
 
 ```
-# A tibble: 1 x 5
+# A tibble: 1 × 5
    year sex   name      n   prop
   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;  &lt;dbl&gt;
 1  1880 M     John   9655 0.0815
@@ -823,7 +862,7 @@ babynames %&gt;% filter(., sex == "M") %&gt;% slice(., 1)
 ```
 
 ```
-# A tibble: 1 x 5
+# A tibble: 1 × 5
    year sex   name      n   prop
   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt;  &lt;dbl&gt;
 1  1880 M     John   9655 0.0815
@@ -860,39 +899,6 @@ http://moderndive.com/2-getting-started.html
 https://bookdown.org/chesterismay/rbasics/3-rstudiobasics.html
 
 https://github.com/rstudio/cheatsheets/blob/master/rstudio-ide.pdf
-
----
-
-## Install &amp; load multiple R packages
-
-
-This can get to be a long list if we want to use a lot of new packages in our work session. We can make a function to load a *list* of packages, and install them if not already installed (more on functions later).
-
-
-```r
-pkgs &lt;- c("readr", "dplyr", "tidyr") # list packages needed
-```
-
---
-
-
-```r
-ipak &lt;- function(pkg){
-    new.pkg &lt;- pkg[!(pkg %in% installed.packages()[, "Package"])]
-    if (length(new.pkg)) 
-        install.packages(new.pkg, dependencies = TRUE)
-    sapply(pkg, require, character.only = TRUE)
-}
-```
-
---
-
-
-```r
-ipak(pkgs) # take function, and give it that list
-```
-
-Function from: https://gist.github.com/stevenworthington/3178163
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

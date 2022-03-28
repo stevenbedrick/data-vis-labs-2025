@@ -14,8 +14,8 @@
 
 <title>Lab 02a: MOMA cleaning</title>
 
-<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -238,7 +238,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2021</a>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2022</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -249,7 +249,7 @@ $(document).ready(function () {
   <a href="data-vis-resources.html">Resources</a>
 </li>
 <li>
-  <a href="https://sakai.ohsu.edu/portal/site/CS-631-1-31934-Sp20">Sakai</a>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AJ-Sp22">Sakai</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -289,18 +289,21 @@ moma &lt;- read_csv(here::here(&quot;data&quot;, &quot;artworks.csv&quot;),
                  )) %&gt;% 
   clean_names()
 problems(moma)</code></pre>
-<pre><code># A tibble: 8 x 5
-     row col       expected    actual file                                      
-   &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;       &lt;chr&gt;  &lt;chr&gt;                                     
-1 103824 DateAcqu… &quot;date like… 1998-… &#39;/Users/bedricks/Dropbox/Work/Teaching/Sp…
-2 128673 DateAcqu… &quot;date like… 1977-… &#39;/Users/bedricks/Dropbox/Work/Teaching/Sp…
-3 131406 DateAcqu… &quot;date like… 1998-… &#39;/Users/bedricks/Dropbox/Work/Teaching/Sp…
-4 131785 DateAcqu… &quot;date like… 1975-… &#39;/Users/bedricks/Dropbox/Work/Teaching/Sp…
-5 132165 DateAcqu… &quot;date like… 1998-… &#39;/Users/bedricks/Dropbox/Work/Teaching/Sp…
-6 132166 DateAcqu… &quot;date like… 1998-… &#39;/Users/bedricks/Dropbox/Work/Teaching/Sp…
-7 132167 DateAcqu… &quot;date like… 1995   &#39;/Users/bedricks/Dropbox/Work/Teaching/Sp…
-8 132169 DateAcqu… &quot;date like… 1998-… &#39;/Users/bedricks/Dropbox/Work/Teaching/Sp…</code></pre>
-<p>Basic cleaning with <code>stringr</code> of <code>gender</code> variable, which refers to the gender of the artist (a <code>()</code> is used a placeholder for “various artists”)</p>
+<pre><code># A tibble: 9 × 5
+     row   col expected        actual     file                                  
+   &lt;int&gt; &lt;int&gt; &lt;chr&gt;           &lt;chr&gt;      &lt;chr&gt;                                 
+1  20736    19 29 columns      19 columns /Users/bedricks/Dropbox/Work/Teaching…
+2 103825    16 date in ISO8601 1998-04    /Users/bedricks/Dropbox/Work/Teaching…
+3 128674    16 date in ISO8601 1977-08    /Users/bedricks/Dropbox/Work/Teaching…
+4 131407    16 date in ISO8601 1998-04    /Users/bedricks/Dropbox/Work/Teaching…
+5 131786    16 date in ISO8601 1975-01    /Users/bedricks/Dropbox/Work/Teaching…
+6 132166    16 date in ISO8601 1998-04    /Users/bedricks/Dropbox/Work/Teaching…
+7 132167    16 date in ISO8601 1998-04    /Users/bedricks/Dropbox/Work/Teaching…
+8 132168    16 date in ISO8601 1995       /Users/bedricks/Dropbox/Work/Teaching…
+9 132170    16 date in ISO8601 1998-04    /Users/bedricks/Dropbox/Work/Teaching…</code></pre>
+<p>Basic cleaning with <code>stringr</code> of <code>gender</code>
+variable, which refers to the gender of the artist (a <code>()</code> is
+used a placeholder for “various artists”)</p>
 <pre class="r"><code>library(stringr)
 moma &lt;- moma %&gt;% 
   mutate(gender = str_replace_all(gender, fixed(&quot;(female)&quot;, 
@@ -315,17 +318,24 @@ moma &lt;- moma %&gt;%
            num_artists == 1 &amp; n_female_artists == 1 ~ &quot;Female&quot;,
            num_artists == 1 &amp; n_male_artists == 1 ~ &quot;Male&quot;
          ))</code></pre>
-<p>Let’s also do some detecting of strings in the <code>credit_line</code> variable.</p>
+<p>Let’s also do some detecting of strings in the
+<code>credit_line</code> variable.</p>
 <pre class="r"><code>moma &lt;- moma %&gt;% 
   mutate(purchase = str_detect(credit_line, fixed(&quot;purchase&quot;, ignore_case = TRUE)),
          gift = str_detect(credit_line, fixed(&quot;gift&quot;, ignore_case = TRUE)),
          exchange = str_detect(credit_line, fixed(&quot;exchange&quot;, ignore_case = TRUE)))</code></pre>
-<p>According to <a href="https://www.moma.org/momaorg/shared/pdfs/docs/explore/CollectionsMgmtPolicyMoMA_Oct10.pdf">MOMA</a>: Acquisitions to the Collection may be made by purchase, gift, fractional interest gift, bequest, or exchange.</p>
+<p>According to <a
+href="https://www.moma.org/momaorg/shared/pdfs/docs/explore/CollectionsMgmtPolicyMoMA_Oct10.pdf">MOMA</a>:
+Acquisitions to the Collection may be made by purchase, gift, fractional
+interest gift, bequest, or exchange.</p>
 <p>Let’s clean up some dates:</p>
 <ul>
-<li>We’ll clean up year acquired with <code>lubridate</code> to pull out the <code>year</code>.</li>
-<li>We’ll rename two date variables that are the artist birth/death year, but aren’t labelled clearly.</li>
-<li>We’ll do a very rough estimate of the date each piece was created, using <code>stringr::str_extract()</code></li>
+<li>We’ll clean up year acquired with <code>lubridate</code> to pull out
+the <code>year</code>.</li>
+<li>We’ll rename two date variables that are the artist birth/death
+year, but aren’t labelled clearly.</li>
+<li>We’ll do a very rough estimate of the date each piece was created,
+using <code>stringr::str_extract()</code></li>
 </ul>
 <pre class="r"><code>library(lubridate)
 moma &lt;- moma %&gt;% 
@@ -338,7 +348,7 @@ moma &lt;- moma %&gt;%
 <pre class="r"><code>moma %&gt;% 
   distinct(classification) %&gt;% 
   print(n = Inf)</code></pre>
-<pre><code># A tibble: 31 x 1
+<pre><code># A tibble: 31 × 1
    classification                
    &lt;chr&gt;                         
  1 Architecture                  
@@ -375,7 +385,9 @@ moma &lt;- moma %&gt;%
 <p>We want to focus on standard rectangular paintings:</p>
 <ul>
 <li>Filter based on classification</li>
-<li>Drop all pieces of art that have either missing (<code>NA</code>) height or width measurements, or who have <code>0</code> for either height or width.</li>
+<li>Drop all pieces of art that have either missing (<code>NA</code>)
+height or width measurements, or who have <code>0</code> for either
+height or width.</li>
 </ul>
 <pre class="r"><code>library(tidyr)
 moma &lt;- moma %&gt;% 

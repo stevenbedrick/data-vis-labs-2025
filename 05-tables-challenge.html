@@ -14,8 +14,8 @@
 
 <title>Lab 05: Tables &amp; Fonts Challenge</title>
 
-<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -238,7 +238,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2021</a>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2022</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -249,7 +249,7 @@ $(document).ready(function () {
   <a href="data-vis-resources.html">Resources</a>
 </li>
 <li>
-  <a href="https://sakai.ohsu.edu/portal/site/CS-631-1-31934-Sp20">Sakai</a>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AJ-Sp22">Sakai</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -273,34 +273,68 @@ $(document).ready(function () {
 
 
 <div id="tables" class="section level1" number="1">
-<h1 number="1"><span class="header-section-number">1</span> Tables</h1>
-<p>Using the data set from the reference lab of PNW flights, choose three analytical questions from the menu below, and design a table for each one that answers it in a publication-ready format (using your choice of table library), including appropriate column names, titles, captions, etc. Unless otherwise specified, all questions should be explored for flights departing from Portland. Alternatively, please feel free to come up with your own analyses!</p>
+<h1><span class="header-section-number">1</span> Tables</h1>
+<p>Using the data set from the reference lab of PNW flights, choose
+three analytical questions from the menu below, and design a table for
+each one that answers it in a publication-ready format (using your
+choice of table library), including appropriate column names, titles,
+captions, etc. Unless otherwise specified, all questions should be
+explored for flights departing from Portland. Alternatively, please feel
+free to come up with your own analyses!</p>
 <ul>
-<li>Which airlines had the <em>best</em> and <em>worst</em> track records of on-time departures in each month? Is it different between PDX and SEA?</li>
-<li>Which airlines <em>improved</em> the most in terms of on-time departures over time, and on which routes? Which airlines got worse?</li>
-<li>What cities have the most service from Portland (defined however you like, but do make sure to define it clearly!), and which have the worst?</li>
+<li>Which airlines had the <em>best</em> and <em>worst</em> track
+records of on-time departures in each month? Is it different between PDX
+and SEA?</li>
+<li>Which airlines <em>improved</em> the most in terms of on-time
+departures over time, and on which routes? Which airlines got
+worse?</li>
+<li>What cities have the most service from Portland (defined however you
+like, but do make sure to define it clearly!), and which have the
+worst?</li>
 <li>By month, what new routes were added or removed?
 <ul>
-<li><em>Hint</em>: I haven’t tried this one, but dplyr’s <code>lead</code> and <code>lag</code> commands could be helpful</li>
+<li><em>Hint</em>: I haven’t tried this one, but dplyr’s
+<code>lead</code> and <code>lag</code> commands could be helpful</li>
 </ul></li>
-<li>Finding busy aircraft (identified by <code>tailnum</code>), with “business” defined as:
+<li>Finding busy aircraft (identified by <code>tailnum</code>), with
+“business” defined as:
 <ul>
-<li>Which specific aircraft (<code>tailnum</code>) are seen most often, for whom do they fly, and on what routes?</li>
-<li>Which specific aircraft accumulate the most <em>flight time</em>?</li>
+<li>Which specific aircraft (<code>tailnum</code>) are seen most often,
+for whom do they fly, and on what routes?</li>
+<li>Which specific aircraft accumulate the most <em>flight
+time</em>?</li>
 <li>Which specific aircraft log the most <em>distance</em>?</li>
 </ul></li>
-<li>Descriptive statistics comparing several characteristics of long-haul vs. short-haul routes (defined however you like, but you must be clear about your definition)
+<li>Descriptive statistics comparing several characteristics of
+long-haul vs. short-haul routes (defined however you like, but you must
+be clear about your definition)
 <ul>
 <li>the <code>air_time</code> column will be useful here</li>
 </ul></li>
-<li>Time of Day: are some destinations from PDX “morning” destinations vs “evening” ones?</li>
+<li>Time of Day: are some destinations from PDX “morning” destinations
+vs “evening” ones?</li>
 </ul>
-<p><em>Note:</em> For some of these questions, you may need to make editorial/analytical choices about what data to include, how to define metrics, etc. For example, it may be the case that improvement/decline in timeliness may be tricky to measure, as naïve approachces may be easily skewed by outliers or by variation in the data. You may choose to exclude certain low-volume carriers, or only include routes that are present throughout the entire dataset, or something else altogether. Make sure your table includes sufficient information to guide the interpretation and comprehension of your analysis.</p>
-<p>Make sure to keep in mind the design principles that we discussed on Monday regarding spacing, use of rules, row-vs-column orientation, alignment, etc. In addition to the table itself, provide a short description of your design and its motivation.</p>
+<p><em>Note:</em> For some of these questions, you may need to make
+editorial/analytical choices about what data to include, how to define
+metrics, etc. For example, it may be the case that improvement/decline
+in timeliness may be tricky to measure, as naïve approachces may be
+easily skewed by outliers or by variation in the data. You may choose to
+exclude certain low-volume carriers, or only include routes that are
+present throughout the entire dataset, or something else altogether.
+Make sure your table includes sufficient information to guide the
+interpretation and comprehension of your analysis.</p>
+<p>Make sure to keep in mind the design principles that we discussed on
+Monday regarding spacing, use of rules, row-vs-column orientation,
+alignment, etc. In addition to the table itself, provide a short
+description of your design and its motivation.</p>
 </div>
 <div id="fonts" class="section level1" number="2">
-<h1 number="2"><span class="header-section-number">2</span> Fonts</h1>
-<p>Spend some time on <a href="https://fonts.google.com">Google Fonts</a> (or a different font repository) and pick out a serif, sanserif, and display font that “speaks to you”. Write a sentence or two about each one, including what sort of scenario you think it would work well for.</p>
+<h1><span class="header-section-number">2</span> Fonts</h1>
+<p>Spend some time on <a href="https://fonts.google.com">Google
+Fonts</a> (or a different font repository) and pick out a serif,
+sanserif, and display font that “speaks to you”. Write a sentence or two
+about each one, including what sort of scenario you think it would work
+well for.</p>
 </div>
 
 <p>
