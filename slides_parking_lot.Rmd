@@ -5,6 +5,8 @@ date: "3/30/2020"
 output: html_document
 ---
 
+<!-- note that in 2021 we used slides 2, 3, 4, and 6 -->
+
 This file is meant to store links to slides until we're ready for them on the main page.
 
 ```{r setup, include = FALSE, cache = FALSE}
