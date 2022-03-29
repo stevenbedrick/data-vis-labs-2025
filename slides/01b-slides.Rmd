@@ -20,7 +20,8 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
   fig.align = "center", out.width = "80%", cache = FALSE)
 library(tidyverse)
 library(palmerpenguins)
-
+library(flair)
+# devtools::install_github("hadley/emo")
 ```
 
 ## Introducing `ggplot`
@@ -61,7 +62,7 @@ iris %>% ggplot(aes(x=Sepal.Length, y=Sepal.Width, color=Species)) + geom_point(
 
 --
 
-* `r emo::ji("palm")`
+* `r emo::ji("person facepalming")`
 
 ---
 
@@ -77,7 +78,7 @@ glimpse(penguins)
 
 --
 
-* _Aesthetics_ map data to visual properties of the plot
+* _Aesthetics_ map dimensions of our data to visual properties of the plot
 
 --
 
@@ -132,9 +133,9 @@ class: center, middle
 ## Our first plot
 
 ```{r, eval=FALSE}
-penguins %>% ggplot(
-  mapping=aes(x=bill_length_mm, y=bill_depth_mm)
-  ) + geom_point()
+penguins %>% ggplot(mapping=aes(
+  x=bill_length_mm, y=bill_depth_mm
+)) + geom_point()
 ```
 --
 ```{r, echo=FALSE, fig.height=4}
@@ -148,11 +149,12 @@ penguins %>% ggplot(
 ## What about color?
 
 
-```{r, eval=FALSE}
-penguins %>% ggplot(
-  mapping=aes(x=bill_length_mm, y=bill_depth_mm, color=species)
-  ) + geom_point()
+```{r introducing_color, eval=FALSE}
+penguins %>% ggplot(mapping=aes(
+    x=bill_length_mm, y=bill_depth_mm, color=species
+  )) + geom_point()
 ```
+
 --
 ```{r, echo=FALSE, fig.height=4}
 penguins %>% ggplot(
@@ -165,9 +167,9 @@ penguins %>% ggplot(
 ## Want a different plot? Try a different geom
 
 ```{r, fig.height=4}
-penguins %>% ggplot(
-  mapping=aes(x=bill_length_mm, fill=species)
-  ) + geom_histogram()
+penguins %>% ggplot(mapping=aes(
+  x=bill_length_mm, fill=species
+)) + geom_histogram()
 ```
 
 ---
@@ -191,4 +193,28 @@ penguins %>% ggplot(
   labs(x="Bill Length (mm)", y="Frequency") +
   ggtitle("Bill Length, by species")
 ```
+
+---
+
+## Workflow tip: Save a plot for later
+
+```{r}
+basic.plot <- penguins %>% 
+  ggplot(aes(x=bill_length_mm, y=bill_depth_mm)) + geom_point()
+```
+
+---
+
+## Workflow tip: Save a plot for later
+
+
+```{r, out.height="300px", out.width="300px"}
+basic.plot + labs(
+    x="Bill Length (mm)", y="Bill Depth (mm)"
+  )
+```
+
+--
+
+* This is useful when building a complex plot!
 

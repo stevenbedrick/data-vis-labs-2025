@@ -72,7 +72,7 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 
 --
 
-* 🥥
+* 🤦
 
 ---
 
@@ -102,7 +102,7 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 
 --
 
-* _Aesthetics_ map data to visual properties of the plot
+* _Aesthetics_ map dimensions of our data to visual properties of the plot
 
 --
 
@@ -158,9 +158,9 @@ class: center, middle
 
 
 ```r
-penguins %&gt;% ggplot(
-  mapping=aes(x=bill_length_mm, y=bill_depth_mm)
-  ) + geom_point()
+penguins %&gt;% ggplot(mapping=aes(
+  x=bill_length_mm, y=bill_depth_mm
+)) + geom_point()
 ```
 --
 &lt;img src="01b-slides_files/figure-html/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /&gt;
@@ -172,12 +172,13 @@ penguins %&gt;% ggplot(
 
 
 ```r
-penguins %&gt;% ggplot(
-  mapping=aes(x=bill_length_mm, y=bill_depth_mm, color=species)
-  ) + geom_point()
+penguins %&gt;% ggplot(mapping=aes(
+    x=bill_length_mm, y=bill_depth_mm, color=species
+  )) + geom_point()
 ```
+
 --
-&lt;img src="01b-slides_files/figure-html/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="01b-slides_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -185,12 +186,12 @@ penguins %&gt;% ggplot(
 
 
 ```r
-penguins %&gt;% ggplot(
-  mapping=aes(x=bill_length_mm, fill=species)
-  ) + geom_histogram()
+penguins %&gt;% ggplot(mapping=aes(
+  x=bill_length_mm, fill=species
+)) + geom_histogram()
 ```
 
-&lt;img src="01b-slides_files/figure-html/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="01b-slides_files/figure-html/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -203,7 +204,7 @@ penguins %&gt;% ggplot(
   ) + geom_histogram(alpha=0.6)
 ```
 
-&lt;img src="01b-slides_files/figure-html/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="01b-slides_files/figure-html/unnamed-chunk-8-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -218,7 +219,35 @@ penguins %&gt;% ggplot(
   ggtitle("Bill Length, by species")
 ```
 
-&lt;img src="01b-slides_files/figure-html/unnamed-chunk-10-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="01b-slides_files/figure-html/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Workflow tip: Save a plot for later
+
+
+```r
+basic.plot &lt;- penguins %&gt;% 
+  ggplot(aes(x=bill_length_mm, y=bill_depth_mm)) + geom_point()
+```
+
+---
+
+## Workflow tip: Save a plot for later
+
+
+
+```r
+basic.plot + labs(
+    x="Bill Length (mm)", y="Bill Depth (mm)"
+  )
+```
+
+&lt;img src="01b-slides_files/figure-html/unnamed-chunk-11-1.png" width="300px" height="300px" style="display: block; margin: auto;" /&gt;
+
+--
+
+* This is useful when building a complex plot!
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
