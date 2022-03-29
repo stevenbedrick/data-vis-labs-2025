@@ -450,7 +450,9 @@ package.</li>
 </ul>
 <pre class="r"><code>install.packages(&quot;devtools&quot;)
 library(devtools)
-install_github(&quot;name_of_package&quot;)</code></pre>
+install_github(&quot;name_of_package&quot;) # replace with the actual name of the package</code></pre>
+<p><em>Side note: for this lab, you will not need to install any
+packages from Github- this is just for future reference.</em></p>
 <p>One nice thing about using RStudio Cloud is that a workspace project
 (like the one you’ve just opened up) can come pre-loaded with the
 necessary libraries, which is a real time-saver in a classroom
@@ -584,77 +586,85 @@ the columns? Is that what we were expecting?</li>
 <li>Looking at a few of the actual rows of data, do the right values
 appear to have ended up in the right columns?</li>
 </ol>
+<p><em>Side note: not all of these questions are relevant for all
+datasets; for example, the <code>babynames</code> dataset does not have
+any times… but it does have years, so you might want to check and see
+what the range of that variable is. Does it make sense?</em></p>
 <p>If you have done the above and produced sane-looking output, you are
 ready for the next bit. Use the code below to create a new data frame
-called <code>alison</code>.</p>
-<pre class="r"><code>alison &lt;- babynames %&gt;%
-  filter(name == &quot;Alison&quot; | name == &quot;Allison&quot;) %&gt;% 
-  filter(sex == &quot;F&quot;) </code></pre>
+called <code>steve</code>.</p>
+<pre class="r"><code>steve &lt;- babynames %&gt;%
+  filter(name == &quot;Steven&quot; | name == &quot;Steve&quot; | name == &quot;Stephen&quot;) %&gt;%
+  filter(sex == &quot;M&quot;)</code></pre>
 <ul>
-<li><p>The first line makes a new dataset called <code>alison</code>,
+<li><p>The first line makes a new dataset called <code>steve</code>,
 whose “life” begins with a copy of the <code>babynames</code> dataset-
 the <code>%&gt;%</code> tells you we are doing some other stuff to it
 later.</p></li>
 <li><p>The second line <code>filters</code> our <code>babynames</code>
-to only keep rows where the <code>name</code> is either “Alison” or
-“Allison” (read <code>|</code> as <em>“or”</em>.)</p></li>
+to only keep rows where the <code>name</code> is either “Steven”,
+“Steve”, or “Stephen” (read <code>|</code> as <em>“or”</em>.)</p></li>
 <li><p>The third bit applies another <code>filter</code> to keep only
-those where sex is female.</p></li>
+those where sex is male (the Social Security Administration’s database
+is still very 20th-century).</p></li>
 </ul>
 <p>When you ran that command, you may have noticed a new entry appear on
 the right-hand side of the screen, in the “environment” tab. This tab
 lists all of the variables that your current environment has loaded.</p>
 <p><img src="images/lab_00/09_environment_tab.png" /></p>
 <p>Let’s check out the data.</p>
-<pre class="r"><code>alison</code></pre>
-<pre><code># A tibble: 218 × 5
-    year sex   name        n      prop
-   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;int&gt;     &lt;dbl&gt;
- 1  1905 F     Alison      7 0.0000226
- 2  1907 F     Alison      5 0.0000148
- 3  1908 F     Allison     6 0.0000169
- 4  1910 F     Alison      5 0.0000119
- 5  1910 F     Allison     5 0.0000119
- 6  1911 F     Allison     9 0.0000204
- 7  1912 F     Allison    12 0.0000204
- 8  1912 F     Alison      9 0.0000153
- 9  1913 F     Alison     12 0.0000183
-10  1913 F     Allison     7 0.0000107
-# … with 208 more rows</code></pre>
-<pre class="r"><code>glimpse(alison)</code></pre>
-<pre><code>Rows: 218
+<pre class="r"><code>steve</code></pre>
+<pre><code># A tibble: 414 × 5
+    year sex   name        n     prop
+   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;   &lt;int&gt;    &lt;dbl&gt;
+ 1  1880 M     Stephen   176 0.00149 
+ 2  1880 M     Steve      52 0.000439
+ 3  1880 M     Steven     17 0.000144
+ 4  1881 M     Stephen   147 0.00136 
+ 5  1881 M     Steve      44 0.000406
+ 6  1881 M     Steven     15 0.000139
+ 7  1882 M     Stephen   201 0.00165 
+ 8  1882 M     Steve      63 0.000516
+ 9  1882 M     Steven     22 0.000180
+10  1883 M     Stephen   140 0.00124 
+# … with 404 more rows</code></pre>
+<pre class="r"><code>glimpse(steve)</code></pre>
+<pre><code>Rows: 414
 Columns: 5
-$ year &lt;dbl&gt; 1905, 1907, 1908, 1910, 1910, 1911, 1912, 1912, 1913, 1913, 1914,…
-$ sex  &lt;chr&gt; &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, …
-$ name &lt;chr&gt; &quot;Alison&quot;, &quot;Alison&quot;, &quot;Allison&quot;, &quot;Alison&quot;, &quot;Allison&quot;, &quot;Allison&quot;, &quot;A…
-$ n    &lt;int&gt; 7, 5, 6, 5, 5, 9, 12, 9, 12, 7, 22, 11, 16, 13, 24, 15, 20, 15, 3…
-$ prop &lt;dbl&gt; 2.259e-05, 1.482e-05, 1.692e-05, 1.192e-05, 1.192e-05, 2.037e-05,…</code></pre>
-<p>You should see that the structure of the <code>alison</code>
-dataframe looks just like that of the <code>babynames</code> dataframe,
-but with many fewer rows.</p>
+$ year &lt;dbl&gt; 1880, 1880, 1880, 1881, 1881, 1881, 1882, 1882, 1882, 1883, 1883,…
+$ sex  &lt;chr&gt; &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, …
+$ name &lt;chr&gt; &quot;Stephen&quot;, &quot;Steve&quot;, &quot;Steven&quot;, &quot;Stephen&quot;, &quot;Steve&quot;, &quot;Steven&quot;, &quot;Step…
+$ n    &lt;int&gt; 176, 52, 17, 147, 44, 15, 201, 63, 22, 140, 62, 13, 165, 66, 20, …
+$ prop &lt;dbl&gt; 0.00148649, 0.00043919, 0.00014358, 0.00135757, 0.00040635, 0.000…</code></pre>
+<p>You should see that the structure of the <code>steve</code> dataframe
+looks just like that of the <code>babynames</code> dataframe, but with
+many fewer rows.</p>
 <p>Again, if you have sane-looking output here, move along to plotting
 the data!</p>
-<pre class="r"><code>plot &lt;- ggplot(alison, aes(x = year, 
+<pre class="r"><code>name.plot &lt;- ggplot(steve, aes(x = year, 
                            y = prop,  
                            group = name, 
                            color = name)) + 
   geom_line()  </code></pre>
-<p>Now if you did this right, you will not see your plot! Because we
-saved the <code>ggplot</code> with a name (<code>plot</code>), R just
-saved the object for you. But check out the top right pane in RStudio
-again: under <code>Data</code> you should see <code>plot</code>, so it
-is there, you just have to ask for it. Here’s how:</p>
-<pre class="r"><code>plot </code></pre>
+<p>Now, if you are following along precisely, you will not see your
+plot! This is because we saved the result of <code>ggplot</code> with a
+name (<code>name.plot</code>) But check out the top right pane in
+RStudio again: under <code>Data</code> you should see
+<code>name.plot</code>— so it <em>is</em> there, you just have to ask
+for it. Here’s how:</p>
+<pre class="r"><code>name.plot </code></pre>
 <p><img src="00-install_name_plot_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 </div>
 <div id="make-a-new-name-plot" class="section level1" number="5">
 <h1><span class="header-section-number">5</span> Make a new name
 plot</h1>
-<p>Edit my code above to create a new dataset. Pick 2 names to compare
-how popular they each are (these could be different spellings of your
-own name, like I did, but you can choose any 2 names that are present in
-the dataset). Make the new plot, changing the name of the first argument
-<code>alison</code> in <code>ggplot()</code> to the name of your new
+<p>Edit my code above to create a new dataset (don’t worry if you’re not
+sure about what every single bit of the code is doing, just dive in and
+go for it). Pick a handful of names to compare how popular they each are
+(these could be different spellings of your own name, like I did, but
+you can choose any pair (or trio, etc.) of names that are present in the
+dataset). Make the new plot, changing the name of the first argument –
+<code>steve</code> – in <code>ggplot()</code> to the name of your new
 dataset.</p>
 <div id="save-and-share" class="section level2" number="5.1">
 <h2><span class="header-section-number">5.1</span> Save and share</h2>
@@ -663,10 +673,10 @@ not like the looks of your plot if you mouse over to <code>Export</code>
 and save it. Instead, use <code>ggplot2</code>’s command for saving a
 plot with sensible defaults:</p>
 <pre class="r"><code>help(ggsave)</code></pre>
-<pre class="r"><code>ggsave(&quot;alison_hill.pdf&quot;, plot) # please make the filename unique!</code></pre>
+<pre class="r"><code>ggsave(&quot;steve_b.pdf&quot;, name.plot) # please make the filename unique!</code></pre>
 <p>Upload this exported plot to Sakai before Wednesday at noon.</p>
 <p>(Note that <em>your</em> plot, the one that you turn in, should not
-be called <code>alison_hill.pdf</code>- it should be named something
+be called <code>steve_b.pdf</code>- it should be named something
 else).</p>
 </div>
 </div>
@@ -674,6 +684,7 @@ else).</p>
 number="6">
 <h1><span class="header-section-number">6</span> Other cool
 <code>babynames</code> projects</h1>
+<p>For inspiration:</p>
 <ul>
 <li>Julia Silge <em>‘My Baby Boomer Name Might Have Been “Debbie”’</em>:
 <a href="https://juliasilge.com/blog/my-baby-boomer-name/"

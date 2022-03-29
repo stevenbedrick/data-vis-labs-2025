@@ -88,8 +88,10 @@ One of the best things about R is its rich ecosystem of add-on packages and tool
 ```{r devtools, eval = FALSE}
 install.packages("devtools")
 library(devtools)
-install_github("name_of_package")
+install_github("name_of_package") # replace with the actual name of the package
 ```
+
+_Side note: for this lab, you will not need to install any packages from Github- this is just for future reference._
 
 One nice thing about using RStudio Cloud is that a workspace project (like the one you've just opened up) can come pre-loaded with the necessary libraries, which is a real time-saver in a classroom environment. For example, the project you're using right now already has the `devtools` package installed. But for the next part of the lab, you'll need to install one additional package.
 
@@ -155,19 +157,21 @@ Here are some of the kinds of questions we might want to be asking about our dat
 6. Are there _missing values_ (`NA`, etc.) in any of the columns? Is that what we were expecting?
 7. Looking at a few of the actual rows of data, do the right values appear to have ended up in the right columns?
 
-If you have done the above and produced sane-looking output, you are ready for the next bit. Use the code below to create a new data frame called `alison`.
+_Side note: not all of these questions are relevant for all datasets; for example, the `babynames` dataset does not have any times... but it does have years, so you might want to check and see what the range of that variable is. Does it make sense?_
+
+If you have done the above and produced sane-looking output, you are ready for the next bit. Use the code below to create a new data frame called `steve`.
 
 ```{r manipulate_name_data}
-alison <- babynames %>%
-  filter(name == "Alison" | name == "Allison") %>% 
-  filter(sex == "F") 
+steve <- babynames %>%
+  filter(name == "Steven" | name == "Steve" | name == "Stephen") %>%
+  filter(sex == "M")
 ```
 
-* The first line makes a new dataset called `alison`, whose "life" begins with a copy of the `babynames` dataset- the `%>%` tells you we are doing some other stuff to it later.
+* The first line makes a new dataset called `steve`, whose "life" begins with a copy of the `babynames` dataset- the `%>%` tells you we are doing some other stuff to it later.
 
-* The second line `filters` our `babynames` to only keep rows where the `name` is either "Alison" or "Allison" (read `|` as _"or"_.) 
+* The second line `filters` our `babynames` to only keep rows where the `name` is either "Steven", "Steve", or "Stephen"  (read `|` as _"or"_.) 
 
-* The third bit applies another `filter` to keep only those where sex is female.
+* The third bit applies another `filter` to keep only those where sex is male (the Social Security Administration's database is still very 20th-century).
 
 When you ran that command, you may have noticed a new entry appear on the right-hand side of the screen, in the "environment" tab. This tab lists all of the variables that your current environment has loaded.
 
@@ -177,31 +181,33 @@ When you ran that command, you may have noticed a new entry appear on the right-
 Let's check out the data.
 
 ```{r}
-alison
-glimpse(alison)
+steve
+glimpse(steve)
 ```
 
-You should see that the structure of the `alison` dataframe looks just like that of the `babynames` dataframe, but with many fewer rows.
+You should see that the structure of the `steve` dataframe looks just like that of the `babynames` dataframe, but with many fewer rows.
 
 Again, if you have sane-looking output here, move along to plotting the data!
 
 ```{r plot_name_data}
-plot <- ggplot(alison, aes(x = year, 
+name.plot <- ggplot(steve, aes(x = year, 
                            y = prop,  
                            group = name, 
                            color = name)) + 
   geom_line()  
 ```
 
-Now if you did this right, you will not see your plot! Because we saved the `ggplot` with a name (`plot`), R just saved the object for you. But check out the top right pane in RStudio again: under `Data` you should see `plot`, so it is there, you just have to ask for it. Here's how:
+Now, if you are following along precisely, you will not see your plot! This is because we saved the result of `ggplot` with a name (`name.plot`) But check out the top right pane in RStudio again: under `Data` you should see `name.plot`--- so it _is_ there, you just have to ask for it. Here's how:
 
 ```{r}
-plot 
+name.plot 
 ```
 
 # Make a new name plot
 
-Edit my code above to create a new dataset. Pick 2 names to compare how popular they each are (these could be different spellings of your own name, like I did, but you can choose any 2 names that are present in the dataset). Make the new plot, changing the name of the first argument `alison` in `ggplot()` to the name of your new dataset.
+Edit my code above to create a new dataset (don't worry if you're not sure about what every single bit of the code is doing, just dive in and go for it). 
+Pick a handful of names to compare how popular they each are (these could be different spellings of your own name, like I did, but you can choose any pair (or trio, etc.) of names that are present in the dataset). 
+Make the new plot, changing the name of the first argument -- `steve` -- in `ggplot()` to the name of your new dataset.
 
 
 ## Save and share 
@@ -213,15 +219,16 @@ help(ggsave)
 ```
 
 ```{r eval = F}
-ggsave("alison_hill.pdf", plot) # please make the filename unique!
+ggsave("steve_b.pdf", name.plot) # please make the filename unique!
 ```
 
 Upload this exported plot to Sakai before Wednesday at noon.
 
-(Note that _your_ plot, the one that you turn in, should not be called `alison_hill.pdf`- it should be named something else).
+(Note that _your_ plot, the one that you turn in, should not be called `steve_b.pdf`- it should be named something else).
 
 # Other cool `babynames` projects
 
+For inspiration:
 
 - Julia Silge *'My Baby Boomer Name Might Have Been "Debbie"'*: https://juliasilge.com/blog/my-baby-boomer-name/
     - Use Julia's Shiny app: https://juliasilge.shinyapps.io/PredictNamesApp/
