@@ -222,7 +222,7 @@ help(ggsave)
 ggsave("steve_b.pdf", name.plot) # please make the filename unique!
 ```
 
-Upload this exported plot to Sakai before Wednesday at noon.
+Upload this exported plot to Sakai before Thursday at noon.
 
 (Note that _your_ plot, the one that you turn in, should not be called `steve_b.pdf`- it should be named something else).
 
