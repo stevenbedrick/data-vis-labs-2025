@@ -26,7 +26,7 @@ library(extrafont)
 
 - Get your feet wet!
 - Innoculate you against `ggplot2` errors- we all get them!
-- Get exposed to the *range* of things you can do, before we go **deeep**...
+- Get exposed to the *range* of things you can do, before we go **deep**...
 - Develop your *own* **personal** preferences for data visualizations!
     - Do you like or hate gridlines?
     - What fonts do you find pleasant to read?
@@ -36,12 +36,19 @@ library(extrafont)
 These are important questions, and I want you to develop (well-informed) opinions on these matters!
 ![](images/theme-team-tweets.png)
 
+Other things to think about for this lab:
+
+- Try not to copy-and-paste code:
+  - Becoming efficient/proficient with R depends on building muscle memory, and the only way to do that is to type
+  - By typing, you _will_ introduce errors, and this is a good chance to get practice at interpreting and fixing them.
+- Take note of steps or functions that you are unfamiliar with- we will likely learn more about them all as the term goes on, but this lab will help you identify particular areas that you are comfortable with as well as areas you will want to focus on.
+
 
 # Nathan's Hot Dog Eating Contest
 
 ![](https://i0.wp.com/flowingdata.com/wp-content/uploads/2009/06/hot-dogs1.gif?zoom=2&fit=900%2C423)
 
-This includes a reconstruction of [Nathan Yau's hot dog contest example](http://flowingdata.com/2009/07/02/whos-going-to-win-nathans-hot-dog-eating-contest/hot-dogs-2/), as interpreted by Jackie Wirz, ported into R and `ggplot2` by Steven Bedrick for a workshop for the [OHSU Data Science Institute](https://ohsulibrary-datascienceinstitute.github.io), and finally adapted by Alison Hill for all you intrepid Data-Viz-onauts!
+This includes a reconstruction of [Nathan Yau's hot dog contest example](http://flowingdata.com/2009/07/02/whos-going-to-win-nathans-hot-dog-eating-contest/hot-dogs-2/), as interpreted by Jackie Wirz, ported into R and `ggplot2` by Steven Bedrick for a workshop for the [OHSU Data Science Institute](https://ohsulibrary-datascienceinstitute.github.io), and finally adapted, made idiomatic, and improved by Alison Hill for all you intrepid Data-Viz-onauts!
 
 
 First, we load our packages: 
@@ -81,7 +88,9 @@ glimpse(hot_dogs)
 hot_dogs
 ```
 
-We'll be wanting to somehow include information about whether a given year was before or after the incorporation of the competitive eating league, so let's add an indicator field to the data using `mutate()`. Also, the data's a little sketchy pre-1981 and for our purposes today we'll be focusing on males only, so let's do some `filter`ing too:
+At this point, follow the HLO process and familiarize yourself with the columns and their contents.
+
+In addition to the information that is already _in_ the dataset itself, we know that we will also be wanting to somehow include information about whether a given year was before or after the incorporation of the competitive eating league. Let's add an _indicator variable_ to the data using `mutate()`. Also, the data's a little sketchy pre-1981, and for our purposes today we'll be focusing on males only, so let's do some `filter`ing, as well:
 
 ```{r}
 hot_dogs <- hot_dogs %>% 
@@ -94,7 +103,7 @@ hot_dogs
 
 # Plot The Data
 
-Now let's try making a first crack at a sketchy plot:
+Now let's try making a first crack at a plot:
 
 ```{r}
 ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
@@ -103,6 +112,7 @@ ggplot(hot_dogs, aes(x = year, y = num_eaten)) +
 
 Note that our data is already in "counted" form, so we're using `geom_col()` instead of `geom_bar()`.
 
+We will now progressively improve this visualization, one step at a time.
 
 # Add Axis Labels And Title
 
@@ -124,6 +134,9 @@ Make 3 versions of the last plot we just made:
 * __In the first,__ make all the columns outlined in "white".
 * __In the second,__ make all the columns outlined in "white" and filled in "navyblue".
 * __In the third,__ make all the columns outlined in "white" and filled in according to whether or not `post_ifoce` is TRUE or FALSE (use default colors for now).
+
+_HINT:_ `color` and `fill` are two of `ggplot`'s aesthetic mapping variables (i.e., "things about how the plot looks that we get to specify")
+
   </div>
 </div>
 
@@ -159,6 +172,9 @@ What if you want to change the legend in the last plot you made? Use google to f
 
 * Delete the legend title
 * Make the legend text either "Post-IFOCE" or "Pre-IFOCE".
+
+HINT: in `ggplot`, legends are controlled by the relevant scale (color, fill, etc.) that they are mapped to.
+
   </div>
 </div>
 
@@ -173,7 +189,7 @@ ggplot(hot_dogs, aes(x = year, y = num_eaten)) +
 
 # Change The Dataset
 
-Now, let's change the question a little bit. This looks at the _creation_ of the IFOCE. What about the _affiliation_ of the contestants? We'll need some different data for this. Through the _Magic Of Data Science™_, we have dug that information up and put it into an expanded version of our CSV file available at [http://bit.ly/cs631-hotdog-affiliated](http://bit.ly/cs631-hotdog-affiliated).
+Now, let's change the question a little bit. Up to this point, we have looked at HDB performance relative to  the _creation_ of the IFOCE. What if what matters is the _affiliation_ of the contestants (i.e., whether or not the contestants are members of the IFOCE or not)? We'll need some different data for this. Through the _Magic Of Data Science™_, we have dug that information up and put it into an expanded version of our CSV file available at [http://bit.ly/cs631-hotdog-affiliated](http://bit.ly/cs631-hotdog-affiliated).
 
 
 <div class="panel panel-success">
@@ -259,6 +275,8 @@ affil_plot
 
 # Play With Scales & Coordinates
 
+Now that the bones of the plot are in place, it's time to tweak the details.
+
 The spacing's a little funky down near the origin of the plot. The [documentation](http://ggplot2.tidyverse.org/reference/scale_continuous.html) tells us that the defaults are `c(0.05, 0)` for continuous variables. The first number is multiplicative and the second is additive. 
 
 The default was that 1.8 ((2017-1981)*.05+0) was added to the right and left sides of the x-axis as padding, so the effective default limits were `c(1979, 2019)`.
@@ -277,7 +295,7 @@ affil_plot
 
 But now the plot looks like it is wearing tight pants.
 
-![](https://media.giphy.com/media/xT1XH07no2wZSq4mnm/giphy.gif)
+<!-- ![](https://media.giphy.com/media/xT1XH07no2wZSq4mnm/giphy.gif) -->
 
 Let's loosen things up a bit by updating the plot coordinates. 
 
@@ -308,6 +326,8 @@ affil_plot
 
 
 # Play With Theme Settings
+
+We will talk a lot more about themes and `ggplot` later in the term, but for now, the important thing to know is that most visual aspects of the plot have a _name_ (e.g. `plot.title`), and the `theme()` function lets us tell `ggplot` what any [named part](https://ggplot2.tidyverse.org/reference/theme.html) of the plot should look like.
 
 Let's change some key theme settings:
 
@@ -366,14 +386,18 @@ affil_plot + theme_tufte( base_family = "Palatino")
 The final thing we have to mess with is the x-axis ticks and labels. We'll do this in two steps, then override our previous layer `scale_x_continuous`.
 
 ```{r}
-years_to_label <- seq(from = 1981, to = 2017, by = 4)
+# manually compute a list of years that we want labeled...
+years_to_label <- seq(from = 1981, to = 2017, by = 4) 
 years_to_label
+
+# add a column to the dataframe containing what we want each year's label to be
 hd_years <- hdm_affil %>%
   distinct(year) %>% 
   mutate(year_lab = ifelse(year %in% years_to_label, year, ""))
 ```
 
 ```{r}
+# manually tell ggplot what to use for breaks and labels
 affil_plot + 
   hot_diggity +
   scale_x_continuous(expand = c(0, 0), 
@@ -406,7 +430,9 @@ nathan_plot <- ggplot(hdm_affil, aes(x = year, y = num_eaten)) +
 nathan_plot
 ```
 
-Adding some plot annotations rather than having a fill legend:
+The fill legend is doing its job, here, but we might instead want to use direct annotations on the plot itself, to make it easier and faster to read. 
+
+`ggplot` will let us add _annotatations_ to the plot- i.e., extra text, lines , etc. that are not derived from the data in the plot, but are manually specified - using the `annotate()` function, which adds additional layers to the plot. The way we are doing it below is a bit tedious but demonstrates how it works.
 
 ```{r}
 nathan_ann <- nathan_plot +
@@ -435,7 +461,7 @@ nathan_ann <- nathan_plot +
 nathan_ann
 ```
 
-Finally, adding in another layer of data from female contestants:
+Finally, adding in another layer of data, including information about female contestants:
 
 ```{r}
 hdm_females <- read_csv(here::here("data", "hot_dog_contest_with_affiliation.csv"), 
