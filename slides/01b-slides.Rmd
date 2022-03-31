@@ -184,12 +184,32 @@ penguins %>% ggplot(
 
 ---
 
+## Different geoms have different options:
+
+```{r, fig.height=4}
+penguins %>% ggplot(
+  mapping=aes(x=bill_length_mm, fill=species)
+  ) + geom_histogram(alpha=0.6)
+```
+
+---
+
+## Different geoms have different options:
+
+```{r, fig.height=4}
+penguins %>% ggplot(
+  mapping=aes(x=bill_length_mm, fill=species)
+  ) + geom_histogram(alpha=0.6, position="identity")
+```
+
+---
+
 ## Customizing other aspects of the plot
 
 ```{r, fig.height=4}
 penguins %>% ggplot(
   mapping=aes(x=bill_length_mm, fill=species)
-  ) + geom_histogram(alpha=0.6) +
+  ) + geom_histogram(alpha=0.6, position="identity") +
   labs(x="Bill Length (mm)", y="Frequency") +
   ggtitle("Bill Length, by species")
 ```
