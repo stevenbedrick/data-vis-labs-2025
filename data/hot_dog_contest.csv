@@ -1,4 +1,12 @@
 year,gender,name,num_eaten
+2021,male,Joey Chestnut,76
+2021,female,Michelle Lesco,30.75
+2020,male,Joey Chestnut, 75
+2020,female,Miki Sudo,48.5
+2019,male,Joey Chestnut,71
+2019,female,Miki Sudo,31
+2018,male,Joey Chestnut,74
+2018,female,Miki Sudo, 37
 2017,male,Joey Chestnut,72.0
 2017,female,Miki Sudo,41.0
 2016,male,Joey Chestnut,70.0

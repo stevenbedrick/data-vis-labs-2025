@@ -72,16 +72,7 @@ hot_dogs <- read_csv(here::here("data", "hot_dog_contest.csv"),
     ))
 ```
 
-Note that if the data were _not_ already downloaded locally, `read_csv()` can load CSV files from a URL:
-
-```{r eval = FALSE}
-hot_dogs <- read_csv("http://bit.ly/cs631-hotdog", 
-    col_types = cols(
-      gender = col_factor(levels = NULL)
-    ))
-```
-
-Either way you do it, check it out once read in and make sure it looks like this!
+Check it out, once it is read in, and make sure it looks like this!
 
 ```{r}
 glimpse(hot_dogs)
@@ -121,7 +112,7 @@ We will now progressively improve this visualization, one step at a time.
 ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col() +
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2017")
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2021", subtitle = "(Male contestants only)")
 ```
 
 # Play With Colors
@@ -146,21 +137,21 @@ _HINT:_ `color` and `fill` are two of `ggplot`'s aesthetic mapping variables (i.
 ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col(colour = "white") + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2017")
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2021", subtitle = "(Male contestants only)")
 ```
 
 ```{r}
 ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col(colour = "white", fill = "navyblue") + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2017")
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2021", subtitle = "(Male contestants only)")
 ```
 
 ```{r}
 ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col(aes(fill = post_ifoce), colour = "white") + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2017")
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2021", subtitle = "(Male contestants only)")
 ```
 
 
@@ -182,7 +173,7 @@ HINT: in `ggplot`, legends are controlled by the relevant scale (color, fill, et
 ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col(aes(fill = post_ifoce), colour = "white") + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2017") +
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2021", subtitle = "(Male contestants only)") +
   scale_fill_discrete(name = "",
                       labels=c("Pre-IFOCE", "Post-IFOCE"))
 ```
@@ -249,7 +240,7 @@ Now let's plot this new data, and fill the columns according to our new `affilia
 ggplot(hdm_affil, aes(x = year, y = num_eaten)) + 
   geom_col(aes(fill = affiliated)) + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2017")
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2021", subtitle = "(Male contestants only)")
 ```
 
 <div class="panel panel-success">
@@ -267,7 +258,7 @@ Do the following updates to the last plot we just made:
 affil_plot <- ggplot(hdm_affil, aes(x = year, y = num_eaten)) + 
   geom_col(aes(fill = affiliated)) + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2017") +
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2021", subtitle = "(Male contestants only)") +
   scale_fill_manual(values = c('#E9602B','#2277A0','#CCB683'),
                     name = "IFOCE-affiliation")
 affil_plot
@@ -387,7 +378,7 @@ The final thing we have to mess with is the x-axis ticks and labels. We'll do th
 
 ```{r}
 # manually compute a list of years that we want labeled...
-years_to_label <- seq(from = 1981, to = 2017, by = 4) 
+years_to_label <- seq(from = 1981, to = 2021, by = 4) 
 years_to_label
 
 # add a column to the dataframe containing what we want each year's label to be
@@ -417,7 +408,7 @@ All together in one chunk, here is our final (for now) plot! I'm also adding som
 nathan_plot <- ggplot(hdm_affil, aes(x = year, y = num_eaten)) + 
   geom_col(aes(fill = affiliated)) + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2017") +
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2021", subtitle = "(Male contestants only)") +
   scale_fill_manual(values = c('#E9602B','#2277A0','#CCB683'),
                     name = "IFOCE-affiliation") + 
   hot_diggity +
@@ -426,9 +417,11 @@ nathan_plot <- ggplot(hdm_affil, aes(x = year, y = num_eaten)) +
   scale_x_continuous(expand = c(0, 0), 
                      breaks = hd_years$year,
                      labels = hd_years$year_lab) + 
-  coord_cartesian(xlim = c(1980, 2018), ylim = c(0, 80)) 
+  coord_cartesian(xlim = c(1980, 2022), ylim = c(0, 80)) 
 nathan_plot
 ```
+
+
 
 The fill legend is doing its job, here, but we might instead want to use direct annotations on the plot itself, to make it easier and faster to read. 
 
@@ -437,7 +430,7 @@ The fill legend is doing its job, here, but we might instead want to use direct 
 ```{r}
 nathan_ann <- nathan_plot +
   guides(fill = FALSE) +
-  coord_cartesian(xlim = c(1980, 2019), ylim = c(0, 85)) +
+  coord_cartesian(xlim = c(1980, 2022), ylim = c(0, 90)) +
   annotate('segment', x=1980.75, xend=2000.25, y= 30, yend=30, size=0.5, color="#CCB683")+
   annotate('segment', x=1980.75, xend=1980.75, y= 30, yend=28, size=0.5, color="#CCB683") +
   annotate('segment', x=2000.25, xend=2000.25, y= 30, yend=28, size=0.5, color="#CCB683") +
@@ -453,11 +446,11 @@ nathan_ann <- nathan_plot +
   annotate('text', x=2003.5, y=65, label="MLE/IFOCE\nFormer Member", color="#2277A0", family="Lato", hjust=0.5, size = 3) +
 
 
-  annotate('segment', x=2006.75, xend=2017.25, y= 76, yend=76, size=0.5, color="#E9602B") +
-  annotate('segment', x=2006.75, xend=2006.75, y= 76, yend=74, size=0.5, color="#E9602B") +
-  annotate('segment', x=2017.25, xend=2017.25, y= 76, yend=74, size=0.5, color="#E9602B") +
-  annotate('segment', x=2012, xend=2012, y= 79, yend=76, size=0.5, color="#E9602B") +
-  annotate('text', x=2012, y=82, label="MLE/IFOCE Current Member", color="#E9602B", family="Lato", hjust=0.5, size = 3)
+  annotate('segment', x=2006.75, xend=2021.25, y= 79, yend=79, size=0.5, color="#E9602B") +
+  annotate('segment', x=2006.75, xend=2006.75, y= 79, yend=77, size=0.5, color="#E9602B") +
+  annotate('segment', x=2021.25, xend=2021.25, y= 79, yend=77, size=0.5, color="#E9602B") +
+  annotate('segment', x=2012, xend=2012, y= 82, yend=79, size=0.5, color="#E9602B") +
+  annotate('text', x=2012, y=86, label="MLE/IFOCE Current Member", color="#E9602B", family="Lato", hjust=0.5, size = 3)
 nathan_ann
 ```
 
@@ -479,7 +472,8 @@ nathan_w_females <- nathan_ann +
   # add in the female data, and manually set a fill color
   geom_col(data = hdm_females, 
            width = 0.75, 
-           fill = "#F68A39") 
+           fill = "#F68A39") +
+  labs(subtitle = NULL) # no longer need the subtitle warning about male-only data!
 nathan_w_females
 ```
 
