@@ -297,12 +297,179 @@ If you want more:
 1. In what year was the first painting by a (solo) female artist acquired? When was that painting created? Which artist? What title? 
 
 
+---
+
+## New this week: `group_by`
+
+Many `dplyr` verbs can be _grouped_
+
+--
+
+I.e., their operation can be performed on partitions of your data:
+
+--
+
+("average of `X`, _by_ `Y`)
+
+--
+
+
+
+Consider `summarise`:
+
+
+```r
+penguins %&gt;% filter(!is.na(bill_length_mm)) %&gt;% 
+  summarise(mean_length=mean(bill_length_mm))
+```
+
+```
+# A tibble: 1 × 1
+  mean_length
+        &lt;dbl&gt;
+1        43.9
+```
+---
+
+## New this week: `group_by`
+
+
+Many `dplyr` verbs can be _grouped_
+
+
+I.e., their operation can be performed on partitions of your data:
+
+
+("average of `X`, _by_ `Y`)
+
+
+
+```r
+penguins %&gt;% filter(!is.na(bill_length_mm)) %&gt;% 
+  group_by(species) %&gt;% 
+  summarise(mean_length=mean(bill_length_mm))
+```
+
+```
+# A tibble: 3 × 2
+  species   mean_length
+  &lt;fct&gt;           &lt;dbl&gt;
+1 Adelie           38.8
+2 Chinstrap        48.8
+3 Gentoo           47.5
+```
+
+--
+
+Most other `dplyr` verbs will "play nicely" with grouped data:
+
+--
+
+`arrange`, `slice`, `count`, `top_n`, etc.
+
+---
+
+## Under the hood
+
+What does `group_by` actually _do_?
+
+--
+
+
+```r
+penguins.grouped &lt;- penguins %&gt;% group_by(species)
+penguins.grouped
+```
+
+
+--
+
+
+```
+# A tibble: 344 × 8
+# Groups:   species [3]
+   species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+ 1 Adelie  Torgersen           39.1          18.7               181        3750
+ 2 Adelie  Torgersen           39.5          17.4               186        3800
+ 3 Adelie  Torgersen           40.3          18                 195        3250
+ 4 Adelie  Torgersen           NA            NA                  NA          NA
+ 5 Adelie  Torgersen           36.7          19.3               193        3450
+ 6 Adelie  Torgersen           39.3          20.6               190        3650
+ 7 Adelie  Torgersen           38.9          17.8               181        3625
+ 8 Adelie  Torgersen           39.2          19.6               195        4675
+ 9 Adelie  Torgersen           34.1          18.1               193        3475
+10 Adelie  Torgersen           42            20.2               190        4250
+# … with 334 more rows, and 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;
+```
+
+---
+
+## Multiple Groups
+
+"How many males and females of each sex do we have?"
+
+--
+
+
+```r
+penguins %&gt;% group_by(species, sex) %&gt;% tally
+```
+
+--
+
+Note that the resulting dataframe is still grouped by `species`!
+
+--
+
+
+```r
+penguins %&gt;% group_by(species, sex)
+```
+
+```
+# A tibble: 344 × 8
+# Groups:   species, sex [8]
+   species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+ 1 Adelie  Torgersen           39.1          18.7               181        3750
+ 2 Adelie  Torgersen           39.5          17.4               186        3800
+ 3 Adelie  Torgersen           40.3          18                 195        3250
+ 4 Adelie  Torgersen           NA            NA                  NA          NA
+ 5 Adelie  Torgersen           36.7          19.3               193        3450
+ 6 Adelie  Torgersen           39.3          20.6               190        3650
+ 7 Adelie  Torgersen           38.9          17.8               181        3625
+ 8 Adelie  Torgersen           39.2          19.6               195        4675
+ 9 Adelie  Torgersen           34.1          18.1               193        3475
+10 Adelie  Torgersen           42            20.2               190        4250
+# … with 334 more rows, and 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;
+```
+
+
+---
+## Lab 02: Challenge 1 (`dplyr`)
+
+1. How many paintings (rows) are in `moma`? How many variables (columns) are in `moma`?
+1. What is the first painting acquired by MoMA? Which year? Which artist? What title?
+    - *Hint: you may want to look into `select` + `arrange`*
+1. What is the oldest painting in the collection? Which year? Which artist? What title? *(see above hint)*
+1. How many distinct artists are there?
+1. Which artist has the most paintings in the collection? How many paintings are by this artist?
+1. How many paintings are by male vs female artists?
+
+If you want more:
+1. How many artists of each gender are there?
+1. In what year were the most paintings acquired? Created?
+1. In what year was the first painting by a (solo) female artist acquired? When was that painting created? Which artist? What title? 
+
+
+
 
 ---
 
 # From Last Week  2
 
-all `ggplot2`
+From `ggplot2`:
 
 - `aes(x = , y = )` (aesthetics)
 - `aes(x = , y = , color = )` (add color)
@@ -310,7 +477,7 @@ all `ggplot2`
 - `+ facet_wrap(~ )` (facetting)
 
 ---
-# Old School (Challenge 2)&lt;sup&gt;1&lt;/sup&gt;
+# "Old School" (Challenge 2)&lt;sup&gt;1&lt;/sup&gt;
 
 - Sketch the graphics below on paper, where the `x`-axis is variable `year_created` and the `y`-axis is variable `year_acquired`
 
@@ -348,7 +515,7 @@ ggplot(moma_ex, aes(painted, acquired)) +
 ```
 --
 
-&lt;img src="02-slides_files/figure-html/unnamed-chunk-11-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="02-slides_files/figure-html/unnamed-chunk-18-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -364,7 +531,7 @@ ggplot(moma_ex, aes(painted, acquired, color = gender)) +
 ```
 --
 
-&lt;img src="02-slides_files/figure-html/unnamed-chunk-13-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="02-slides_files/figure-html/unnamed-chunk-20-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -379,7 +546,7 @@ ggplot(moma_ex, aes(painted, acquired, size = area)) +
 ```
 --
 
-&lt;img src="02-slides_files/figure-html/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="02-slides_files/figure-html/unnamed-chunk-22-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -393,7 +560,7 @@ ggplot(moma_ex, aes(painted, acquired, color = gender)) +
 ```
 
 --
-&lt;img src="02-slides_files/figure-html/unnamed-chunk-17-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="02-slides_files/figure-html/unnamed-chunk-24-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 

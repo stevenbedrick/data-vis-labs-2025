@@ -10,7 +10,7 @@ output:
       highlightStyle: atelier-lakeside-light
       highlightLines: true
       countIncrementalSlides: false
-knit: pagedown::chrome_print
+#knit: pagedown::chrome_print
 ---
 
 
@@ -224,12 +224,128 @@ If you want more:
 1. In what year was the first painting by a (solo) female artist acquired? When was that painting created? Which artist? What title? 
 
 
+---
+
+## New this week: `group_by`
+
+Many `dplyr` verbs can be _grouped_
+
+--
+
+I.e., their operation can be performed on partitions of your data:
+
+--
+
+("average of `X`, _by_ `Y`)
+
+--
+
+```{r,echo=FALSE}
+library(palmerpenguins)
+```
+
+Consider `summarise`:
+
+```{r}
+penguins %>% filter(!is.na(bill_length_mm)) %>% 
+  summarise(mean_length=mean(bill_length_mm))
+```
+---
+
+## New this week: `group_by`
+
+
+Many `dplyr` verbs can be _grouped_
+
+
+I.e., their operation can be performed on partitions of your data:
+
+
+("average of `X`, _by_ `Y`)
+
+
+```{r}
+penguins %>% filter(!is.na(bill_length_mm)) %>% 
+  group_by(species) %>% 
+  summarise(mean_length=mean(bill_length_mm))
+```
+
+--
+
+Most other `dplyr` verbs will "play nicely" with grouped data:
+
+--
+
+`arrange`, `slice`, `count`, `top_n`, etc.
+
+---
+
+## Under the hood
+
+What does `group_by` actually _do_?
+
+--
+
+```{r, eval=FALSE}
+penguins.grouped <- penguins %>% group_by(species)
+penguins.grouped
+```
+
+
+--
+
+```{r, echo=FALSE}
+penguins.grouped <- penguins %>% group_by(species)
+penguins.grouped
+```
+
+---
+
+## Multiple Groups
+
+"How many males and females of each sex do we have?"
+
+--
+
+```{r, eval=FALSE}
+penguins %>% group_by(species, sex) %>% tally
+```
+
+--
+
+Note that the resulting dataframe is still grouped by `species`!
+
+--
+
+```{r}
+penguins %>% group_by(species, sex)
+```
+
+
+---
+## Lab 02: Challenge 1 (`dplyr`)
+
+1. How many paintings (rows) are in `moma`? How many variables (columns) are in `moma`?
+1. What is the first painting acquired by MoMA? Which year? Which artist? What title?
+    - *Hint: you may want to look into `select` + `arrange`*
+1. What is the oldest painting in the collection? Which year? Which artist? What title? *(see above hint)*
+1. How many distinct artists are there?
+1. Which artist has the most paintings in the collection? How many paintings are by this artist?
+1. How many paintings are by male vs female artists?
+
+If you want more:
+1. How many artists of each gender are there?
+1. In what year were the most paintings acquired? Created?
+1. In what year was the first painting by a (solo) female artist acquired? When was that painting created? Which artist? What title? 
+
+
+
 
 ---
 
 # From Last Week  2
 
-all `ggplot2`
+From `ggplot2`:
 
 - `aes(x = , y = )` (aesthetics)
 - `aes(x = , y = , color = )` (add color)
@@ -237,7 +353,7 @@ all `ggplot2`
 - `+ facet_wrap(~ )` (facetting)
 
 ---
-# Old School (Challenge 2)<sup>1</sup>
+# "Old School" (Challenge 2)<sup>1</sup>
 
 - Sketch the graphics below on paper, where the `x`-axis is variable `year_created` and the `y`-axis is variable `year_acquired`
 
