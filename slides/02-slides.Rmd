@@ -10,8 +10,9 @@ output:
       highlightStyle: atelier-lakeside-light
       highlightLines: true
       countIncrementalSlides: false
-#knit: pagedown::chrome_print
+knit: pagedown::chrome_print
 ---
+
 
 
 
