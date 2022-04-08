@@ -359,7 +359,7 @@ From `ggplot2`:
 
 ```{r echo=FALSE}
 moma_ex <-
-  data_frame(
+  tibble(
     painted = c(1980, 1990, 2000, 2010),
     acquired = c(1985, 1995, 2005, 2015),
     area = c(3, 2, 1, 2),
