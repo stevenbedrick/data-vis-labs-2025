@@ -43,23 +43,13 @@ library(tidyverse)
 
 # Read in the data
 
-Use this code chunk to read in the data available at [http://bit.ly/cs631-meow](http://bit.ly/cs631-meow):
-
-```{r}
-sounds <- read_csv("http://bit.ly/cs631-meow")
-```
-
-Or store it locally:
-
 ```{r}
 sounds <- read_csv(here::here("data", "animal_sounds_summary.csv"))
 ```
 
-
-
 # Colour vs fill aesthetic
 
-Fill and colour scales in ggplot2 can use the same palettes. Some shapes such as lines only accept the colour aesthetic, while others, such as polygons, accept both colour and fill aesthetics. In the latter case, the colour refers to the border of the shape, and the fill to the interior.
+Fill and colour scales in ggplot2 can use the same palettes. Some shapes such as lines only accept the `colour` aesthetic, while others, such as polygons, accept both `colour` and `fill` aesthetics. In the latter case, the `colour` refers to the border of the shape, and the `fill` to the interior.
 
 
 
@@ -302,15 +292,39 @@ Because `geom_line` understands the `color` aesthetic, it will try to draw separ
 
 ## Brief aside: factors
 
-At this point, our plot is looking pretty good. But you may have noticed that the legend order doesn't match the lines. We can fix that using the [`forcats` package](http://forcats.tidyverse.org), which is `for` `cat`egorical variables. There are lots of functions in `forcats`, and you can install & load it separately, although `forcats` is loaded with the `tidyverse`.
+At this point, our plot is looking pretty good. But you may have noticed that the legend order doesn't match the order of the lines in the plot. **Question:** why is this an issue?
+
+What determines the order of levels in the legend? The order of levels in the underlying factor:
+
+```{r}
+levels(as.factor(sounds$sound))
+```
+
+In this case, since we haven't set them, R will pick an order for us.
+
+We _could_ manually re-order the levels of the factor, but different plots might necessitate different factor ordering, and if we have more than two or three levels, typing them repeatedly gets tedious fast. Instead, let's have R do it!
+
+The [`forcats` package](http://forcats.tidyverse.org), is `for` `cat`egorical variables and has lots of useful functions, including some for re-ordering levels. There are lots of functions in `forcats`, and you can install & load it separately, although `forcats` is loaded with the `tidyverse`.
 
 ```{r eval = FALSE}
 install.packages("forcats")
 library(forcats)
 ```
 
-We'll use the `fct_reorder2` function, which works for when you have a line chart of two quantitative variables, colored by a factor variable. Let's see the difference.
+We'll use the `fct_reorder2` function, which by default will re-order the levels of a factor based on the order of occurrence of one variable (`y` in the docs) when the dataframe is _sorted_ by another variable (`x` in the docs):
 
+```{r}
+# "Sort the dataframe by age, find the last occurrence of each level of sounds$sound in order of prop_produce
+fct_reorder2(
+  as.factor(sounds$sound), 
+  sounds$age, # variable "x"
+  sounds$prop_produce # varible "y"
+) %>% levels
+```
+
+
+
+This (somehwat convoluted) procedure is very useful for when you have a line chart of two quantitative variables, colored by a factor variable. Let's see the difference:
 
 ```{r}
 sounds <- sounds %>% 

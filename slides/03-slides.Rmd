@@ -25,6 +25,25 @@ library(tidyverse)
 sounds <- read_csv(here::here("data", "animal_sounds_summary.csv")) %>% 
   select(-prop_produce, -contains("understand"))
 ```
+# Plan for today
+
+- Refresher on Base R types and operators
+
+--
+
+- Tying it together with `dplyr`
+
+--
+
+- `ggplot` aesthetics and colors
+
+--
+
+
+- Lab workbook
+
+
+---
 
 
 # Data for today
@@ -46,6 +65,8 @@ Use this code chunk to import my cleaned CSV file:
 library(readr)
 sounds <- read_csv("http://bit.ly/cs631-meow")
 ```
+
+
 
 
 ---
@@ -113,11 +134,157 @@ knitr::include_graphics("http://r4ds.had.co.nz/diagrams/data-structures-overview
 
 
 ---
-class: middle, center, inverse
+# Lists? Vectors?
 
-# ⌛️
+--
+What is `2`, anyway?
 
-## Let's review 
+```{r}
+typeof(2)
+```
+
+--
+```{r}
+length(2)
+```
+
+--
+
+`2` is really a vector of length 1!
+```{r}
+is.vector(2)
+```
+
+---
+
+# Lists? Vectors?
+
+What about longer vectors?
+
+--
+```{r}
+typeof(c(2,2))
+length(c(2,2))
+```
+
+---
+
+# Lists? Vectors?
+
+_Atomic Vectors_ in `R` are of the same _type_ (all numbers, all logicals, etc.)
+
+--
+
+_Lists_ are vectors made up of multiple items of _different_ types:
+
+```{r}
+my.list <- list(c(1,2,3), c(TRUE, FALSE, TRUE))
+my.list
+```
+
+---
+
+# Lists? Vectors?
+
+_Atomic Vectors_ in `R` are of the same _type_ (all numbers, all logicals, etc.)
+
+_Lists_ are vectors made up of multiple items of _different_ types:
+
+```{r}
+my.list <- list(x=c(1,2,3), y=c(TRUE, FALSE, TRUE))
+my.list
+```
+
+It is usually better to give names to list elements...
+
+--
+
+- Note: a data frame is just a list where each element is:
+  - An atomic vector
+  - Of uniform length
+
+---
+# Lists? Vectors?
+
+Many operations in R are _vectorized_ (i.e., operate on an entire vector all in one go):
+
+--
+
+Adding a "scalar" (i.e., a vector of length 1) to a vector:
+
+```{r}
+some.numbers <- c(1,2,3)
+some.numbers + 1
+```
+
+--
+
+Adding two vectors of identical length:
+
+```{r}
+some.numbers + c(2,2,2)
+```
+
+---
+
+# Lists? Vectors?
+
+What if there is a length mis-match?
+
+--
+
+```{r}
+some.numbers + c(8,8,8,8)
+```
+
+--
+
+What's going on?
+
+--
+
+The shorter vector is _recycled_ until it matches the length of the larger vector:
+
+--
+
+```{r}
+c(1,2,3,1) + c(8,8,8,8)
+```
+
+--
+
+(Note that you may get a _warning_ from R if this happens)
+
+--
+
+This is how adding a scalar to a vector works, under the hood!
+
+---
+
+# Lists? Vectors?
+
+Vectorization is very useful:
+
+```{r, eval=FALSE}
+y_hat <- predict(some.model)
+residuals <- y_hat - my.data$y
+```
+
+--
+
+Many things that would use _loops_ in other languages can be done using vectorized operations in R.
+
+--
+
+Many functions operate on vectors:
+
+--
+
+- `mean()`, `sum()`, etc.
+
+--
+
+One way to think of them : factories to convert atomic vectors of length `n` to atomic vectors of length 1!
 
 ---
 
@@ -349,6 +516,29 @@ At the end of today's lab, you'll see an extra section on continuous colors.
 ---
 ## But first: `shape`
 
+--
+
+`Shape` works like any other `ggplot` aesthetic:
+
+--
+
+```{r,echo=FALSE}
+library(palmerpenguins)
+```
+
+
+```{r, fig.height=4}
+penguins %>% 
+  ggplot(aes(x=bill_length_mm, y=bill_depth_mm, 
+             shape=species, color=species)) + 
+  geom_point(size=2)
+```
+
+
+
+---
+## But first: `shape`
+
 ```{r echo = FALSE}
 ## A look at all 25 symbols
 df <- data.frame(x = 1:5, 
@@ -378,10 +568,13 @@ s + geom_point(aes(shape = z), size = 6, colour = "hotpink")
 s + geom_point(aes(shape = z), size = 6, colour = "hotpink", fill = "gold") 
 ```
 
+
 ---
 ## Default shape for `geom_point`
 
 🕵🏽 Requires spelunking into the dark corners of the `ggplot2` code on [GitHub](https://github.com/tidyverse/ggplot2/blob/master/R/geom-point.r):
+
+--
 
 ```{r eval = FALSE}
 default_aes = aes(

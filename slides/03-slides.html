@@ -23,6 +23,25 @@ class: center, middle, inverse, title-slide
 
 
 
+# Plan for today
+
+- Refresher on Base R types and operators
+
+--
+
+- Tying it together with `dplyr`
+
+--
+
+- `ggplot` aesthetics and colors
+
+--
+
+
+- Lab workbook
+
+
+---
 
 
 # Data for today
@@ -45,6 +64,8 @@ Use this code chunk to import my cleaned CSV file:
 library(readr)
 sounds &lt;- read_csv("http://bit.ly/cs631-meow")
 ```
+
+
 
 
 ---
@@ -182,11 +203,223 @@ $ kids_respond &lt;dbl&gt; 35, 35, 35, 91, 93, 93, 139, 145, 143, 94, 94, 94, 14
 
 
 ---
-class: middle, center, inverse
+# Lists? Vectors?
 
-# ⌛️
+--
+What is `2`, anyway?
 
-## Let's review 
+
+```r
+typeof(2)
+```
+
+```
+[1] "double"
+```
+
+--
+
+```r
+length(2)
+```
+
+```
+[1] 1
+```
+
+--
+
+`2` is really a vector of length 1!
+
+```r
+is.vector(2)
+```
+
+```
+[1] TRUE
+```
+
+---
+
+# Lists? Vectors?
+
+What about longer vectors?
+
+--
+
+```r
+typeof(c(2,2))
+```
+
+```
+[1] "double"
+```
+
+```r
+length(c(2,2))
+```
+
+```
+[1] 2
+```
+
+---
+
+# Lists? Vectors?
+
+_Atomic Vectors_ in `R` are of the same _type_ (all numbers, all logicals, etc.)
+
+--
+
+_Lists_ are vectors made up of multiple items of _different_ types:
+
+
+```r
+my.list &lt;- list(c(1,2,3), c(TRUE, FALSE, TRUE))
+my.list
+```
+
+```
+[[1]]
+[1] 1 2 3
+
+[[2]]
+[1]  TRUE FALSE  TRUE
+```
+
+---
+
+# Lists? Vectors?
+
+_Atomic Vectors_ in `R` are of the same _type_ (all numbers, all logicals, etc.)
+
+_Lists_ are vectors made up of multiple items of _different_ types:
+
+
+```r
+my.list &lt;- list(x=c(1,2,3), y=c(TRUE, FALSE, TRUE))
+my.list
+```
+
+```
+$x
+[1] 1 2 3
+
+$y
+[1]  TRUE FALSE  TRUE
+```
+
+It is usually better to give names to list elements...
+
+--
+
+- Note: a data frame is just a list where each element is:
+  - An atomic vector
+  - Of uniform length
+
+---
+# Lists? Vectors?
+
+Many operations in R are _vectorized_ (i.e., operate on an entire vector all in one go):
+
+--
+
+Adding a "scalar" (i.e., a vector of length 1) to a vector:
+
+
+```r
+some.numbers &lt;- c(1,2,3)
+some.numbers + 1
+```
+
+```
+[1] 2 3 4
+```
+
+--
+
+Adding two vectors of identical length:
+
+
+```r
+some.numbers + c(2,2,2)
+```
+
+```
+[1] 3 4 5
+```
+
+---
+
+# Lists? Vectors?
+
+What if there is a length mis-match?
+
+--
+
+
+```r
+some.numbers + c(8,8,8,8)
+```
+
+```
+[1]  9 10 11  9
+```
+
+--
+
+What's going on?
+
+--
+
+The shorter vector is _recycled_ until it matches the length of the larger vector:
+
+--
+
+
+```r
+c(1,2,3,1) + c(8,8,8,8)
+```
+
+```
+[1]  9 10 11  9
+```
+
+--
+
+(Note that you may get a _warning_ from R if this happens)
+
+--
+
+This is how adding a scalar to a vector works, under the hood!
+
+---
+
+# Lists? Vectors?
+
+Vectorization is very useful:
+
+
+```r
+y_hat &lt;- predict(some.model)
+residuals &lt;- y_hat - my.data$y
+```
+
+--
+
+Many things that would use _loops_ in other languages can be done using vectorized operations in R.
+
+--
+
+Many functions operate on vectors:
+
+--
+
+- `mean()`, `sum()`, etc.
+
+--
+
+One way to think of them : factories to convert atomic vectors of length `n` to atomic vectors of length 1!
 
 ---
 
@@ -252,7 +485,7 @@ sounds %&gt;%
 ```
 
 ```
-# A tibble: 33 x 5
+# A tibble: 33 × 5
      age sound          kids_produce kids_respond form 
    &lt;dbl&gt; &lt;chr&gt;                 &lt;dbl&gt;        &lt;dbl&gt; &lt;chr&gt;
  1     8 cockadoodledoo            1           35 WS   
@@ -287,7 +520,7 @@ sounds %&gt;%
 ```
 
 ```
-# A tibble: 33 x 5
+# A tibble: 33 × 5
      age sound          kids_produce kids_respond prop_produce
    &lt;dbl&gt; &lt;chr&gt;                 &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
  1     8 cockadoodledoo            1           35       0.0286
@@ -323,7 +556,7 @@ sounds %&gt;%
 ```
 
 ```
-# A tibble: 33 x 5
+# A tibble: 33 × 5
      age sound          kids_produce kids_respond prop_produce
    &lt;dbl&gt; &lt;chr&gt;                 &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
  1     8 cockadoodledoo            1           35         2.86
@@ -545,25 +778,52 @@ At the end of today's lab, you'll see an extra section on continuous colors.
 ---
 ## But first: `shape`
 
-&lt;img src="03-slides_files/figure-html/unnamed-chunk-18-1.png" width="65%" style="display: block; margin: auto;" /&gt;
+--
+
+`Shape` works like any other `ggplot` aesthetic:
+
+--
+
+
+
+
+
+```r
+penguins %&gt;% 
+  ggplot(aes(x=bill_length_mm, y=bill_depth_mm, 
+             shape=species, color=species)) + 
+  geom_point(size=2)
+```
+
+&lt;img src="03-slides_files/figure-html/unnamed-chunk-30-1.png" width="65%" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+## But first: `shape`
+
+&lt;img src="03-slides_files/figure-html/unnamed-chunk-31-1.png" width="65%" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Shapes with `color = "hotpink"`
 
 
-&lt;img src="03-slides_files/figure-html/unnamed-chunk-19-1.png" width="65%" style="display: block; margin: auto;" /&gt;
+&lt;img src="03-slides_files/figure-html/unnamed-chunk-32-1.png" width="65%" style="display: block; margin: auto;" /&gt;
 
 
 ---
 ## Shapes with `fill = "gold"`
 
 
-&lt;img src="03-slides_files/figure-html/unnamed-chunk-20-1.png" width="65%" style="display: block; margin: auto;" /&gt;
+&lt;img src="03-slides_files/figure-html/unnamed-chunk-33-1.png" width="65%" style="display: block; margin: auto;" /&gt;
+
 
 ---
 ## Default shape for `geom_point`
 
 🕵🏽 Requires spelunking into the dark corners of the `ggplot2` code on [GitHub](https://github.com/tidyverse/ggplot2/blob/master/R/geom-point.r):
+
+--
 
 
 ```r
