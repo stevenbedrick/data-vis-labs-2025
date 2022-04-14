@@ -13,7 +13,7 @@
 
 <title>Principles &amp; Practice of Data Visualization</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <style type = "text/css">
 .main-container {
   max-width: 940px;
@@ -80,6 +81,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -232,7 +236,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -298,9 +302,13 @@ href="slides/02-slides.pdf">pdf</a>)</li>
 <li>Dataset: <a
 href="data/artworks-cleaned.csv">https://stevenbedrick.github.io/data-vis-labs-2022/data/artworks.csv</a>
 <!--     - Dataset Cleaning *(optional)*: [02a-moma-cleaning.html](02a-moma-cleaning.html) -->
-<!--     - Addendum: [02-addendum.html](02-addendum.html) -->
-<!-- - [Lab 03: Colors with Animal Sounds](03-colors.html) -->
-<!--     - [Slides](slides/03-slides.html) ([pdf](slides/03-slides.pdf)) -->
+<!--     - Addendum: [02-addendum.html](02-addendum.html) --></li>
+</ul></li>
+<li><p><a href="03-colors.html">Lab 03: Colors with Animal
+Sounds</a></p>
+<ul>
+<li><a href="slides/03-slides.html">Slides</a> (<a
+href="slides/03-slides.pdf">pdf</a>)
 <!--     - Dataset: [http://bit.ly/cs631-meow](http://bit.ly/cs631-meow) -->
 <!--     - Dataset Cleaning *(optional)*: [03a-meow-cleaning.html](03a-meow-cleaning.html) -->
 <!-- - [Lab 04: Tidy Data + Distributions](04-challenge_rev.html) -->
