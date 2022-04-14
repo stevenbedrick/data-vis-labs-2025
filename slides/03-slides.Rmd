@@ -478,7 +478,7 @@ summary_table <- tibble::tribble(
   "minimum", "min(x)",
   "maximum", "max(x)",
   "mean", "mean(x)",
-  "median", "mean(x)",
+  "median", "median(x)",
   "standard deviation", "sd(x)",
   "variance", "var(x)",
   "rank", "rank(x)"
