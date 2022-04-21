@@ -9,12 +9,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Alison Hill (updates by Steven Bedrick)" />
+<meta name="author" content="Alison Hill &amp; Steven Bedrick" />
 
 
 <title>Lab 04: Distributions &amp; Summary Statistics</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -64,6 +64,7 @@ if (window.hljs) {
 
 
 
+
 <style type = "text/css">
 .main-container {
   max-width: 940px;
@@ -84,6 +85,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -309,7 +313,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -344,7 +348,7 @@ div.tocify {
 <h1 class="title toc-ignore">Lab 04: Distributions &amp; Summary
 Statistics</h1>
 <h3 class="subtitle">BMI 5/625</h3>
-<h4 class="author">Alison Hill (updates by Steven Bedrick)</h4>
+<h4 class="author">Alison Hill &amp; Steven Bedrick</h4>
 
 </div>
 
@@ -357,20 +361,20 @@ Statistics</h1>
 <div id="packages" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Packages</h1>
 <p>New ones to install:</p>
-<pre class="r"><code>install.packages(&quot;ggbeeswarm&quot;)
+<pre class="r"><code>install.packages(&quot;Hmisc&quot;)
+install.packages(&quot;ggbeeswarm&quot;)
 install.packages(&quot;skimr&quot;)
 install.packages(&quot;janitor&quot;)
-install.packages(&quot;ggridges&quot;)</code></pre>
+install.packages(&quot;ggdist&quot;)</code></pre>
 <p>To load:</p>
 <pre class="r"><code>library(tidyverse)
 library(ggbeeswarm)
 library(skimr)
 library(janitor)
-library(ggridges)</code></pre>
-<pre><code>Error in library(ggridges): there is no package called &#39;ggridges&#39;</code></pre>
+library(ggdist)</code></pre>
 </div>
-<div id="make-the-data" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Make the data</h1>
+<div id="make-sample-data" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Make Sample data</h1>
 <p>Below are simulated four distributions (n = 250 each), all with
 similar measures of center (mean = 0) and spread (s.d. = 1), but with
 distinctly different shapes.<a href="#fn1" class="footnote-ref"
@@ -388,31 +392,26 @@ and 0.95 and standard deviation 0.31).</li>
 library(SuppDists)
 # this is used later to generate the s and k distributions
 findParams &lt;- function(mu, sigma, skew, kurt) {
-  # as of 2021, this code apparently doesn&#39;t work: 
-  #value &lt;- JohnsonFit(c(mu, sigma, skew, kurt), moment=&quot;find&quot;)  
-  
-  # but this one does:
   value &lt;- JohnsonFit(c(mu, sigma, skew, kurt), moment=&quot;use&quot;)
     return(value)  
-  
-  # at one point suppdists made us work this way:
-   # list(gamma = value$gamma, delta = value$delta, 
-   #  xi = value$xi, lambda = value$lambda, 
-   #  type = value$type)  
 }</code></pre>
 <pre class="r"><code># Generate sample data -------------------------------------------------------
-set.seed(141079)
+set.seed(8675309)
+
 # normal
-n &lt;- rnorm(250)
+n &lt;- rnorm(250) # 250 simulated draws from a normal distribution
+
 # right-skew
 s &lt;- rJohnson(250, findParams(0.0, 1.0, 2.2, 13.0))
+
 # leptikurtic
 k &lt;- rJohnson(250, findParams(0, 1, 0, 30))
+
 # mixture
 mm &lt;- rnorm(250, rep(c(-1, 1), each = 50) * sqrt(0.9), sqrt(0.1))</code></pre>
-</div>
-<div id="tidy-the-data" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Tidy the data</h1>
+<div id="tidy-the-data" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Tidy the data</h2>
+<p>Combine our four sets of samples</p>
 <pre class="r"><code>four &lt;- data.frame(
   dist = factor(rep(c(&quot;n&quot;, &quot;s&quot;, &quot;k&quot;, &quot;mm&quot;), 
                     each = 250),
@@ -420,13 +419,14 @@ mm &lt;- rnorm(250, rep(c(-1, 1), each = 50) * sqrt(0.9), sqrt(0.1))</code></pre
   vals = c(n, s, k, mm)
 )</code></pre>
 </div>
-<div id="explore-the-data" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> Explore the data</h1>
+</div>
+<div id="explore-the-data" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Explore the data</h1>
 <pre class="r"><code>glimpse(four)</code></pre>
 <pre><code>Rows: 1,000
 Columns: 2
 $ dist &lt;fct&gt; n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n,…
-$ vals &lt;dbl&gt; 0.91835807, -0.44302553, 2.83453800, -0.74480448, 1.44310364, 0.1…</code></pre>
+$ vals &lt;dbl&gt; -0.99658235, 0.72182415, -0.61720882, 2.02939157, 1.06541605, 0.9…</code></pre>
 <p>Let’s see what our descriptive statistics look like:</p>
 <pre class="r"><code>skim(four)</code></pre>
 <table>
@@ -502,7 +502,7 @@ $ vals &lt;dbl&gt; 0.91835807, -0.44302553, 2.83453800, -0.74480448, 1.44310364,
 </tbody>
 </table>
 <p><strong>Variable type: numeric</strong></p>
-<table style="width:100%;">
+<table>
 <colgroup>
 <col width="17%" />
 <col width="12%" />
@@ -511,7 +511,7 @@ $ vals &lt;dbl&gt; 0.91835807, -0.44302553, 2.83453800, -0.74480448, 1.44310364,
 <col width="6%" />
 <col width="7%" />
 <col width="7%" />
-<col width="5%" />
+<col width="6%" />
 <col width="6%" />
 <col width="6%" />
 <col width="7%" />
@@ -536,14 +536,14 @@ $ vals &lt;dbl&gt; 0.91835807, -0.44302553, 2.83453800, -0.74480448, 1.44310364,
 <td align="left">vals</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">0.13</td>
-<td align="right">0.98</td>
-<td align="right">-3.49</td>
-<td align="right">-0.53</td>
-<td align="right">0.1</td>
-<td align="right">0.76</td>
-<td align="right">6.59</td>
-<td align="left">▁▇▃▁▁</td>
+<td align="right">0.12</td>
+<td align="right">1.08</td>
+<td align="right">-4.43</td>
+<td align="right">-0.62</td>
+<td align="right">0.12</td>
+<td align="right">0.74</td>
+<td align="right">8.97</td>
+<td align="left">▁▇▂▁▁</td>
 </tr>
 </tbody>
 </table>
@@ -625,62 +625,64 @@ $ vals &lt;dbl&gt; 0.91835807, -0.44302553, 2.83453800, -0.74480448, 1.44310364,
 <td align="left">n</td>
 <td align="right">0</td>
 <td align="right">1</td>
+<td align="right">0.01</td>
+<td align="right">0.99</td>
+<td align="right">-2.72</td>
+<td align="right">-0.68</td>
 <td align="right">0.04</td>
-<td align="right">1.03</td>
-<td align="right">-3.07</td>
-<td align="right">-0.65</td>
-<td align="right">0.04</td>
-<td align="right">0.79</td>
-<td align="right">2.83</td>
-<td align="left">▁▃▇▅▁</td>
+<td align="right">0.69</td>
+<td align="right">2.87</td>
+<td align="left">▁▅▇▅▁</td>
 </tr>
 <tr class="even">
 <td align="left">vals</td>
 <td align="left">s</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">0.62</td>
-<td align="right">0.93</td>
-<td align="right">-0.86</td>
-<td align="right">0.00</td>
-<td align="right">0.37</td>
-<td align="right">1.08</td>
-<td align="right">6.59</td>
-<td align="left">▇▅▁▁▁</td>
+<td align="right">0.64</td>
+<td align="right">1.04</td>
+<td align="right">-0.81</td>
+<td align="right">0.02</td>
+<td align="right">0.39</td>
+<td align="right">0.90</td>
+<td align="right">8.97</td>
+<td align="left">▇▂▁▁▁</td>
 </tr>
 <tr class="odd">
 <td align="left">vals</td>
 <td align="left">k</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">0.03</td>
-<td align="right">0.80</td>
-<td align="right">-3.49</td>
-<td align="right">-0.31</td>
+<td align="right">0.04</td>
+<td align="right">1.09</td>
+<td align="right">-4.43</td>
+<td align="right">-0.42</td>
 <td align="right">0.02</td>
-<td align="right">0.42</td>
-<td align="right">4.17</td>
-<td align="left">▁▂▇▁▁</td>
+<td align="right">0.48</td>
+<td align="right">6.19</td>
+<td align="left">▁▅▇▁▁</td>
 </tr>
 <tr class="even">
 <td align="left">vals</td>
 <td align="left">mm</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">-0.16</td>
+<td align="right">-0.21</td>
 <td align="right">1.00</td>
-<td align="right">-1.75</td>
-<td align="right">-0.99</td>
-<td align="right">-0.64</td>
-<td align="right">0.91</td>
-<td align="right">1.92</td>
-<td align="left">▆▇▁▇▂</td>
+<td align="right">-2.04</td>
+<td align="right">-1.04</td>
+<td align="right">-0.65</td>
+<td align="right">0.84</td>
+<td align="right">1.69</td>
+<td align="left">▂▇▁▃▃</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="histograms" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> Histograms</h1>
+<div id="histograms" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Histograms</h1>
+<p>For univariate distributions, Histograms are your go-to starting
+place.</p>
 <p>What you want to look for:</p>
 <ul>
 <li>How many “mounds” do you see? (modality)</li>
@@ -689,17 +691,21 @@ the peak symmetrical? (skewness)</li>
 <li>Notice that kurtosis (peakedness) of the distribution is difficult
 to judge here, especially given the effects of differing binwidths.</li>
 </ul>
-<p>The nice thing about <code>ggplot</code> is that we can use
-<code>facet_wrap</code>, and the x- and y-axes are the same, and the
-size of the binwidths are also the same.</p>
+<p>When your data have natural “grouping”, this is a great use case for
+<code>ggplot</code>’s <code>facet_wrap</code> feature; and the x- and
+y-axes will be the same, and the size of histogram binwidths are also
+the same. This is an example of the “small multiples” technique, in
+which we are making a (potentially large!) number of
+identically-formatted plots with the intention of facilitating
+comparisons.</p>
 <pre class="r"><code>#2 x 2 histograms in ggplot
 ggplot(four, aes(x = vals)) + #no y needed for visualization of univariate distributions
   geom_histogram(fill = &quot;white&quot;, colour = &quot;black&quot;) + #easier to see for me
   coord_cartesian(xlim = c(-5, 5)) + #use this to change x/y limits!
   facet_wrap(~ dist) #this is one factor variable with 4 levels</code></pre>
 <p><img src="04-distributions_files/figure-html/gghist-1.png" width="672" /></p>
-<div id="binwidths" class="section level2" number="6.1">
-<h2><span class="header-section-number">6.1</span> Binwidths</h2>
+<div id="binwidths" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Binwidths</h2>
 <p>Always change the binwidths on a histogram. Sometimes the default in
 <code>ggplot</code> works great, sometimes it does not.</p>
 <p>Super narrow:</p>
@@ -724,8 +730,11 @@ ggplot(four, aes(x = vals)) +
   facet_wrap(~ dist)</code></pre>
 <p><img src="04-distributions_files/figure-html/gghist_right-1.png" width="672" /></p>
 </div>
-<div id="add-a-rug" class="section level2" number="6.2">
-<h2><span class="header-section-number">6.2</span> Add a rug</h2>
+<div id="add-a-rug" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Add a rug</h2>
+<p>A “rug” can help give additional insight into the underlying
+distribution of data points- remember, a facted histogram like this can
+obscure differences in sample size across groups!</p>
 <pre class="r"><code>#2 x 2 histograms in ggplot
 ggplot(four, aes(x = vals)) + 
   geom_histogram(binwidth = .2, fill = &quot;white&quot;, colour = &quot;black&quot;) + 
@@ -735,8 +744,8 @@ ggplot(four, aes(x = vals)) +
 <p><img src="04-distributions_files/figure-html/gghist_rug-1.png" width="672" /></p>
 </div>
 </div>
-<div id="boxplots-medium-to-large-n" class="section level1" number="7">
-<h1><span class="header-section-number">7</span> Boxplots (medium to
+<div id="boxplots-medium-to-large-n" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Boxplots (medium to
 large N)</h1>
 <p>What you want to look for:</p>
 <ul>
@@ -753,8 +762,8 @@ here.</li>
   scale_y_continuous(name=&quot;&quot;) + 
   coord_cartesian(ylim = c(-4,4))</code></pre>
 <p><img src="04-distributions_files/figure-html/ggbox-1.png" width="672" /></p>
-<div id="add-notches" class="section level2" number="7.1">
-<h2><span class="header-section-number">7.1</span> Add notches</h2>
+<div id="add-notches" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Add notches</h2>
 <p><a href="http://docs.ggplot2.org/0.9.3.1/geom_boxplot.html">ggplot
 notches</a>: “Notches are used to compare groups; if the notches of two
 boxes do not overlap, this is strong evidence that the medians differ.”
@@ -766,10 +775,12 @@ boxes do not overlap, this is strong evidence that the medians differ.”
   coord_cartesian(ylim = c(-4,4))</code></pre>
 <p><img src="04-distributions_files/figure-html/ggbox_notch-1.png" width="672" /></p>
 </div>
-<div id="add-summary-statistics" class="section level2" number="7.2">
-<h2><span class="header-section-number">7.2</span> Add summary
+<div id="add-summary-statistics" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Add summary
 statistics</h2>
-<p>Here we add a diamond for the mean (see other possible shape codes <a
+<p>We can use <code>stat_summary()</code> to add supplemental computed
+points to the plot, corresponding to different summary statistics. Here
+we are adding a diamond for the mean (see other possible shape codes <a
 href="http://www.cookbook-r.com/Graphs/Shapes_and_line_types/">here</a>).</p>
 <pre class="r"><code>ggplot(four, aes(x = dist, y = vals)) + 
   geom_boxplot() +
@@ -783,8 +794,8 @@ href="http://www.cookbook-r.com/Graphs/Shapes_and_line_types/">here</a>).</p>
 </div>
 </div>
 <div id="univariate-scatterplots-small-to-medium-n"
-class="section level1" number="8">
-<h1><span class="header-section-number">8</span> Univariate scatterplots
+class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Univariate scatterplots
 (small to medium n)</h1>
 <p>Options:</p>
 <ul>
@@ -799,8 +810,8 @@ href="https://cran.r-project.org/web/packages/beeswarm/beeswarm.pdf">Beeswarm</a
 ‘stripchart’, except that would-be overlapping points are separated such
 that each is visible.”</li>
 </ul>
-<div id="stripchart" class="section level2" number="8.1">
-<h2><span class="header-section-number">8.1</span> Stripchart</h2>
+<div id="stripchart" class="section level2" number="7.1">
+<h2><span class="header-section-number">7.1</span> Stripchart</h2>
 <p>Combining <code>geom_jitter() + stat_summary()</code> is the ggplot
 corollary to a stripchart.</p>
 <pre class="r"><code>ggplot(four, aes(x = dist, y = vals)) +
@@ -817,11 +828,15 @@ corollary to a stripchart.</p>
   scale_y_continuous(name = &quot;&quot;) + 
   coord_cartesian(ylim = c(-4, 4))</code></pre>
 <p><img src="04-distributions_files/figure-html/ggjitter_stat-1.png" width="672" /></p>
+<p>One tip for using stripcharts: make sure to experiment with different
+values of <code>alpha</code>, as different distributions and sample
+sizes will be best served by more or less transparency (and thus more or
+less apparent overlap).</p>
 </div>
-<div id="dotplot" class="section level2" number="8.2">
-<h2><span class="header-section-number">8.2</span> Dotplot</h2>
-<p>This is a beeswarm-like ggplot- not exactly the same, but gives you
-the same idea.</p>
+<div id="dotplot" class="section level2" number="7.2">
+<h2><span class="header-section-number">7.2</span> Dotplot</h2>
+<p>Dotplots visualize individual datapoints; various options control
+details about the layout of the points.</p>
 <pre class="r"><code>ggplot(four, aes(x = dist, y = vals)) +
   geom_dotplot(stackdir = &quot;center&quot;, 
                binaxis = &quot;y&quot;, 
@@ -835,10 +850,11 @@ the same idea.</p>
   coord_cartesian(ylim = c(-4, 4))</code></pre>
 <p><img src="04-distributions_files/figure-html/ggdot_stat-1.png" width="672" /></p>
 </div>
-<div id="beeswarm" class="section level2" number="8.3">
-<h2><span class="header-section-number">8.3</span> Beeswarm</h2>
-<p><a href="https://github.com/eclarke/ggbeeswarm"
-class="uri">https://github.com/eclarke/ggbeeswarm</a></p>
+<div id="beeswarm" class="section level2" number="7.3">
+<h2><span class="header-section-number">7.3</span> Beeswarm</h2>
+<p><a href="https://github.com/eclarke/ggbeeswarm">Beeswarm plots</a>
+are a variation on the dot plot; <code>ggbeeswarm</code> has a number of
+different options for controlling their layout:</p>
 <pre class="r"><code>install.packages(&quot;ggbeeswarm&quot;)
 library(ggbeeswarm)</code></pre>
 <pre class="r"><code>ggplot(four, aes(x = dist, y = vals)) +
@@ -856,14 +872,14 @@ library(ggbeeswarm)</code></pre>
   scale_y_continuous(name = &quot;&quot;) + 
   coord_cartesian(ylim = c(-4, 4))</code></pre>
 <p><img src="04-distributions_files/figure-html/ggbee2_stat-1.png" width="672" /></p>
-<p>Note that these recommendations do not apply if your data is “big”.
+<p>Note that beeswarm plots don’t work so well if your data is “big”.
 You will know your data is too big if you try the below methods and you
 can’t see many of the individual points (typically, N &gt; 100).</p>
 </div>
 </div>
 <div id="boxplots-univariate-scatterplots-small-to-medium-n"
-class="section level1" number="9">
-<h1><span class="header-section-number">9</span> Boxplots + univariate
+class="section level1" number="8">
+<h1><span class="header-section-number">8</span> Boxplots + univariate
 scatterplots (small to medium n)</h1>
 <p>Combining <code>geom_boxplot() + geom_dotplot()</code> is my personal
 pick for EDA when I have small - medium data (N &lt; 100).</p>
@@ -883,11 +899,19 @@ pick for EDA when I have small - medium data (N &lt; 100).</p>
   scale_y_continuous(name = &quot;&quot;) + 
   coord_cartesian(ylim = c(-4, 4))</code></pre>
 <p><img src="04-distributions_files/figure-html/ggbox_dot-1.png" width="672" /></p>
-<p>You can also combin <code>geom_boxplot() + geom_jitter()</code>. I
-left the outliers in to demonstrate the jittered points only go left to
-right because I set the jitter <code>height = 0</code>.</p>
+<p>This gives us the “best of both worlds” in that we can see
+descriptive statistics about the distributions as well as see the
+underlying points themselves.</p>
+<p>You can also combine <code>geom_boxplot() + geom_jitter()</code>. In
+this case, note that the boxplot is configured to leave in the outliers,
+even though it means that they will be double-plotted (once from
+<code>geom_boxplot()</code> and once from <code>geom_jitter()</code>).
+This is to demonstrate the jittered points are only being shifted from
+left to right, because I set the jitter <code>height = 0</code>. What
+happens if you tell <code>position_jitter()</code> to do something
+different?</p>
 <pre class="r"><code>ggplot(four, aes(y = vals, x = dist)) + 
-  geom_boxplot(width = .5) + #left the outliers in here, so they are double-plotted
+  geom_boxplot(width = .5) + #note that the outlier points will be double-plotted
   geom_jitter(fill = &quot;lightseagreen&quot;, 
               colour = &quot;lightseagreen&quot;,
               na.rm = TRUE,
@@ -899,38 +923,28 @@ right because I set the jitter <code>height = 0</code>.</p>
 <p><img src="04-distributions_files/figure-html/ggbox_jitter-1.png" width="672" /></p>
 </div>
 <div id="density-plots-medium-to-large-n" class="section level1"
-number="10">
-<h1><span class="header-section-number">10</span> Density plots (medium
+number="9">
+<h1><span class="header-section-number">9</span> Density plots (medium
 to large n)</h1>
-<p>A few ways to do this:</p>
-<ul>
-<li><a
-href="https://chemicalstatistician.wordpress.com/2013/06/09/exploratory-data-analysis-kernel-density-estimation-in-r-on-ozone-pollution-data-in-new-york-and-ozonopolis/">Kernel
-density</a>: “Kernel density estimation (KDE) is a non-parametric way to
-estimate the probability density function of a random variable. Kernel
-density estimation is a fundamental data smoothing problem where
-inferences about the population are made, based on a finite data
-sample.” - from <a
-href="https://en.wikipedia.org/wiki/Kernel_density_estimation">wikipedia</a></li>
-<li><a
-href="https://cran.r-project.org/web/packages/UsingR/UsingR.pdf">Violin
-plots</a>: “This function serves the same utility as side-by-side
-boxplots, only it provides more detail about the different distribution.
-It plots violinplots instead of boxplots. That is, instead of a box, it
-uses the density function to plot the density. For skewed distributions,
-the results look like”violins”. Hence the name.”
-<ul>
-<li>Some violin plots also include the boxplot so you can see
-Q1/Q2/Q3.</li>
-</ul></li>
-<li><a
-href="https://cran.r-project.org/web/packages/beanplot/vignettes/beanplot.pdf">Beanplots</a>:
-“The name beanplot stems from green beans. The density shape can be seen
-as the pod of a green bean, while the scatter plot shows the seeds
-inside the pod.”</li>
-</ul>
-<div id="density-plots" class="section level2" number="10.1">
-<h2><span class="header-section-number">10.1</span> Density plots</h2>
+<p>For larger sample sizes, showing the actual points themselves becomes
+impractical, and density estimate plots become a better solution. A
+density plot is a visualization of a <em>kernel density estimate</em>,
+``a non-parametric way to estimate the probability density function of a
+random variable.’’ (from <a
+href="https://en.wikipedia.org/wiki/Kernel_density_estimation">wikipedia</a>).</p>
+<p>A simple kernel density plot is very useful on its own, but there are
+many variations. One popular one is the <em>violin plot</em>, which is
+essentially a boxplot except with a mirrored KDE plot instead of a
+rectangular box. Another variation combines a stripchart and a scatter
+plot to form a “<a
+href="https://cran.r-project.org/web/packages/beanplot/vignettes/beanplot.pdf">beanplot</a>”,
+whose name “stems from green beans. The density shape can be seen as the
+pod of a green bean, while the scatter plot shows the seeds inside the
+pod.”</p>
+<div id="density-plots" class="section level2" number="9.1">
+<h2><span class="header-section-number">9.1</span> Density plots</h2>
+<p><code>ggplot</code>’s <code>geom_density()</code> will compute and
+plot a KDE:</p>
 <pre class="r"><code>ggplot(four, aes(x = vals)) + 
   geom_density(fill = &quot;lightseagreen&quot;) +
   coord_cartesian(xlim = c(-5, 5)) +
@@ -947,13 +961,19 @@ level to make the color fill transparent (0 = completely transparent; 1
 ggplot(four, aes(x = vals, fill = dist)) + 
   geom_density(alpha = .5)</code></pre>
 <p><img src="04-distributions_files/figure-html/ggdensityinone-1.png" width="672" /></p>
-<div id="add-a-histogram" class="section level3" number="10.1.1">
-<h3><span class="header-section-number">10.1.1</span> Add a
+<p>Keiran Healy has a <a
+href="https://kieranhealy.org/blog/archives/2021/12/19/comparing-distributions/">lovely
+essay</a> discussing different design approaches to this sort of
+plot!</p>
+<div id="add-a-histogram" class="section level3" number="9.1.1">
+<h3><span class="header-section-number">9.1.1</span> Add a
 histogram</h3>
-<p>These are pretty easy to make in <code>ggplot</code>. However, note
-that the y-axis is different from if you just plotted the histogram. In
-fact, when interpreting this plot, the y-axis is only meaningful for
-reading density. It is meaningless for interpreting the histogram.</p>
+<p>Sometimes one wants to combine a histogram and a density plot; while
+these are pretty easy to make in <code>ggplot</code>, there are some
+gotchas. In the plot below, note that the y-axis is different from if
+you just plotted the histogram. In fact, when interpreting this plot,
+the y-axis is only meaningful for reading density. It is meaningless for
+interpreting the histogram.</p>
 <pre class="r"><code>ggplot(four, aes(x = vals)) + 
   geom_histogram(aes(y = ..density..), 
                  binwidth = .5, 
@@ -963,10 +983,14 @@ reading density. It is meaningless for interpreting the histogram.</p>
   coord_cartesian(xlim = c(-5,5)) + 
   facet_wrap(~ dist)</code></pre>
 <p><img src="04-distributions_files/figure-html/gghist_density-1.png" width="672" /></p>
+<p>Question to consider: what does the y-axis represent in a histogram?
+What does it represent in a density plot?</p>
 </div>
 </div>
-<div id="violin-plots" class="section level2" number="10.2">
-<h2><span class="header-section-number">10.2</span> Violin plots</h2>
+<div id="violin-plots" class="section level2" number="9.2">
+<h2><span class="header-section-number">9.2</span> Violin plots</h2>
+<p><code>ggplot</code>’s built-in <code>geom_violin()</code> will make
+simple violin plots:</p>
 <p>My advice: always set <code>color = NA</code> for
 <code>geom_violin</code>. For fill, always set <code>alpha</code>.</p>
 <pre class="r"><code>ggplot(four, aes(x = dist, y = vals)) +
@@ -977,9 +1001,9 @@ reading density. It is meaningless for interpreting the histogram.</p>
                 scale = &quot;count&quot;) + # max width proportional to sample size
   coord_cartesian(ylim = c(-4, 4))</code></pre>
 <p><img src="04-distributions_files/figure-html/ggvio-1.png" width="672" /></p>
-<div id="add-a-boxplot" class="section level3" number="10.2.1">
-<h3><span class="header-section-number">10.2.1</span> Add a boxplot</h3>
-<p>Combination <code>geom_violin() + geom_boxplot()</code> is my
+<div id="add-a-boxplot" class="section level3" number="9.2.1">
+<h3><span class="header-section-number">9.2.1</span> Add a boxplot</h3>
+<p>A combination of <code>geom_violin() + geom_boxplot()</code> is my
 personal pick for EDA when I have large data (N &gt; 100).</p>
 <pre class="r"><code>ggplot(four, aes(x = dist, y = vals)) +
     geom_boxplot(outlier.size = 2, 
@@ -995,59 +1019,83 @@ personal pick for EDA when I have large data (N &gt; 100).</p>
 <p><img src="04-distributions_files/figure-html/ggbox_vio-1.png" width="672" /></p>
 <p>Note that it is just as easy to layer a univariate scatterplot over a
 violin plot, just by replacing the <code>geom_boxplot</code> with a
-different geom as shown abobe. Lots of combination plots are
+different geom as shown above. Lots of combination plots are
 possible!</p>
 </div>
 </div>
 </div>
-<div id="split-violin" class="section level1" number="11">
-<h1><span class="header-section-number">11</span> Split violin</h1>
-<p>Using David Robinson’s code: <a
-href="https://gist.github.com/dgrtwo/eb7750e74997891d7c20"
-class="uri">https://gist.github.com/dgrtwo/eb7750e74997891d7c20</a></p>
-<pre class="r"><code>ggplot(four, aes(x = dist, y = vals)) +
-    geom_flat_violin(alpha = .5, 
-                fill = &quot;lightseagreen&quot;,
-                colour = NA,
-                na.rm = TRUE) +
-    coord_flip()</code></pre>
+<div id="split-violin" class="section level1" number="10">
+<h1><span class="header-section-number">10</span> Split violin</h1>
+<p>For more sophisticated variations, we turn to the <code>ggdist</code>
+package:</p>
+<pre class="r"><code>install.packages(&quot;ggdist&quot;)
+library(ggdist)</code></pre>
+<p>It contains <code>geom</code>s and <code>stat</code>s that, when used
+in combination with one another, will enable us to build many different
+kinds of distribution visualizations.</p>
+<p>For example, one popular variation on the violin plot is the “split
+violin” plot, which removes the mirroring of the violin plot and uses
+that space for other purposes.</p>
+<p>For a traditional violin plot, use <code>stat_slab()</code></p>
+<pre class="r"><code>ggplot(four, aes(x=dist, y=vals)) +
+  stat_slab(fill=&quot;lightseagreen&quot;, trim=FALSE, side=&quot;both&quot;)</code></pre>
 <p><img src="04-distributions_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>To split, and only half one side, alter the <code>side</code>
+setting:</p>
+<pre class="r"><code>ggplot(four, aes(x=dist, y=vals)) +
+  stat_slab(fill=&quot;lightseagreen&quot;, trim=FALSE, side=&quot;right&quot;)</code></pre>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Personally, I prefer to smoosh things down a little bit, for a full
+“split-violin” effect:</p>
+<pre class="r"><code>ggplot(four, aes(x=dist, y=vals)) +
+  stat_slab(fill=&quot;lightseagreen&quot;, trim=FALSE, side=&quot;right&quot;, scale=0.5)</code></pre>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><code>ggdist</code> has many variations of this basic plot, including
+ones with interval bars (<code>stat_slabinterval()</code>), etc.:</p>
+<pre class="r"><code>ggplot(four, aes(x=dist, y=vals)) +
+  stat_slabinterval(fill=&quot;lightseagreen&quot;, trim = FALSE, side=&quot;right&quot;, scale=0.5) </code></pre>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>And of course, we can re-orient our plot by changing the
+<code>x</code> and <code>y</code> aesthetics:</p>
+<pre class="r"><code>ggplot(four, aes(y = dist, x = vals)) +
+    stat_slabinterval(fill=&quot;lightseagreen&quot;, trim = FALSE, side=&quot;right&quot;, scale=0.5)</code></pre>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
-<div id="ridgeline-plots" class="section level1" number="12">
-<h1><span class="header-section-number">12</span> Ridgeline plots</h1>
-<p>Typically makes the most sense to have the factor variable like
-<code>dist</code> on the y-axis for these.</p>
-<p><a
-href="https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html"
-class="uri">https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html</a></p>
-<pre class="r"><code># play with scale
-ggplot(four, aes(x = vals, y = dist)) +
-  geom_density_ridges(scale = 0.9, 
-                      fill = &quot;lightseagreen&quot;, 
-                      alpha = .5)</code></pre>
-<pre><code>Error in geom_density_ridges(scale = 0.9, fill = &quot;lightseagreen&quot;, alpha = 0.5): could not find function &quot;geom_density_ridges&quot;</code></pre>
+<div id="ridgeline-plots" class="section level1" number="11">
+<h1><span class="header-section-number">11</span> Ridgeline plots</h1>
+<p>For ridgeline plots, it makes the most sense to have the factor
+variable (like <code>dist</code>) be on the y-axis. Ridgeline plots are
+indicated when there is a relatively large number of levels to the
+factor, and when comparison across factors is important.</p>
+<pre class="r"><code>ggplot(four, aes(y = dist, x = vals)) +
+    stat_slab(fill=&quot;lightseagreen&quot;, trim = FALSE, side=&quot;right&quot;, scale=0.5)</code></pre>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>(This isn’t an optimal use case for a ridgeline plot, we’re just
+demonstrating…)</p>
+<p>As an alternative to <code>ggdist</code>, you may want to check out
+<a
+href="https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html"><code>ggridges</code></a>,
+a package entirely dedicated to ridgeline plots.</p>
 </div>
-<div id="raincloud-plots" class="section level1" number="13">
-<h1><span class="header-section-number">13</span> Raincloud plots</h1>
-<p><a
-href="https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html"
-class="uri">https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html</a></p>
-<pre class="r"><code>ggplot(four, aes(x = vals, y = dist)) +
-  geom_density_ridges(jittered_points = TRUE, 
-                      position = &quot;raincloud&quot;,
-                      fill = &quot;lightseagreen&quot;, 
-                      alpha = 0.7, 
-                      scale = 0.7)</code></pre>
-<pre><code>Error in geom_density_ridges(jittered_points = TRUE, position = &quot;raincloud&quot;, : could not find function &quot;geom_density_ridges&quot;</code></pre>
+<div id="raincloud-plots" class="section level1" number="12">
+<h1><span class="header-section-number">12</span> Raincloud plots</h1>
+<p>By combining <code>stat_slab</code> and <code>stat_dots</code>, we
+can create a “raincloud” plot:</p>
+<pre class="r"><code>ggplot(four, aes(y = dist, x = vals)) +
+    stat_slab(fill=&quot;lightseagreen&quot;, trim = FALSE, side=&quot;right&quot;, scale=0.5) +
+  stat_dots(side=&quot;left&quot;, alpha=0.5)</code></pre>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 </div>
 <div id="plotting-summary-statistics" class="section level1"
-number="14">
-<h1><span class="header-section-number">14</span> Plotting summary
+number="13">
+<h1><span class="header-section-number">13</span> Plotting summary
 statistics</h1>
-<p>The more general <code>stat_summary</code> function applies a summary
-function to the variable mapped to y at each x value.</p>
-<div id="means-and-error-bars" class="section level2" number="14.1">
-<h2><span class="header-section-number">14.1</span> Means and error
+<p>Moving back to standard <code>ggplot</code> territory, let’s revisit
+<code>stat_summary</code>. A more general way to look at
+<code>stat_summary</code> is that it applies a “summary function” to the
+variable mapped to <code>y</code> at each <code>x</code> value.</p>
+<div id="means-and-error-bars" class="section level2" number="13.1">
+<h2><span class="header-section-number">13.1</span> Means and error
 bars</h2>
 <p>The simplest summary function is <code>mean_se</code>, which returns
 the mean and the mean plus its standard error on each side. Thus,
@@ -1089,14 +1137,14 @@ sample mean without assuming normality.</li>
 </ul>
 <pre class="r"><code>ggplot(four, aes(x = dist, y = vals)) +
   stat_summary(fun.data = &quot;mean_se&quot;)</code></pre>
-<p><img src="04-distributions_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <pre class="r"><code>ggplot(four, aes(x = dist, y = vals)) +
   stat_summary(fun.y = &quot;mean&quot;, geom = &quot;point&quot;) +
   stat_summary(fun.y = &quot;max&quot;, geom = &quot;point&quot;, shape = 21)</code></pre>
-<p><img src="04-distributions_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <pre class="r"><code>ggplot(four, aes(x = dist, y = vals)) +
   stat_summary(fun.data = median_hilow)</code></pre>
-<p><img src="04-distributions_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <p>You may have noticed two different arguments that are potentially
 confusing: <code>fun.data</code> and <code>fun.y</code>. If the function
 returns three values, specify the function with the argument
@@ -1106,15 +1154,16 @@ returns three values, specify the function with the argument
 mean(x) # use fun.y</code></pre>
 <pre><code>[1] 2</code></pre>
 <pre class="r"><code>mean_cl_normal(x) # use fun.data</code></pre>
-<pre><code>Error: The `Hmisc` package is required.</code></pre>
+<pre><code>  y       ymin     ymax
+1 2 -0.4841377 4.484138</code></pre>
 <p>Confidence limits may give us a better idea than standard error
 limits of whether two means would be deemed statistically different when
 modeling, so we frequently use <code>mean_cl_normal</code> or
 <code>mean_cl_boot</code> in addition to <code>mean_se</code>.</p>
 </div>
 <div id="connecting-means-with-lines" class="section level2"
-number="14.2">
-<h2><span class="header-section-number">14.2</span> Connecting means
+number="13.2">
+<h2><span class="header-section-number">13.2</span> Connecting means
 with lines</h2>
 <p>Using the <code>ToothGrowth</code> dataset</p>
 <pre class="r"><code>data(ToothGrowth)
@@ -1123,19 +1172,19 @@ tg &lt;- ToothGrowth</code></pre>
 ggplot(tg, aes(x = dose, y = len, colour = supp)) + 
   stat_summary(fun.data = &quot;mean_se&quot;) +
   ggtitle(&quot;Mean +/- SE&quot;)</code></pre>
-<p><img src="04-distributions_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <pre class="r"><code># Connect the points with lines
 ggplot(tg, aes(x = dose, y = len, colour = supp)) + 
   stat_summary(fun.data = &quot;mean_se&quot;) +
   stat_summary(fun.y = mean, geom = &quot;line&quot;) +
   ggtitle(&quot;Mean +/- SE&quot;)</code></pre>
-<p><img src="04-distributions_files/figure-html/unnamed-chunk-13-2.png" width="672" /></p>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-19-2.png" width="672" /></p>
 <pre class="r"><code># Use 95% confidence interval instead of SEM
 ggplot(tg, aes(x = dose, y = len, colour = supp)) + 
   stat_summary(fun.data = &quot;mean_cl_normal&quot;) +
   stat_summary(fun.y = mean, geom = &quot;line&quot;) +
   ggtitle(&quot;Mean with 95% confidence intervals&quot;)</code></pre>
-<p><img src="04-distributions_files/figure-html/unnamed-chunk-13-3.png" width="672" /></p>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-19-3.png" width="672" /></p>
 <pre class="r"><code># The errorbars overlapped, so use position_dodge to move them horizontally
 pd &lt;- position_dodge(0.1) # move them .05 to the left and right
 
@@ -1143,31 +1192,36 @@ ggplot(tg, aes(x = dose, y = len, colour = supp)) +
   stat_summary(fun.data = &quot;mean_cl_normal&quot;, position = pd) +
   stat_summary(fun.y = mean, geom = &quot;line&quot;, position = pd) +
   ggtitle(&quot;Mean with 95% confidence intervals&quot;)</code></pre>
-<p><img src="04-distributions_files/figure-html/unnamed-chunk-13-4.png" width="672" /></p>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-19-4.png" width="672" /></p>
 <p>Not the best example for this geom, but another good one for showing
 variability…</p>
 <pre class="r"><code># ribbon geom
 ggplot(tg, aes(x = dose, y = len, colour = supp, fill = supp)) + 
   stat_summary(fun.y = mean, geom = &quot;line&quot;) +
   stat_summary(fun.data = mean_se, geom = &quot;ribbon&quot;, alpha = .5)</code></pre>
-<p><img src="04-distributions_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 </div>
-<div id="bars-with-error-bars" class="section level2" number="14.3">
-<h2><span class="header-section-number">14.3</span> Bars with error
+<div id="bars-with-error-bars" class="section level2" number="13.3">
+<h2><span class="header-section-number">13.3</span> Bars with error
 bars</h2>
-<p>If you must…</p>
+<p>This is not an ideal practice, but sometimes you must…</p>
 <pre class="r"><code># Standard error of the mean; note positioning
 ggplot(tg, aes(x = factor(dose), y = len, fill = supp)) + 
   stat_summary(fun.y = mean, geom = &quot;bar&quot;, position = position_dodge(width = .9)) +
   stat_summary(fun.data = mean_se, geom = &quot;linerange&quot;, position = position_dodge(width = .9)) +
   ggtitle(&quot;Mean +/- SE&quot;)</code></pre>
-<p><img src="04-distributions_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>The key trick here is telling <code>stat_summary</code> to use the
+“bar” geom instead of its default (point or linerange).</p>
+<p>Note that it is important to be clear about whether your error bars
+represent the standard error of the mean, or a true confidence interval,
+which can be computed as follows:</p>
 <pre class="r"><code># Use 95% confidence interval instead of SEM
 ggplot(tg, aes(x = factor(dose), y = len, fill = supp)) + 
   stat_summary(fun.y = mean, geom = &quot;bar&quot;, position = position_dodge(width = .9)) +
   stat_summary(fun.data = mean_cl_boot, geom = &quot;linerange&quot;, position = position_dodge(width = .9)) +
   ggtitle(&quot;Mean with 95% confidence intervals&quot;)</code></pre>
-<p><img src="04-distributions_files/figure-html/unnamed-chunk-15-2.png" width="672" /></p>
+<p><img src="04-distributions_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <p>More help here: <a
 href="http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/"
 class="uri">http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/</a></p>

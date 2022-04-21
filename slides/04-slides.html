@@ -93,7 +93,7 @@ $ cake      &lt;chr&gt; "cake", "cake", "cake", "cake", "cake", "cake", "cake", 
 .pull-left[
 
 ```
-# A tibble: 2 x 4
+# A tibble: 2 × 4
   series challenge    cake pie_tart
   &lt;fct&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;
 1 1      showstopper     5        5
@@ -101,7 +101,7 @@ $ cake      &lt;chr&gt; "cake", "cake", "cake", "cake", "cake", "cake", "cake", 
 ```
 
 ```
-# A tibble: 2 x 4
+# A tibble: 2 × 4
   series challenge    cake pie_tart
   &lt;fct&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;
 1 2      showstopper     8       17
@@ -115,7 +115,7 @@ $ cake      &lt;chr&gt; "cake", "cake", "cake", "cake", "cake", "cake", "cake", 
 .pull-right[
 
 ```
-# A tibble: 2 x 4
+# A tibble: 2 × 4
   series challenge    cake pie_tart
   &lt;fct&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;
 1 3      showstopper    12       17
@@ -123,7 +123,7 @@ $ cake      &lt;chr&gt; "cake", "cake", "cake", "cake", "cake", "cake", "cake", 
 ```
 
 ```
-# A tibble: 2 x 4
+# A tibble: 2 × 4
   series challenge    cake pie_tart
   &lt;fct&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;
 1 4      showstopper    27        9
@@ -131,10 +131,19 @@ $ cake      &lt;chr&gt; "cake", "cake", "cake", "cake", "cake", "cake", "cake", 
 ```
 ]
 
+--
+
+Four seasons, four datasets...
+
+--
+
+Each row: a challenge type ("signature" vs. "showstopper") and a count of entries by type
+
 ---
 
 # Still un-tidy cakes
 
+.pull-left[
 
 
 ```r
@@ -143,7 +152,7 @@ cakes_untidy %&gt;%
 ```
 
 ```
-# A tibble: 16 x 4
+# A tibble: 16 × 4
    series challenge    cake pie_tart
    &lt;fct&gt;  &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;
  1 1      showstopper     5        5
@@ -163,8 +172,13 @@ cakes_untidy %&gt;%
 15 8      showstopper    26       12
 16 8      signature      21        8
 ```
+]
 
+--
 
+.pull-right[
+At least now it's a single dataframe...
+]
 ---
 
 # Finally tidy cakes
@@ -180,7 +194,7 @@ cakes_tidy
 ```
 
 ```
-# A tibble: 32 x 4
+# A tibble: 32 × 4
    series challenge   bake_type num_bakes
    &lt;fct&gt;  &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt;
  1 1      showstopper cake              5
@@ -213,7 +227,7 @@ cakes_tidy
 ```
 
 ```
-# A tibble: 32 x 4
+# A tibble: 32 × 4
    series challenge   bake_type num_bakes
    &lt;fct&gt;  &lt;chr&gt;       &lt;fct&gt;         &lt;dbl&gt;
  1 1      showstopper cake              5
@@ -260,6 +274,8 @@ skim(cakes_tidy)
 ```
 
 
+--
+
 Table: Data summary
 
 |                         |           |
@@ -275,12 +291,24 @@ Table: Data summary
 |________________________ |           |
 |Group variables          |None       |
 
+---
+
+
+```r
+library(skimr)
+skim(cakes_tidy)
+```
+
+--
+
 
 **Variable type: character**
 
 |skim_variable | n_missing| complete_rate| min| max| empty| n_unique| whitespace|
 |:-------------|---------:|-------------:|---:|---:|-----:|--------:|----------:|
 |challenge     |         0|             1|   9|  11|     0|        2|          0|
+
+--
 
 
 **Variable type: factor**
@@ -289,6 +317,7 @@ Table: Data summary
 |:-------------|---------:|-------------:|:-------|--------:|:----------------------|
 |series        |         0|             1|FALSE   |        8|1: 4, 2: 4, 3: 4, 4: 4 |
 |bake_type     |         0|             1|FALSE   |        2|cak: 16, pie: 16       |
+--
 
 
 **Variable type: numeric**
@@ -296,6 +325,7 @@ Table: Data summary
 |skim_variable | n_missing| complete_rate|  mean|  sd| p0| p25| p50|  p75| p100|hist  |
 |:-------------|---------:|-------------:|-----:|---:|--:|---:|---:|----:|----:|:-----|
 |num_bakes     |         0|             1| 12.56| 7.1|  0|   7|  12| 17.5|   27|▆▇▇▇▃ |
+
 
 ---
 
@@ -337,7 +367,7 @@ cakes_tidy %&gt;%
 ```
 
 ```
-# A tibble: 4 x 3
+# A tibble: 4 × 3
   challenge   bake_type     n
   &lt;chr&gt;       &lt;fct&gt;     &lt;dbl&gt;
 1 showstopper cake        129
@@ -356,7 +386,7 @@ cakes_tidy %&gt;%
 ```
 
 ```
-# A tibble: 16 x 3
+# A tibble: 16 × 3
    series bake_type     n
    &lt;fct&gt;  &lt;fct&gt;     &lt;dbl&gt;
  1 1      cake         17
@@ -386,9 +416,8 @@ library(skimr)
 cakes_tidy %&gt;% 
   group_by(bake_type) %&gt;% 
   select_if(is.numeric) %&gt;% 
-  skim()
+  skim() %&gt;% summary
 ```
-
 
 Table: Data summary
 
@@ -403,14 +432,6 @@ Table: Data summary
 |________________________ |           |
 |Group variables          |bake_type  |
 
-
-**Variable type: numeric**
-
-|skim_variable |bake_type | n_missing| complete_rate|  mean|   sd| p0|   p25|  p50|   p75| p100|hist  |
-|:-------------|:---------|---------:|-------------:|-----:|----:|--:|-----:|----:|-----:|----:|:-----|
-|num_bakes     |cake      |         0|             1| 15.81| 7.31|  4| 11.00| 15.5| 21.00|   27|▅▇▁▇▅ |
-|num_bakes     |pie_tart  |         0|             1|  9.31| 5.30|  0|  5.75|  8.5| 12.75|   17|▃▅▇▃▆ |
-
 See: https://suzanbaert.netlify.com/2018/01/dplyr-tutorial-1/
 
 ---
@@ -424,7 +445,7 @@ cakes_by_series
 ```
 
 ```
-# A tibble: 16 x 3
+# A tibble: 16 × 3
    series bake_type     n
    &lt;fct&gt;  &lt;fct&gt;     &lt;dbl&gt;
  1 1      cake         17
@@ -458,10 +479,12 @@ ggplot(cakes_by_series, aes(x = series, y = n,
   expand_limits(y = 0)
 ```
 
-&lt;img src="04-slides_files/figure-html/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-21-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: middle, inverse, center
+
+## `select()`: Your new best friend
 
 ---
 
@@ -475,7 +498,7 @@ cakes_raw %&gt;% head(4)
 ```
 
 ```
-# A tibble: 4 x 5
+# A tibble: 4 × 5
   series episode baker     challenge cake 
    &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;
 1      1       1 Annetha   signature cake 
@@ -496,7 +519,7 @@ cakes_raw %&gt;% select(cake)
 ```
 
 ```
-# A tibble: 1,772 x 1
+# A tibble: 1,772 × 1
    cake 
    &lt;chr&gt;
  1 cake 
@@ -523,7 +546,7 @@ cakes_raw %&gt;% select(cake, baker) %&gt;% head(4)
 ```
 
 ```
-# A tibble: 4 x 2
+# A tibble: 4 × 2
   cake  baker    
   &lt;chr&gt; &lt;chr&gt;    
 1 cake  Annetha  
@@ -544,7 +567,7 @@ cakes_raw %&gt;% select(!cake) %&gt;% head(4)
 ```
 
 ```
-# A tibble: 4 x 4
+# A tibble: 4 × 4
   series episode baker     challenge
    &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;    
 1      1       1 Annetha   signature
@@ -564,7 +587,7 @@ cakes_raw %&gt;% select(starts_with("c"))
 ```
 
 ```
-# A tibble: 1,772 x 2
+# A tibble: 1,772 × 2
    challenge cake 
    &lt;chr&gt;     &lt;chr&gt;
  1 signature cake 
@@ -590,7 +613,7 @@ cakes_raw %&gt;% select(last_col()) %&gt;% head(4)
 ```
 
 ```
-# A tibble: 4 x 1
+# A tibble: 4 × 1
   cake 
   &lt;chr&gt;
 1 cake 
@@ -610,7 +633,7 @@ cakes_raw %&gt;% select(baker:cake) %&gt;% head(4)
 ```
 
 ```
-# A tibble: 4 x 3
+# A tibble: 4 × 3
   baker     challenge cake 
   &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;
 1 Annetha   signature cake 
@@ -626,7 +649,7 @@ cakes_raw %&gt;% select(baker:cake) %&gt;% head(4)
 Matching columns by name:
 * `starts_with()`/`ends_with()`
 * `contains()`
-* `num_range()` (for matching numerical ranges: think columns named for years, etc.)
+* `num_range()` (for matching numerical ranges: think columns named for years, quarters, etc.)
 
 See the `select` help page for more examples...
 
@@ -740,7 +763,7 @@ billboard %&gt;%
 ```
 
 ```
-# A tibble: 10 x 5
+# A tibble: 10 × 5
    artist track                   date.entered week   rank
    &lt;chr&gt;  &lt;chr&gt;                   &lt;date&gt;       &lt;chr&gt; &lt;dbl&gt;
  1 2 Pac  Baby Don't Cry (Keep... 2000-02-26   1        87
@@ -754,14 +777,106 @@ billboard %&gt;%
  9 2 Pac  Baby Don't Cry (Keep... 2000-02-26   9        NA
 10 2 Pac  Baby Don't Cry (Keep... 2000-02-26   10       NA
 ```
+---
+class: middle, inverse, center
+
+## `janitor`: Your _other_ new best friend
+
+---
+
+Often, data comes to us in... a less than pristine state:
+
+--
+
+
+
+
+```r
+glimpse(gapmnd)
+```
+
+```
+Rows: 213
+Columns: 15
+$ `Fixed broadband Internet subscribers (per 100 people)` &lt;chr&gt; "Afghanistan",…
+$ `1998`                                                  &lt;dbl&gt; NA, NA, NA, NA…
+$ `1999`                                                  &lt;dbl&gt; NA, NA, NA, NA…
+$ `2000`                                                  &lt;dbl&gt; NA, NA, NA, NA…
+$ `2001`                                                  &lt;dbl&gt; 0.0000000000, …
+$ `2002`                                                  &lt;dbl&gt; 0.0000000000, …
+$ `2003`                                                  &lt;dbl&gt; 0.000000e+00, …
+$ `2004`                                                  &lt;dbl&gt; 6.880265e-04, …
+$ `2005`                                                  &lt;dbl&gt; 7.356639e-04, …
+$ `2006`                                                  &lt;dbl&gt; 0.001625928, N…
+$ `2007`                                                  &lt;dbl&gt; 0.001581161, 0…
+$ `2008`                                                  &lt;dbl&gt; 0.001537626, 2…
+$ `2009`                                                  &lt;dbl&gt; 0.00299058, 2.…
+$ `2010`                                                  &lt;dbl&gt; 0.004362367, 3…
+$ `2011`                                                  &lt;lgl&gt; NA, NA, NA, NA…
+```
+
+--
+
+Note the very inconvenient column names...
+
+---
+
+## The `janitor` package is here to help!
+
+
+```r
+gapmnd %&gt;% janitor::clean_names() %&gt;% glimpse()
+```
+
+```
+Rows: 213
+Columns: 15
+$ fixed_broadband_internet_subscribers_per_100_people &lt;chr&gt; "Afghanistan", "Al…
+$ x1998                                               &lt;dbl&gt; NA, NA, NA, NA, NA…
+$ x1999                                               &lt;dbl&gt; NA, NA, NA, NA, NA…
+$ x2000                                               &lt;dbl&gt; NA, NA, NA, NA, NA…
+$ x2001                                               &lt;dbl&gt; 0.0000000000, 0.00…
+$ x2002                                               &lt;dbl&gt; 0.0000000000, 0.00…
+$ x2003                                               &lt;dbl&gt; 0.000000e+00, 0.00…
+$ x2004                                               &lt;dbl&gt; 6.880265e-04, 0.00…
+$ x2005                                               &lt;dbl&gt; 7.356639e-04, 8.65…
+$ x2006                                               &lt;dbl&gt; 0.001625928, NA, 0…
+$ x2007                                               &lt;dbl&gt; 0.001581161, 0.315…
+$ x2008                                               &lt;dbl&gt; 0.001537626, 2.011…
+$ x2009                                               &lt;dbl&gt; 0.00299058, 2.8815…
+$ x2010                                               &lt;dbl&gt; 0.004362367, 3.292…
+$ x2011                                               &lt;lgl&gt; NA, NA, NA, NA, NA…
+```
+
+---
+
+### `janitor` has many other capabilities...
+
+--
+
+* Transforming columns
+
+--
+
+* Removing empty rows/columns
+
+--
+
+* Collapsing sets of values values to `NA`, as needed
+
+--
+
+It also has a very nice cross-tabulation syntax (`tabyl()`)!
 
 
 ---
 
-## You have 2 challenges today!
 
-Described [here](04-challenge.html)
-Reference lab [here](04-distributions.html)
+## You have 2 _challenges_ today!
+
+Described [here](04-challenge_rev.html)
+
+Also see a reference walkthrough [here](04-distributions.html)
 
 
 ---

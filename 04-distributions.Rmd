@@ -1,7 +1,7 @@
 ---
 title: "Lab 04: Distributions & Summary Statistics"
 subtitle: "BMI 5/625"
-author: "Alison Hill (updates by Steven Bedrick)"
+author: "Alison Hill & Steven Bedrick"
 output:
   html_document:
     theme: flatly
@@ -26,10 +26,11 @@ knitr::include_url("slides/04-slides.html")
 New ones to install:
 
 ```{r eval = FALSE}
+install.packages("Hmisc")
 install.packages("ggbeeswarm")
 install.packages("skimr")
 install.packages("janitor")
-install.packages("ggridges")
+install.packages("ggdist")
 ```
 
 
@@ -40,10 +41,10 @@ library(tidyverse)
 library(ggbeeswarm)
 library(skimr)
 library(janitor)
-library(ggridges)
+library(ggdist)
 ```
 
-# Make the data
+# Make Sample data
 
 Below are simulated four distributions (n = 250 each), all with similar measures of center (mean = 0) and spread (s.d. = 1), but with distinctly different shapes.^[The [code for these distributions](https://github.com/hadley/boxplots-paper/blob/master/boxplots-density.r) originally came from Hadley Wickham's paper on ["40 years of boxplots"](http://vita.had.co.nz/papers/boxplots.html)]
 
@@ -58,35 +59,32 @@ and kurtosis 30);
 library(SuppDists)
 # this is used later to generate the s and k distributions
 findParams <- function(mu, sigma, skew, kurt) {
-  # as of 2021, this code apparently doesn't work: 
-  #value <- JohnsonFit(c(mu, sigma, skew, kurt), moment="find")  
-  
-  # but this one does:
   value <- JohnsonFit(c(mu, sigma, skew, kurt), moment="use")
     return(value)  
-  
-  # at one point suppdists made us work this way:
-   # list(gamma = value$gamma, delta = value$delta, 
-   #  xi = value$xi, lambda = value$lambda, 
-   #  type = value$type)  
 }
 ```
 
 ```{r make_data}
 # Generate sample data -------------------------------------------------------
-set.seed(141079)
+set.seed(8675309)
+
 # normal
-n <- rnorm(250)
+n <- rnorm(250) # 250 simulated draws from a normal distribution
+
 # right-skew
 s <- rJohnson(250, findParams(0.0, 1.0, 2.2, 13.0))
+
 # leptikurtic
 k <- rJohnson(250, findParams(0, 1, 0, 30))
+
 # mixture
 mm <- rnorm(250, rep(c(-1, 1), each = 50) * sqrt(0.9), sqrt(0.1))
 ```
 
 
-# Tidy the data
+## Tidy the data
+
+Combine our four sets of samples
 
 ```{r make_data_long}
 four <- data.frame(
@@ -116,6 +114,8 @@ four %>%
 
 # Histograms
 
+For univariate distributions, Histograms are your go-to starting place. 
+
 What you want to look for:
 
 * How many "mounds" do you see? (modality)
@@ -123,7 +123,7 @@ What you want to look for:
 * Notice that kurtosis (peakedness) of the distribution is difficult to judge here, especially given the effects of differing binwidths.
 
 
-The nice thing about `ggplot` is that we can use `facet_wrap`, and the x- and y-axes are the same, and the size of the binwidths are also the same. 
+When your data have natural "grouping", this is a great use case for `ggplot`'s `facet_wrap` feature; and the x- and y-axes will be the same, and the size of histogram binwidths are also the same. This is an example of the "small multiples" technique, in which we are making a (potentially large!) number of identically-formatted plots with the intention of facilitating comparisons.
 
 
 
@@ -172,6 +172,8 @@ ggplot(four, aes(x = vals)) +
 
 ## Add a rug
 
+A "rug" can help give additional insight into the underlying distribution of data points- remember, a facted histogram like this can obscure differences in sample size across groups!
+
 ```{r gghist_rug}
 #2 x 2 histograms in ggplot
 ggplot(four, aes(x = vals)) + 
@@ -180,8 +182,6 @@ ggplot(four, aes(x = vals)) +
   coord_cartesian(xlim = c(-5, 5)) + 
   facet_wrap(~ dist)
 ```
-
-
 
 # Boxplots (medium to large N)
 
@@ -215,7 +215,7 @@ ggplot(four, aes(y = vals, x = dist)) +
 
 ## Add summary statistics
 
-Here we add a diamond for the mean (see other possible shape codes [here](http://www.cookbook-r.com/Graphs/Shapes_and_line_types/)). 
+We can use `stat_summary()` to add supplemental computed points to the plot, corresponding to different summary statistics. Here we are adding a diamond for the mean (see other possible shape codes [here](http://www.cookbook-r.com/Graphs/Shapes_and_line_types/)). 
 
 ```{r ggbox_stat}
 ggplot(four, aes(x = dist, y = vals)) + 
@@ -255,10 +255,11 @@ ggplot(four, aes(x = dist, y = vals)) +
   coord_cartesian(ylim = c(-4, 4))
 ```
 
+One tip for using stripcharts: make sure to experiment with different values of `alpha`, as different distributions and sample sizes will be best served by more or less transparency (and thus more or less apparent overlap).
 
 ## Dotplot
 
-This is a beeswarm-like ggplot- not exactly the same, but gives you the same idea.
+Dotplots visualize individual datapoints; various options control details about the layout of the points.
 
 ```{r ggdot_stat}
 ggplot(four, aes(x = dist, y = vals)) +
@@ -277,7 +278,7 @@ ggplot(four, aes(x = dist, y = vals)) +
 
 ## Beeswarm
 
-https://github.com/eclarke/ggbeeswarm
+[Beeswarm plots](https://github.com/eclarke/ggbeeswarm) are a variation on the dot plot; `ggbeeswarm` has a number of different options for controlling their layout:
 
 ```{r eval=FALSE}
 install.packages("ggbeeswarm")
@@ -303,10 +304,9 @@ ggplot(four, aes(x = dist, y = vals)) +
   coord_cartesian(ylim = c(-4, 4))
 ```
 
-Note that these recommendations do not apply if your data is "big". You will know your data is too big if you try the below methods and you can't see many of the individual points (typically, N > 100). 
+Note that beeswarm plots don't work so well if your data is "big". You will know your data is too big if you try the below methods and you can't see many of the individual points (typically, N > 100). 
 
 # Boxplots + univariate scatterplots (small to medium n)
-
 
 Combining `geom_boxplot() + geom_dotplot()` is my personal pick for EDA when I have small - medium data (N < 100).
 
@@ -328,12 +328,13 @@ ggplot(four, aes(y = vals, x = dist)) +
   coord_cartesian(ylim = c(-4, 4))
 ```
 
+This gives us the "best of both worlds" in that we can see descriptive statistics about the distributions as well as see the underlying points themselves.
 
-You can also combin `geom_boxplot() + geom_jitter()`. I left the outliers in to demonstrate the jittered points only go left to right because I set the jitter `height = 0`.
+You can also combine `geom_boxplot() + geom_jitter()`. In this case, note that the boxplot is configured to leave in the outliers, even though it means that they will be double-plotted (once from `geom_boxplot()` and once from `geom_jitter()`). This is to demonstrate the jittered points are only being shifted from left to right, because I set the jitter `height = 0`. What happens if you tell `position_jitter()` to do something different?
 
 ```{r ggbox_jitter}
 ggplot(four, aes(y = vals, x = dist)) + 
-  geom_boxplot(width = .5) + #left the outliers in here, so they are double-plotted
+  geom_boxplot(width = .5) + #note that the outlier points will be double-plotted
   geom_jitter(fill = "lightseagreen", 
               colour = "lightseagreen",
               na.rm = TRUE,
@@ -346,15 +347,14 @@ ggplot(four, aes(y = vals, x = dist)) +
 
 # Density plots (medium to large n)
 
-A few ways to do this:
+For larger sample sizes, showing the actual points themselves becomes impractical, and density estimate plots become a better solution. A density plot is a visualization of a _kernel density estimate_, ``a non-parametric way to estimate the probability density function of a random variable.'' (from [wikipedia](https://en.wikipedia.org/wiki/Kernel_density_estimation)). 
 
-* [Kernel density](https://chemicalstatistician.wordpress.com/2013/06/09/exploratory-data-analysis-kernel-density-estimation-in-r-on-ozone-pollution-data-in-new-york-and-ozonopolis/): "Kernel density estimation (KDE) is a non-parametric way to estimate the probability density function of a random variable. Kernel density estimation is a fundamental data smoothing problem where inferences about the population are made, based on a finite data sample." - from [wikipedia](https://en.wikipedia.org/wiki/Kernel_density_estimation)
-* [Violin plots](https://cran.r-project.org/web/packages/UsingR/UsingR.pdf): "This function serves the same utility as side-by-side boxplots, only it provides more detail about the different distribution. It plots violinplots instead of boxplots. That is, instead of a box, it uses the density function to plot the density. For skewed distributions, the results look like "violins". Hence the name." 
-    - Some violin plots also include the boxplot so you can see Q1/Q2/Q3.
-* [Beanplots](https://cran.r-project.org/web/packages/beanplot/vignettes/beanplot.pdf): "The name beanplot stems from green beans. The density shape can be seen as the pod of a green bean, while the scatter plot shows the seeds inside the pod."
+A simple kernel density plot is very useful on its own, but there are many variations. One popular one is the _violin plot_, which is essentially a boxplot except with a mirrored KDE plot instead of a rectangular box. Another variation combines a stripchart and a scatter plot to form a "[beanplot](https://cran.r-project.org/web/packages/beanplot/vignettes/beanplot.pdf)", whose name "stems from green beans. The density shape can be seen as the pod of a green bean, while the scatter plot shows the seeds inside the pod."
 
 
 ## Density plots
+
+`ggplot`'s `geom_density()` will compute and plot a KDE:
 
 ```{r ggdensity}
 ggplot(four, aes(x = vals)) + 
@@ -371,9 +371,11 @@ ggplot(four, aes(x = vals, fill = dist)) +
   geom_density(alpha = .5)
 ```
 
+Keiran Healy has a [lovely essay](https://kieranhealy.org/blog/archives/2021/12/19/comparing-distributions/) discussing different design approaches to this sort of plot!
+
 ### Add a histogram
 
-These are pretty easy to make in `ggplot`. However, note that the y-axis is different from if you just plotted the histogram. In fact, when interpreting this plot, the y-axis is only meaningful for reading density. It is meaningless for interpreting the histogram.
+Sometimes one wants to combine a histogram and a density plot; while these are pretty easy to make in `ggplot`, there are some gotchas. In the plot below, note that the y-axis is different from if you just plotted the histogram. In fact, when interpreting this plot, the y-axis is only meaningful for reading density. It is meaningless for interpreting the histogram.
 
 ```{r gghist_density}
 ggplot(four, aes(x = vals)) + 
@@ -386,7 +388,11 @@ ggplot(four, aes(x = vals)) +
   facet_wrap(~ dist)
 ```
 
+Question to consider: what does the y-axis represent in a histogram? What does it represent in a density plot?
+
 ## Violin plots
+
+`ggplot`'s built-in `geom_violin()` will make simple violin plots:
 
 My advice: always set `color = NA` for `geom_violin`. For fill, always set `alpha`.
 
@@ -402,7 +408,7 @@ ggplot(four, aes(x = dist, y = vals)) +
 
 ### Add a boxplot
 
-Combination `geom_violin() + geom_boxplot()` is my personal pick for EDA when I have large data (N > 100).
+A combination of `geom_violin() + geom_boxplot()` is my personal pick for EDA when I have large data (N > 100).
 
 ```{r ggbox_vio}
 ggplot(four, aes(x = dist, y = vals)) +
@@ -418,132 +424,84 @@ ggplot(four, aes(x = dist, y = vals)) +
   coord_cartesian(ylim = c(-4, 4))
 ```
 
-Note that it is just as easy to layer a univariate scatterplot over a violin plot, just by replacing the `geom_boxplot` with a different geom as shown abobe. Lots of combination plots are possible! 
+Note that it is just as easy to layer a univariate scatterplot over a violin plot, just by replacing the `geom_boxplot` with a different geom as shown above. Lots of combination plots are possible! 
 
 # Split violin
 
-Using David Robinson's code: https://gist.github.com/dgrtwo/eb7750e74997891d7c20
+For more sophisticated variations, we turn to the `ggdist` package:
 
-```{r echo = FALSE}
-# somewhat hackish solution to:
-# https://twitter.com/EamonCaddigan/status/646759751242620928
-# based mostly on copy/pasting from ggplot2 geom_violin source:
-# https://github.com/hadley/ggplot2/blob/master/R/geom-violin.r
-
-library(ggplot2)
-library(dplyr)
-
-
-"%||%" <- function(a, b) {
-  if (!is.null(a)) a else b
-}
-
-geom_flat_violin <- function(mapping = NULL, data = NULL, stat = "ydensity",
-                        position = "dodge", trim = TRUE, scale = "area",
-                        show.legend = NA, inherit.aes = TRUE, ...) {
-  layer(
-    data = data,
-    mapping = mapping,
-    stat = stat,
-    geom = GeomFlatViolin,
-    position = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    params = list(
-      trim = trim,
-      scale = scale,
-      ...
-    )
-  )
-}
-
-#' @rdname ggplot2-ggproto
-#' @format NULL
-#' @usage NULL
-#' @export
-GeomFlatViolin <-
-  ggproto("GeomFlatViolin", Geom,
-          setup_data = function(data, params) {
-            data$width <- data$width %||%
-              params$width %||% (resolution(data$x, FALSE) * 0.9)
-            
-            # ymin, ymax, xmin, and xmax define the bounding rectangle for each group
-            data %>%
-              group_by(group) %>%
-              mutate(ymin = min(y),
-                     ymax = max(y),
-                     xmin = x,
-                     xmax = x + width / 2)
-          },
-          
-          draw_group = function(data, panel_scales, coord) {
-            # Find the points for the line to go all the way around
-            data <- transform(data, xminv = x,
-                              xmaxv = x + violinwidth * (xmax - x))
-            
-            # Make sure it's sorted properly to draw the outline
-            newdata <- rbind(plyr::arrange(transform(data, x = xminv), y),
-                             plyr::arrange(transform(data, x = xmaxv), -y))
-            
-            # Close the polygon: set first and last point the same
-            # Needed for coord_polar and such
-            newdata <- rbind(newdata, newdata[1,])
-            
-            ggplot2:::ggname("geom_flat_violin", GeomPolygon$draw_panel(newdata, panel_scales, coord))
-          },
-          
-          draw_key = draw_key_polygon,
-          
-          default_aes = aes(weight = 1, colour = "grey20", fill = "white", size = 0.5,
-                            alpha = NA, linetype = "solid"),
-          
-          required_aes = c("x", "y")
-)
+```{r, eval=FALSE}
+install.packages("ggdist")
+library(ggdist)
 ```
 
+It contains `geom`s and `stat`s that, when used in combination with one another, will enable us to build many different kinds of distribution visualizations.  
+
+For example, one popular variation on the violin plot is the "split violin" plot, which removes the mirroring of the violin plot and uses that space for other purposes.
+
+For a traditional violin plot, use `stat_slab()`
 
 ```{r}
-ggplot(four, aes(x = dist, y = vals)) +
-    geom_flat_violin(alpha = .5, 
-                fill = "lightseagreen",
-                colour = NA,
-                na.rm = TRUE) +
-    coord_flip()
+ggplot(four, aes(x=dist, y=vals)) +
+  stat_slab(fill="lightseagreen", trim=FALSE, side="both")
 ```
 
+To split, and only half one side, alter the `side` setting:
+
+```{r}
+ggplot(four, aes(x=dist, y=vals)) +
+  stat_slab(fill="lightseagreen", trim=FALSE, side="right")
+```
+
+Personally, I prefer to smoosh things down a little bit, for a full "split-violin" effect:
+
+```{r}
+ggplot(four, aes(x=dist, y=vals)) +
+  stat_slab(fill="lightseagreen", trim=FALSE, side="right", scale=0.5)
+```
+
+`ggdist` has many variations of this basic plot, including ones with interval bars (`stat_slabinterval()`), etc.:
+
+```{r}
+ggplot(four, aes(x=dist, y=vals)) +
+  stat_slabinterval(fill="lightseagreen", trim = FALSE, side="right", scale=0.5) 
+
+```
+
+And of course, we can re-orient our plot by changing the `x` and `y` aesthetics:
+
+```{r}
+ggplot(four, aes(y = dist, x = vals)) +
+    stat_slabinterval(fill="lightseagreen", trim = FALSE, side="right", scale=0.5)
+```
 
 # Ridgeline plots
 
-Typically makes the most sense to have the factor variable like `dist` on the y-axis for these.
+For ridgeline plots, it makes the most sense to have the factor variable (like `dist`) be on the y-axis. Ridgeline plots are indicated when there is a relatively large number of levels to the factor, and when comparison across factors is important.
 
-https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html
-
-```{r ggridgeline}
-# play with scale
-ggplot(four, aes(x = vals, y = dist)) +
-  geom_density_ridges(scale = 0.9, 
-                      fill = "lightseagreen", 
-                      alpha = .5)
+```{r}
+ggplot(four, aes(y = dist, x = vals)) +
+    stat_slab(fill="lightseagreen", trim = FALSE, side="right", scale=0.5)
 ```
+
+(This isn't an optimal use case for a ridgeline plot, we're just demonstrating...)
+
+As an alternative to `ggdist`, you may want to check out [`ggridges`](https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html), a package entirely dedicated to ridgeline plots.
 
 # Raincloud plots
 
-https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html
+By combining `stat_slab` and `stat_dots`, we can create a "raincloud" plot:
 
-```{r ggraincloud}
-ggplot(four, aes(x = vals, y = dist)) +
-  geom_density_ridges(jittered_points = TRUE, 
-                      position = "raincloud",
-                      fill = "lightseagreen", 
-                      alpha = 0.7, 
-                      scale = 0.7)
+```{r}
+ggplot(four, aes(y = dist, x = vals)) +
+    stat_slab(fill="lightseagreen", trim = FALSE, side="right", scale=0.5) +
+  stat_dots(side="left", alpha=0.5)
+
 ```
-
-
 
 # Plotting summary statistics
 
-The more general `stat_summary` function applies a summary function to the variable mapped to y at each x value.
+Moving back to standard `ggplot` territory, let's revisit `stat_summary`. A more general way to look at `stat_summary` is that it applies a "summary function" to the variable mapped to `y` at each `x` value.
 
 ## Means and error bars 
 
@@ -585,8 +543,6 @@ ggplot(four, aes(x = dist, y = vals)) +
   stat_summary(fun.data = median_hilow)
 ```
 
-
-
 You may have noticed two different arguments that are potentially confusing: `fun.data` and `fun.y`. If the function returns three values, specify the function with the argument `fun.data`. If the function returns one value, specify `fun.y`. See below.
 
 ```{r}
@@ -596,8 +552,6 @@ mean_cl_normal(x) # use fun.data
 ```
 
 Confidence limits may give us a better idea than standard error limits of whether two means would be deemed statistically different when modeling, so we frequently use `mean_cl_normal` or `mean_cl_boot` in addition to `mean_se`.
-
-
 
 
 ## Connecting means with lines
@@ -649,15 +603,20 @@ ggplot(tg, aes(x = dose, y = len, colour = supp, fill = supp)) +
 
 ## Bars with error bars
 
-If you must...
+This is not an ideal practice, but sometimes you must...
 ```{r}
 # Standard error of the mean; note positioning
 ggplot(tg, aes(x = factor(dose), y = len, fill = supp)) + 
   stat_summary(fun.y = mean, geom = "bar", position = position_dodge(width = .9)) +
   stat_summary(fun.data = mean_se, geom = "linerange", position = position_dodge(width = .9)) +
   ggtitle("Mean +/- SE")
+```
 
+The key trick here is telling `stat_summary` to use the "bar" geom instead of its default (point or linerange).
 
+Note that it is important to be clear about whether your error bars represent the standard error of the mean, or a true confidence interval, which can be computed as follows:
+
+```{r}
 # Use 95% confidence interval instead of SEM
 ggplot(tg, aes(x = factor(dose), y = len, fill = supp)) + 
   stat_summary(fun.y = mean, geom = "bar", position = position_dodge(width = .9)) +
