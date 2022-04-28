@@ -1,0 +1,449 @@
+---
+title: "Lab 05: Data Wrangling for Tables"
+author: "Alison Hill & Steven Bedrick"
+subtitle: "BMI 5/625"
+always_allow_html: true
+output:
+  html_document:
+    number_sections: yes
+    theme: flatly
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+date: '2022-04-28'
+---
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+library(tidyverse)
+library(janitor)
+library(broom)
+library(pnwflights14)
+data("flights", package = "pnwflights14")
+```
+
+
+# Data-wrangling and tidying for tables
+
+Making tables is often when we stretch our `dplyr` skills. Here are some additional more advanced examples that you may find helpful for today's assignment!
+
+We'll use the `pnwflights14` package to practice our `dplyr` skills. We need to download the package from github using `devtools`.
+
+```{r eval = FALSE}
+# once per machine
+install.packages("devtools")
+devtools::install_github("ismayc/pnwflights14")
+```
+
+Now, we need to load the `flights` dataset from the `pnwflights14` package.
+
+```{r eval = FALSE}
+# once per work session
+library(pnwflights14)
+data("flights", package = "pnwflights14")
+```
+
+# More Fun `dplyr` Tricks
+
+## `dplyr::select`
+
+Recall that we use select to specify which columns in a dataframe you'd like to keep **by name**:
+
+```{r use-dplyr-select}
+# keep these 2 cols
+mini_flights <- flights %>% 
+  select(carrier, flight)
+glimpse(mini_flights)
+
+# keep first five cols
+first_five <- flights %>% 
+  select(year, month, day, dep_time, dep_delay)
+glimpse(first_five)
+
+# alternatively, specify range
+first_five <- flights %>% 
+  select(year:dep_delay)
+glimpse(first_five)
+```
+
+We can also choose the columns we want by negation, that is, you can specify which columns to drop instead of keep. This way, all variables **not** listed are kept.
+
+```{r drop-select}
+# we can also use negation
+all_but_year <- flights %>% 
+  select(-year)
+glimpse(all_but_year)
+```
+
+
+
+`dplyr::select` comes with several other helper functions...
+
+
+```{r dplyr-select-helpers}
+depart <- flights %>%
+  select(starts_with("dep_"))
+glimpse(depart)
+
+times <- flights %>%
+  select(contains("time"))
+glimpse(times)
+
+# note that we are not actually saving the new dataframe here
+flights %>%
+  select(-contains("time")) %>% head()
+
+
+delays <- flights %>%
+  select(ends_with("delay"))
+glimpse(delays)
+```
+
+One of my favorite select helper functions is `everything()`, which allows you to use select to keep **all** your variables, but easily rearrange the columns without having to list all the variables to keep/drop.
+
+```{r dplyr-select-everything}
+new_order <- flights %>% 
+  select(origin, dest, everything())
+head(new_order)
+
+# with negation
+new_order2 <- flights %>% 
+  select(origin, dest, everything(), -year)
+head(new_order2)
+```
+
+
+We can also rename variables within select.
+
+```{r rename-select}
+flights2 <- flights %>%
+  select(tail_num = tailnum, everything())
+head(flights2)
+```
+
+If you don't want to move the renamed variables within your dataframe, you can use the `rename` function.
+
+```{r rename}
+flights3 <- flights %>%
+  rename(tail_num = tailnum)
+glimpse(flights3)
+```
+
+## `dplyr::filter`
+
+As we have previously seen, `filter` has many flexible uses:
+
+
+```{r dplyr-filter}
+# flights taking off from PDX
+pdx <- flights %>% 
+  filter(origin == "PDX")
+head(pdx)
+
+# january flights from PDX
+pdx_jan <- flights %>% 
+  filter(origin == "PDX", month == 1) # the comma is an "and"
+head(pdx_jan)
+
+# flights to ATL (Atlanta) or BNA (Nashville)
+to_south <- flights %>% 
+  filter(dest == "ATL" | dest == "BNA") %>% # | is "or"
+  select(origin, dest, everything())
+head(to_south)
+
+# flights from PDX to ATL (Atlanta) or BNA (Nashville)
+pdx_to_south <- flights %>% 
+  filter(origin == "PDX", dest == "ATL" | dest == "BNA") %>% # | is "or"
+  select(origin, dest, everything())
+head(pdx_to_south)
+
+# alternatively, using group membership
+south_dests <- c("ATL", "BNA")
+pdx_to_south2 <- flights %>% 
+  filter(origin == "PDX", dest %in% south_dests) %>% 
+  select(origin, dest, everything())
+head(pdx_to_south2)
+
+# flights delayed by 1 hour or more
+delay_1plus <- flights %>%
+  filter(dep_delay >= 60)
+head(delay_1plus)
+
+# flights delayed by 1 hour, but not more than 2 hours
+delay_1hr <- flights %>%
+  filter(dep_delay >= 60, dep_delay < 120)
+head(delay_1hr)
+range(delay_1hr$dep_delay, na.rm = TRUE)
+
+# even more efficient using between (always inclusive)
+delay_bwn <- flights %>%
+  filter(between(dep_delay, 60, 119))
+head(delay_bwn)
+range(delay_bwn$dep_delay, na.rm = TRUE)
+```
+
+
+## `dplyr::arrange`
+
+```{r}
+# default is ascending order
+flights %>% 
+  arrange(year, month, day) %>% head(n=20)
+
+# descending order
+flights %>% 
+  arrange(desc(year), desc(month), desc(day)) %>% head(n=20)
+```
+
+
+## `dplyr::distinct`
+
+
+```{r}
+# unique origin-dest combinations
+flights %>% 
+  select(origin, dest) %>% 
+  distinct %>% head(n=50)
+
+# all unique destinations from PDX (there are 49, so we'll just list the first few)
+from_pdx <- flights %>% 
+  filter(origin == "PDX") %>% 
+  select(origin, dest) %>%
+  distinct(dest)
+head(from_pdx)
+```
+
+
+
+## `dplyr::mutate`
+
+`mutate` is used to transform existing variables or create new ones; here, we are using it to create an indicator variable that identifies flights that were entirely on-time.
+
+```{r}
+# add total delay variable
+flights %>%
+  mutate(tot_delay = dep_delay + arr_delay) %>%
+  select(origin, dest, ends_with("delay"), everything()) %>% 
+  head
+
+# flights that were delayed at departure had on time or early arrivals?
+arrivals <- flights %>%
+  mutate(arr_ok = ifelse(dep_delay > 0 & arr_delay <= 0, 1, 0)) %>% 
+  select(origin, dest, ends_with("delay"), carrier, arr_ok)
+
+# peek at it
+arrivals %>%
+  filter(arr_ok == 1) %>%
+  head
+```
+
+
+
+## `dplyr::summarise` (or `dplyr::summarize`)
+
+We have seen `summarise` used to calculate summary statistics, like so:
+
+```{r}
+flights %>%
+  summarise(mean(dep_delay, na.rm = TRUE))
+```
+
+But this can get tedious when we want to compute several summary statistics, like so:
+
+```{r}
+# we can also name that variable, and summarise multiple variables
+flights %>%
+  summarise(mean_delay = mean(dep_delay, na.rm = TRUE),
+            sd_delay = sd(dep_delay, na.rm = TRUE),
+            median_delay = median(dep_delay, na.rm = TRUE))
+```
+
+`summarise` together with `across()` lets us automate this process a bit:
+
+
+```{r}
+flights %>%
+  filter(!is.na(dep_delay)) %>%
+  select(dep_delay) %>%
+  summarise(
+    across(everything(), 
+           lst(mean, sd, median)) # making this a list gets us nice column names
+    )
+  
+
+# same thing over all numeric columns
+flights %>%
+  filter(!is.na(dep_delay)) %>%
+  summarise(across(where(is.numeric), lst(mean, sd, median)))
+
+# combine with pivot_longer, change names too
+flights %>%
+  filter(!is.na(dep_delay)) %>%
+  summarise(across(dep_delay, lst(mean, stdev=sd, median))) %>% 
+  pivot_longer(everything(), names_to="delay_stat", values_to="value", names_prefix = "dep_delay_")
+```
+
+We can use aggregating functions in `summarise`
+
+```{r}
+# how many unique destinations?
+summary_table <- flights %>% 
+  summarise(tot_flights = n(),
+            tot_planes = n_distinct(tailnum),
+            tot_carriers = n_distinct(carrier),
+            tot_dests = n_distinct(dest),
+            tot_origins = n_distinct(origin))
+
+summary_table
+```
+
+The resulting table is a bit messy; we can reprocess using `pivot_longer` and `separate`:
+
+```{r}
+# chain with tidyr functions
+summary_table %>% 
+  pivot_longer(everything(), names_to="key", values_to="value") %>% 
+  separate(key, into = c("tot", "entity")) %>% 
+  select(-tot, total = value)
+```
+Or we can do it in a single call to `pivot_longer()`:
+
+```{r}
+summary_table %>% 
+  pivot_longer(
+    everything(), # grab all columns
+    names_to="entity", # make a new column called "entity" to store the old column names
+    names_prefix="tot_", # remove the "tot_" prefix from the old column names
+    values_to="total") # put the values in a column called "total"
+```
+
+
+# `tidyr`
+
+We'll work with a made up dataframe:
+
+```{r}
+df <- data.frame(
+  id = 1:10,
+  date = as.Date('2015-01-01') + 0:9,
+  q1_m1_w1 = rnorm(10, 0, 1),
+  q1_m1_w2 = rnorm(10, 0, 1),
+  q1_m2_w3 = rnorm(10, 0, 1),
+  q2_m1_w1 = rnorm(10, 0, 1),
+  q2_m2_w1 = rnorm(10, 0, 1),
+  q2_m2_w2 = rnorm(10, 0, 1)
+)
+```
+
+```{r}
+# HLO
+head(df)
+glimpse(df)
+```
+
+## `tidyr::pivot_longer`
+
+First, let's pivot...
+```{r}
+df_tidy <- df %>%
+  pivot_longer(q1_m1_w1:q2_m2_w2, names_to="key", values_to="value")
+head(df_tidy)
+```
+
+
+## `tidyr::separate`
+
+```{r}
+# separate 1 col into 3 cols
+df_sep <- df_tidy %>%
+  separate(key, into = c("quarter", "month", "week"))
+head(df_sep)
+
+# separate 1 col into 2 cols
+df_sep2 <- df_tidy %>%
+  separate(key, into = c("quarter", "period"), extra = "merge")
+head(df_sep2)
+```
+stringr vs. tidyr separate by regular expression
+
+## `tidyr::extract`
+
+`Extract` is essentially the same as `separate`, let's see how...
+
+```{r}
+# extract
+df_ext <- df_sep2 %>%
+  extract(period, into = "month")
+head(df_ext)
+```
+
+We can see that, by default, it's taking the first alphanumeric chunk of the value, and `extract`ing it. We can specify much more complex patterns: 
+
+```{r}
+# this gives us same output as separate
+df_ext <- df_sep2 %>%
+  extract(period, into = c("month", "week"), 
+          regex = "([[:alnum:]]+)_([[:alnum:]]+)")
+head(df_ext)
+```
+
+## `tidyr::unite`
+
+The `unite()` function lets us reverse the process:
+
+```{r}
+# let's say we want to combine quarter and month with an underscore
+df_uni <- df_sep %>%
+  unite(period, quarter:month) # sep = "_" is the default arg
+head(df_uni)
+
+# let's say we want to combine quarter and month with nothing
+df_uni <- df_sep %>%
+  unite(period, quarter:month, sep = "")
+head(df_uni)
+```
+
+## `tidyr::pivot_wider`
+
+```{r}
+# finally let's spread
+df_spread <- df_uni %>%
+  pivot_wider(names_from=week, values_from=value)  # fill = NA is default arg
+head(df_spread)
+```
+
+## Putting it all together (`pivot_longer() %>% separate() %>% pivot_wider()`)
+
+All in one, if we had wanted to end up with one row per month:
+
+```{r}
+df_tidiest <- df %>% 
+  pivot_longer(q1_m1_w1:q2_m2_w2, names_to="key", values_to="value") %>% 
+  separate(key, into = c("quarter", "month", "week")) %>% 
+  pivot_wider(names_from=week, values_from=value)
+head(df_tidiest)
+```
+
+# `broom`
+
+"The broom package takes the messy output of built-in functions in R, such as `lm`, `nls`, or `t.test`, and turns them into tidy data frames." So, broom tidies output from other R functions that are un-tidy.
+
+See here for list of functions: https://github.com/dgrtwo/broom
+
+Vignette: ftp://cran.r-project.org/pub/R/web/packages/broom/vignettes/broom.html
+
+```{r}
+fit <- lm(mpg ~ qsec + factor(am) + wt + factor(gear), 
+          data = mtcars)
+```
+
+Un-tidy output from `lm`
+```{r}
+summary(fit)
+```
+
+Tidy output from `broom`
+```{r}
+tidy(fit)
+```
+
+This is very helfpul for making e.g. regression tables for papers!

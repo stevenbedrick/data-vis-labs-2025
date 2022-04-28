@@ -14,7 +14,7 @@
 
 <title>Lab 05: Tables &amp; Fonts Challenge</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -61,6 +61,7 @@ if (window.hljs) {
 
 
 
+
 <style type = "text/css">
 .main-container {
   max-width: 940px;
@@ -81,6 +82,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -233,7 +237,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -267,7 +271,6 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Lab 05: Tables &amp; Fonts Challenge</h1>
 <h4 class="author">Steven Bedrick</h4>
-<h4 class="date">4/28/2020</h4>
 
 </div>
 
@@ -276,9 +279,9 @@ $(document).ready(function () {
 <h1><span class="header-section-number">1</span> Tables</h1>
 <p>Using the data set from the reference lab of PNW flights, choose
 three analytical questions from the menu below, and design a table for
-each one that answers it in a publication-ready format (using your
-choice of table library), including appropriate column names, titles,
-captions, etc. Unless otherwise specified, all questions should be
+each one that answers it in a publication-ready format (using
+<code>gt</code>), <em>including appropriate column names, titles,
+captions, etc.</em> Unless otherwise specified, all questions should be
 explored for flights departing from Portland. Alternatively, please feel
 free to come up with your own analyses!</p>
 <ul>
@@ -293,8 +296,8 @@ like, but do make sure to define it clearly!), and which have the
 worst?</li>
 <li>By month, what new routes were added or removed?
 <ul>
-<li><em>Hint</em>: I haven’t tried this one, but dplyr’s
-<code>lead</code> and <code>lag</code> commands could be helpful</li>
+<li><em>Hint</em>: dplyr’s <code>lead</code> and <code>lag</code>
+commands could be helpful here</li>
 </ul></li>
 <li>Finding busy aircraft (identified by <code>tailnum</code>), with
 “business” defined as:
@@ -324,17 +327,25 @@ present throughout the entire dataset, or something else altogether.
 Make sure your table includes sufficient information to guide the
 interpretation and comprehension of your analysis.</p>
 <p>Make sure to keep in mind the design principles that we discussed on
-Monday regarding spacing, use of rules, row-vs-column orientation,
+Tuesday regarding spacing, use of rules, row-vs-column orientation,
 alignment, etc. In addition to the table itself, provide a short
 description of your design and its motivation.</p>
 </div>
 <div id="fonts" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Fonts</h1>
-<p>Spend some time on <a href="https://fonts.google.com">Google
+<ol style="list-style-type: decimal">
+<li>Spend some time on <a href="https://fonts.google.com">Google
 Fonts</a> (or a different font repository) and pick out a serif,
-sanserif, and display font that “speaks to you”. Write a sentence or two
-about each one, including what sort of scenario you think it would work
-well for.</p>
+sanserif, and display font that “speaks to you”.</li>
+<li>Write a sentence or two about each one, including what sort of
+scenario you think it would work well for.</li>
+<li>Install them into your R project as shown in the reference lab, and
+if appropriate use them in a figure.</li>
+</ol>
+</div>
+<div id="deliverable" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Deliverable</h1>
+<p>Your knitted .Rmd file (i.e., the HTML output).</p>
 </div>
 
 <p>

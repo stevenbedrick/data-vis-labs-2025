@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Alison Hill &amp; Steven Bedrick" />
+
+<meta name="date" content="2022-04-28" />
+
+<title>Lab 05: Data Wrangling for Tables</title>
+
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2022</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="slides.html">Slides &amp; Reading</a>
+</li>
+<li>
+  <a href="data-vis-resources.html">Resources</a>
+</li>
+<li>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AJ-Sp22">Sakai</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Lab 05: Data Wrangling for Tables</h1>
+<h3 class="subtitle">BMI 5/625</h3>
+<h4 class="author">Alison Hill &amp; Steven Bedrick</h4>
+<h4 class="date">2022-04-28</h4>
+
+</div>
+
+
+<div id="data-wrangling-and-tidying-for-tables" class="section level1"
+number="1">
+<h1><span class="header-section-number">1</span> Data-wrangling and
+tidying for tables</h1>
+<p>Making tables is often when we stretch our <code>dplyr</code> skills.
+Here are some additional more advanced examples that you may find
+helpful for today’s assignment!</p>
+<p>We’ll use the <code>pnwflights14</code> package to practice our
+<code>dplyr</code> skills. We need to download the package from github
+using <code>devtools</code>.</p>
+<pre class="r"><code># once per machine
+install.packages(&quot;devtools&quot;)
+devtools::install_github(&quot;ismayc/pnwflights14&quot;)</code></pre>
+<p>Now, we need to load the <code>flights</code> dataset from the
+<code>pnwflights14</code> package.</p>
+<pre class="r"><code># once per work session
+library(pnwflights14)
+data(&quot;flights&quot;, package = &quot;pnwflights14&quot;)</code></pre>
+</div>
+<div id="more-fun-dplyr-tricks" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> More Fun
+<code>dplyr</code> Tricks</h1>
+<div id="dplyrselect" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span>
+<code>dplyr::select</code></h2>
+<p>Recall that we use select to specify which columns in a dataframe
+you’d like to keep <strong>by name</strong>:</p>
+<pre class="r"><code># keep these 2 cols
+mini_flights &lt;- flights %&gt;% 
+  select(carrier, flight)
+glimpse(mini_flights)</code></pre>
+<pre><code>## Rows: 162,049
+## Columns: 2
+## $ carrier &lt;chr&gt; &quot;AS&quot;, &quot;US&quot;, &quot;UA&quot;, &quot;US&quot;, &quot;AS&quot;, &quot;DL&quot;, &quot;UA&quot;, &quot;UA&quot;, &quot;UA&quot;, &quot;UA&quot;, &quot;U…
+## $ flight  &lt;int&gt; 145, 1830, 1609, 466, 121, 1823, 1481, 229, 1576, 478, 1569, 6…</code></pre>
+<pre class="r"><code># keep first five cols
+first_five &lt;- flights %&gt;% 
+  select(year, month, day, dep_time, dep_delay)
+glimpse(first_five)</code></pre>
+<pre><code>## Rows: 162,049
+## Columns: 5
+## $ year      &lt;int&gt; 2014, 2014, 2014, 2014, 2014, 2014, 2014, 2014, 2014, 2014, …
+## $ month     &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+## $ day       &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+## $ dep_time  &lt;int&gt; 1, 4, 8, 28, 34, 37, 346, 526, 527, 536, 541, 549, 550, 557,…
+## $ dep_delay &lt;dbl&gt; 96, -6, 13, -2, 44, 82, 227, -4, 7, 1, 1, 24, 0, -3, -3, -2,…</code></pre>
+<pre class="r"><code># alternatively, specify range
+first_five &lt;- flights %&gt;% 
+  select(year:dep_delay)
+glimpse(first_five)</code></pre>
+<pre><code>## Rows: 162,049
+## Columns: 5
+## $ year      &lt;int&gt; 2014, 2014, 2014, 2014, 2014, 2014, 2014, 2014, 2014, 2014, …
+## $ month     &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+## $ day       &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+## $ dep_time  &lt;int&gt; 1, 4, 8, 28, 34, 37, 346, 526, 527, 536, 541, 549, 550, 557,…
+## $ dep_delay &lt;dbl&gt; 96, -6, 13, -2, 44, 82, 227, -4, 7, 1, 1, 24, 0, -3, -3, -2,…</code></pre>
+<p>We can also choose the columns we want by negation, that is, you can
+specify which columns to drop instead of keep. This way, all variables
+<strong>not</strong> listed are kept.</p>
+<pre class="r"><code># we can also use negation
+all_but_year &lt;- flights %&gt;% 
+  select(-year)
+glimpse(all_but_year)</code></pre>
+<pre><code>## Rows: 162,049
+## Columns: 15
+## $ month     &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+## $ day       &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+## $ dep_time  &lt;int&gt; 1, 4, 8, 28, 34, 37, 346, 526, 527, 536, 541, 549, 550, 557,…
+## $ dep_delay &lt;dbl&gt; 96, -6, 13, -2, 44, 82, 227, -4, 7, 1, 1, 24, 0, -3, -3, -2,…
+## $ arr_time  &lt;int&gt; 235, 738, 548, 800, 325, 747, 936, 1148, 917, 1334, 911, 907…
+## $ arr_delay &lt;dbl&gt; 70, -23, -4, -23, 43, 88, 219, 15, 24, -6, 4, 12, -12, -16, …
+## $ carrier   &lt;chr&gt; &quot;AS&quot;, &quot;US&quot;, &quot;UA&quot;, &quot;US&quot;, &quot;AS&quot;, &quot;DL&quot;, &quot;UA&quot;, &quot;UA&quot;, &quot;UA&quot;, &quot;UA&quot;, …
+## $ tailnum   &lt;chr&gt; &quot;N508AS&quot;, &quot;N195UW&quot;, &quot;N37422&quot;, &quot;N547UW&quot;, &quot;N762AS&quot;, &quot;N806DN&quot;, …
+## $ flight    &lt;int&gt; 145, 1830, 1609, 466, 121, 1823, 1481, 229, 1576, 478, 1569,…
+## $ origin    &lt;chr&gt; &quot;PDX&quot;, &quot;SEA&quot;, &quot;PDX&quot;, &quot;PDX&quot;, &quot;SEA&quot;, &quot;SEA&quot;, &quot;SEA&quot;, &quot;PDX&quot;, &quot;SEA…
+## $ dest      &lt;chr&gt; &quot;ANC&quot;, &quot;CLT&quot;, &quot;IAH&quot;, &quot;CLT&quot;, &quot;ANC&quot;, &quot;DTW&quot;, &quot;ORD&quot;, &quot;IAH&quot;, &quot;DEN…
+## $ air_time  &lt;dbl&gt; 194, 252, 201, 251, 201, 224, 202, 217, 136, 268, 130, 122, …
+## $ distance  &lt;dbl&gt; 1542, 2279, 1825, 2282, 1448, 1927, 1721, 1825, 1024, 2402, …
+## $ hour      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, …
+## $ minute    &lt;dbl&gt; 1, 4, 8, 28, 34, 37, 46, 26, 27, 36, 41, 49, 50, 57, 57, 58,…</code></pre>
+<p><code>dplyr::select</code> comes with several other helper
+functions…</p>
+<pre class="r"><code>depart &lt;- flights %&gt;%
+  select(starts_with(&quot;dep_&quot;))
+glimpse(depart)</code></pre>
+<pre><code>## Rows: 162,049
+## Columns: 2
+## $ dep_time  &lt;int&gt; 1, 4, 8, 28, 34, 37, 346, 526, 527, 536, 541, 549, 550, 557,…
+## $ dep_delay &lt;dbl&gt; 96, -6, 13, -2, 44, 82, 227, -4, 7, 1, 1, 24, 0, -3, -3, -2,…</code></pre>
+<pre class="r"><code>times &lt;- flights %&gt;%
+  select(contains(&quot;time&quot;))
+glimpse(times)</code></pre>
+<pre><code>## Rows: 162,049
+## Columns: 3
+## $ dep_time &lt;int&gt; 1, 4, 8, 28, 34, 37, 346, 526, 527, 536, 541, 549, 550, 557, …
+## $ arr_time &lt;int&gt; 235, 738, 548, 800, 325, 747, 936, 1148, 917, 1334, 911, 907,…
+## $ air_time &lt;dbl&gt; 194, 252, 201, 251, 201, 224, 202, 217, 136, 268, 130, 122, 8…</code></pre>
+<pre class="r"><code># note that we are not actually saving the new dataframe here
+flights %&gt;%
+  select(-contains(&quot;time&quot;)) %&gt;% head()</code></pre>
+<pre><code>## # A tibble: 6 × 13
+##    year month   day dep_delay arr_delay carrier tailnum flight origin dest 
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;
+## 1  2014     1     1        96        70 AS      N508AS     145 PDX    ANC  
+## 2  2014     1     1        -6       -23 US      N195UW    1830 SEA    CLT  
+## 3  2014     1     1        13        -4 UA      N37422    1609 PDX    IAH  
+## 4  2014     1     1        -2       -23 US      N547UW     466 PDX    CLT  
+## 5  2014     1     1        44        43 AS      N762AS     121 SEA    ANC  
+## 6  2014     1     1        82        88 DL      N806DN    1823 SEA    DTW  
+## # … with 3 more variables: distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+<pre class="r"><code>delays &lt;- flights %&gt;%
+  select(ends_with(&quot;delay&quot;))
+glimpse(delays)</code></pre>
+<pre><code>## Rows: 162,049
+## Columns: 2
+## $ dep_delay &lt;dbl&gt; 96, -6, 13, -2, 44, 82, 227, -4, 7, 1, 1, 24, 0, -3, -3, -2,…
+## $ arr_delay &lt;dbl&gt; 70, -23, -4, -23, 43, 88, 219, 15, 24, -6, 4, 12, -12, -16, …</code></pre>
+<p>One of my favorite select helper functions is
+<code>everything()</code>, which allows you to use select to keep
+<strong>all</strong> your variables, but easily rearrange the columns
+without having to list all the variables to keep/drop.</p>
+<pre class="r"><code>new_order &lt;- flights %&gt;% 
+  select(origin, dest, everything())
+head(new_order)</code></pre>
+<pre><code>## # A tibble: 6 × 16
+##   origin dest   year month   day dep_time dep_delay arr_time arr_delay carrier
+##   &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;  
+## 1 PDX    ANC    2014     1     1        1        96      235        70 AS     
+## 2 SEA    CLT    2014     1     1        4        -6      738       -23 US     
+## 3 PDX    IAH    2014     1     1        8        13      548        -4 UA     
+## 4 PDX    CLT    2014     1     1       28        -2      800       -23 US     
+## 5 SEA    ANC    2014     1     1       34        44      325        43 AS     
+## 6 SEA    DTW    2014     1     1       37        82      747        88 DL     
+## # … with 6 more variables: tailnum &lt;chr&gt;, flight &lt;int&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+<pre class="r"><code># with negation
+new_order2 &lt;- flights %&gt;% 
+  select(origin, dest, everything(), -year)
+head(new_order2)</code></pre>
+<pre><code>## # A tibble: 6 × 15
+##   origin dest  month   day dep_time dep_delay arr_time arr_delay carrier tailnum
+##   &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  
+## 1 PDX    ANC       1     1        1        96      235        70 AS      N508AS 
+## 2 SEA    CLT       1     1        4        -6      738       -23 US      N195UW 
+## 3 PDX    IAH       1     1        8        13      548        -4 UA      N37422 
+## 4 PDX    CLT       1     1       28        -2      800       -23 US      N547UW 
+## 5 SEA    ANC       1     1       34        44      325        43 AS      N762AS 
+## 6 SEA    DTW       1     1       37        82      747        88 DL      N806DN 
+## # … with 5 more variables: flight &lt;int&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+<p>We can also rename variables within select.</p>
+<pre class="r"><code>flights2 &lt;- flights %&gt;%
+  select(tail_num = tailnum, everything())
+head(flights2)</code></pre>
+<pre><code>## # A tibble: 6 × 16
+##   tail_num  year month   day dep_time dep_delay arr_time arr_delay carrier
+##   &lt;chr&gt;    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;  
+## 1 N508AS    2014     1     1        1        96      235        70 AS     
+## 2 N195UW    2014     1     1        4        -6      738       -23 US     
+## 3 N37422    2014     1     1        8        13      548        -4 UA     
+## 4 N547UW    2014     1     1       28        -2      800       -23 US     
+## 5 N762AS    2014     1     1       34        44      325        43 AS     
+## 6 N806DN    2014     1     1       37        82      747        88 DL     
+## # … with 7 more variables: flight &lt;int&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+<p>If you don’t want to move the renamed variables within your
+dataframe, you can use the <code>rename</code> function.</p>
+<pre class="r"><code>flights3 &lt;- flights %&gt;%
+  rename(tail_num = tailnum)
+glimpse(flights3)</code></pre>
+<pre><code>## Rows: 162,049
+## Columns: 16
+## $ year      &lt;int&gt; 2014, 2014, 2014, 2014, 2014, 2014, 2014, 2014, 2014, 2014, …
+## $ month     &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+## $ day       &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+## $ dep_time  &lt;int&gt; 1, 4, 8, 28, 34, 37, 346, 526, 527, 536, 541, 549, 550, 557,…
+## $ dep_delay &lt;dbl&gt; 96, -6, 13, -2, 44, 82, 227, -4, 7, 1, 1, 24, 0, -3, -3, -2,…
+## $ arr_time  &lt;int&gt; 235, 738, 548, 800, 325, 747, 936, 1148, 917, 1334, 911, 907…
+## $ arr_delay &lt;dbl&gt; 70, -23, -4, -23, 43, 88, 219, 15, 24, -6, 4, 12, -12, -16, …
+## $ carrier   &lt;chr&gt; &quot;AS&quot;, &quot;US&quot;, &quot;UA&quot;, &quot;US&quot;, &quot;AS&quot;, &quot;DL&quot;, &quot;UA&quot;, &quot;UA&quot;, &quot;UA&quot;, &quot;UA&quot;, …
+## $ tail_num  &lt;chr&gt; &quot;N508AS&quot;, &quot;N195UW&quot;, &quot;N37422&quot;, &quot;N547UW&quot;, &quot;N762AS&quot;, &quot;N806DN&quot;, …
+## $ flight    &lt;int&gt; 145, 1830, 1609, 466, 121, 1823, 1481, 229, 1576, 478, 1569,…
+## $ origin    &lt;chr&gt; &quot;PDX&quot;, &quot;SEA&quot;, &quot;PDX&quot;, &quot;PDX&quot;, &quot;SEA&quot;, &quot;SEA&quot;, &quot;SEA&quot;, &quot;PDX&quot;, &quot;SEA…
+## $ dest      &lt;chr&gt; &quot;ANC&quot;, &quot;CLT&quot;, &quot;IAH&quot;, &quot;CLT&quot;, &quot;ANC&quot;, &quot;DTW&quot;, &quot;ORD&quot;, &quot;IAH&quot;, &quot;DEN…
+## $ air_time  &lt;dbl&gt; 194, 252, 201, 251, 201, 224, 202, 217, 136, 268, 130, 122, …
+## $ distance  &lt;dbl&gt; 1542, 2279, 1825, 2282, 1448, 1927, 1721, 1825, 1024, 2402, …
+## $ hour      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, …
+## $ minute    &lt;dbl&gt; 1, 4, 8, 28, 34, 37, 46, 26, 27, 36, 41, 49, 50, 57, 57, 58,…</code></pre>
+</div>
+<div id="dplyrfilter" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span>
+<code>dplyr::filter</code></h2>
+<p>As we have previously seen, <code>filter</code> has many flexible
+uses:</p>
+<pre class="r"><code># flights taking off from PDX
+pdx &lt;- flights %&gt;% 
+  filter(origin == &quot;PDX&quot;)
+head(pdx)</code></pre>
+<pre><code>## # A tibble: 6 × 16
+##    year month   day dep_time dep_delay arr_time arr_delay carrier tailnum flight
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;int&gt;
+## 1  2014     1     1        1        96      235        70 AS      N508AS     145
+## 2  2014     1     1        8        13      548        -4 UA      N37422    1609
+## 3  2014     1     1       28        -2      800       -23 US      N547UW     466
+## 4  2014     1     1      526        -4     1148        15 UA      N813UA     229
+## 5  2014     1     1      541         1      911         4 UA      N36476    1569
+## 6  2014     1     1      549        24      907        12 US      N548UW     649
+## # … with 6 more variables: origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+<pre class="r"><code># january flights from PDX
+pdx_jan &lt;- flights %&gt;% 
+  filter(origin == &quot;PDX&quot;, month == 1) # the comma is an &quot;and&quot;
+head(pdx_jan)</code></pre>
+<pre><code>## # A tibble: 6 × 16
+##    year month   day dep_time dep_delay arr_time arr_delay carrier tailnum flight
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;int&gt;
+## 1  2014     1     1        1        96      235        70 AS      N508AS     145
+## 2  2014     1     1        8        13      548        -4 UA      N37422    1609
+## 3  2014     1     1       28        -2      800       -23 US      N547UW     466
+## 4  2014     1     1      526        -4     1148        15 UA      N813UA     229
+## 5  2014     1     1      541         1      911         4 UA      N36476    1569
+## 6  2014     1     1      549        24      907        12 US      N548UW     649
+## # … with 6 more variables: origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+<pre class="r"><code># flights to ATL (Atlanta) or BNA (Nashville)
+to_south &lt;- flights %&gt;% 
+  filter(dest == &quot;ATL&quot; | dest == &quot;BNA&quot;) %&gt;% # | is &quot;or&quot;
+  select(origin, dest, everything())
+head(to_south)</code></pre>
+<pre><code>## # A tibble: 6 × 16
+##   origin dest   year month   day dep_time dep_delay arr_time arr_delay carrier
+##   &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;  
+## 1 SEA    ATL    2014     1     1      624        -6     1401        -6 DL     
+## 2 SEA    ATL    2014     1     1      802        -3     1533       -17 AS     
+## 3 SEA    ATL    2014     1     1      824        -1     1546       -14 DL     
+## 4 PDX    ATL    2014     1     1      944        -6     1727        -8 AS     
+## 5 PDX    ATL    2014     1     1     1054        94     1807        84 DL     
+## 6 SEA    ATL    2014     1     1     1158         6     1915       -14 DL     
+## # … with 6 more variables: tailnum &lt;chr&gt;, flight &lt;int&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+<pre class="r"><code># flights from PDX to ATL (Atlanta) or BNA (Nashville)
+pdx_to_south &lt;- flights %&gt;% 
+  filter(origin == &quot;PDX&quot;, dest == &quot;ATL&quot; | dest == &quot;BNA&quot;) %&gt;% # | is &quot;or&quot;
+  select(origin, dest, everything())
+head(pdx_to_south)</code></pre>
+<pre><code>## # A tibble: 6 × 16
+##   origin dest   year month   day dep_time dep_delay arr_time arr_delay carrier
+##   &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;  
+## 1 PDX    ATL    2014     1     1      944        -6     1727        -8 AS     
+## 2 PDX    ATL    2014     1     1     1054        94     1807        84 DL     
+## 3 PDX    ATL    2014     1     1     1323        -2     2038       -15 DL     
+## 4 PDX    ATL    2014     1     1     2253         8      611         4 DL     
+## 5 PDX    ATL    2014     1     2      627        -3     1350        -7 DL     
+## 6 PDX    ATL    2014     1     2      918        -2     1643        -2 DL     
+## # … with 6 more variables: tailnum &lt;chr&gt;, flight &lt;int&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+<pre class="r"><code># alternatively, using group membership
+south_dests &lt;- c(&quot;ATL&quot;, &quot;BNA&quot;)
+pdx_to_south2 &lt;- flights %&gt;% 
+  filter(origin == &quot;PDX&quot;, dest %in% south_dests) %&gt;% 
+  select(origin, dest, everything())
+head(pdx_to_south2)</code></pre>
+<pre><code>## # A tibble: 6 × 16
+##   origin dest   year month   day dep_time dep_delay arr_time arr_delay carrier
+##   &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;  
+## 1 PDX    ATL    2014     1     1      944        -6     1727        -8 AS     
+## 2 PDX    ATL    2014     1     1     1054        94     1807        84 DL     
+## 3 PDX    ATL    2014     1     1     1323        -2     2038       -15 DL     
+## 4 PDX    ATL    2014     1     1     2253         8      611         4 DL     
+## 5 PDX    ATL    2014     1     2      627        -3     1350        -7 DL     
+## 6 PDX    ATL    2014     1     2      918        -2     1643        -2 DL     
+## # … with 6 more variables: tailnum &lt;chr&gt;, flight &lt;int&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+<pre class="r"><code># flights delayed by 1 hour or more
+delay_1plus &lt;- flights %&gt;%
+  filter(dep_delay &gt;= 60)
+head(delay_1plus)</code></pre>
+<pre><code>## # A tibble: 6 × 16
+##    year month   day dep_time dep_delay arr_time arr_delay carrier tailnum flight
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;int&gt;
+## 1  2014     1     1        1        96      235        70 AS      N508AS     145
+## 2  2014     1     1       37        82      747        88 DL      N806DN    1823
+## 3  2014     1     1      346       227      936       219 UA      N14219    1481
+## 4  2014     1     1      650        90     1037        91 US      N626AW     460
+## 5  2014     1     1      959       164     1137       157 AS      N534AS     805
+## 6  2014     1     1     1008        68     1242        64 AS      N788AS     456
+## # … with 6 more variables: origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+<pre class="r"><code># flights delayed by 1 hour, but not more than 2 hours
+delay_1hr &lt;- flights %&gt;%
+  filter(dep_delay &gt;= 60, dep_delay &lt; 120)
+head(delay_1hr)</code></pre>
+<pre><code>## # A tibble: 6 × 16
+##    year month   day dep_time dep_delay arr_time arr_delay carrier tailnum flight
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;int&gt;
+## 1  2014     1     1        1        96      235        70 AS      N508AS     145
+## 2  2014     1     1       37        82      747        88 DL      N806DN    1823
+## 3  2014     1     1      650        90     1037        91 US      N626AW     460
+## 4  2014     1     1     1008        68     1242        64 AS      N788AS     456
+## 5  2014     1     1     1014        75     1613        81 UA      N37408    1444
+## 6  2014     1     1     1036        81     1408        63 OO      N218AG    3466
+## # … with 6 more variables: origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+<pre class="r"><code>range(delay_1hr$dep_delay, na.rm = TRUE)</code></pre>
+<pre><code>## [1]  60 119</code></pre>
+<pre class="r"><code># even more efficient using between (always inclusive)
+delay_bwn &lt;- flights %&gt;%
+  filter(between(dep_delay, 60, 119))
+head(delay_bwn)</code></pre>
+<pre><code>## # A tibble: 6 × 16
+##    year month   day dep_time dep_delay arr_time arr_delay carrier tailnum flight
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;int&gt;
+## 1  2014     1     1        1        96      235        70 AS      N508AS     145
+## 2  2014     1     1       37        82      747        88 DL      N806DN    1823
+## 3  2014     1     1      650        90     1037        91 US      N626AW     460
+## 4  2014     1     1     1008        68     1242        64 AS      N788AS     456
+## 5  2014     1     1     1014        75     1613        81 UA      N37408    1444
+## 6  2014     1     1     1036        81     1408        63 OO      N218AG    3466
+## # … with 6 more variables: origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+<pre class="r"><code>range(delay_bwn$dep_delay, na.rm = TRUE)</code></pre>
+<pre><code>## [1]  60 119</code></pre>
+</div>
+<div id="dplyrarrange" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span>
+<code>dplyr::arrange</code></h2>
+<pre class="r"><code># default is ascending order
+flights %&gt;% 
+  arrange(year, month, day) %&gt;% head(n=20)</code></pre>
+<pre><code>## # A tibble: 20 × 16
+##     year month   day dep_time dep_delay arr_time arr_delay carrier tailnum
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  
+##  1  2014     1     1        1        96      235        70 AS      N508AS 
+##  2  2014     1     1        4        -6      738       -23 US      N195UW 
+##  3  2014     1     1        8        13      548        -4 UA      N37422 
+##  4  2014     1     1       28        -2      800       -23 US      N547UW 
+##  5  2014     1     1       34        44      325        43 AS      N762AS 
+##  6  2014     1     1       37        82      747        88 DL      N806DN 
+##  7  2014     1     1      346       227      936       219 UA      N14219 
+##  8  2014     1     1      526        -4     1148        15 UA      N813UA 
+##  9  2014     1     1      527         7      917        24 UA      N75433 
+## 10  2014     1     1      536         1     1334        -6 UA      N574UA 
+## 11  2014     1     1      541         1      911         4 UA      N36476 
+## 12  2014     1     1      549        24      907        12 US      N548UW 
+## 13  2014     1     1      550         0      837       -12 DL      N660DL 
+## 14  2014     1     1      557        -3     1134       -16 AA      N3JLAA 
+## 15  2014     1     1      557        -3      825       -25 AS      N562AS 
+## 16  2014     1     1      558        -2      801        -2 AS      N402AS 
+## 17  2014     1     1      559        -1      916        -9 F9      N210FR 
+## 18  2014     1     1      600         0     1151       -19 AA      N3JFAA 
+## 19  2014     1     1      600       -10      842        -8 AS      N786AS 
+## 20  2014     1     1      602        -3      943         5 F9      N201FR 
+## # … with 7 more variables: flight &lt;int&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+<pre class="r"><code># descending order
+flights %&gt;% 
+  arrange(desc(year), desc(month), desc(day)) %&gt;% head(n=20)</code></pre>
+<pre><code>## # A tibble: 20 × 16
+##     year month   day dep_time dep_delay arr_time arr_delay carrier tailnum
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  
+##  1  2014    12    31        2        12      601        31 AA      N3JKAA 
+##  2  2014    12    31       27        -3      623         3 AA      N3EWAA 
+##  3  2014    12    31       39        14      324         4 AS      N762AS 
+##  4  2014    12    31       40         0      549         0 DL      N757AT 
+##  5  2014    12    31       52        -8      917       -21 AA      N3JFAA 
+##  6  2014    12    31       54         4      621        17 DL      N128DL 
+##  7  2014    12    31       56        61      848        80 DL      N655DL 
+##  8  2014    12    31      512        -3      904         4 US      N653AW 
+##  9  2014    12    31      515        -5      855         5 US      N580UW 
+## 10  2014    12    31      534         4      859         7 UA      N34460 
+## 11  2014    12    31      546         1      916        -4 WN      N8323C 
+## 12  2014    12    31      548        -2     1351       -13 UA      N461UA 
+## 13  2014    12    31      549         4     1208        12 UA      N68807 
+## 14  2014    12    31      550         0      922         2 WN      N797MX 
+## 15  2014    12    31      551        -4     1202        12 AA      N3HXAA 
+## 16  2014    12    31      551        -9      744       -15 AS      N570AS 
+## 17  2014    12    31      555       -10      824        -1 AS      N548AS 
+## 18  2014    12    31      558        -2      849         0 DL      N668DN 
+## 19  2014    12    31      558        -2     1149         4 AA      N436AA 
+## 20  2014    12    31      558        -2      738        -4 AS      N585AS 
+## # … with 7 more variables: flight &lt;int&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+</div>
+<div id="dplyrdistinct" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span>
+<code>dplyr::distinct</code></h2>
+<pre class="r"><code># unique origin-dest combinations
+flights %&gt;% 
+  select(origin, dest) %&gt;% 
+  distinct %&gt;% head(n=50)</code></pre>
+<pre><code>## # A tibble: 50 × 2
+##    origin dest 
+##    &lt;chr&gt;  &lt;chr&gt;
+##  1 PDX    ANC  
+##  2 SEA    CLT  
+##  3 PDX    IAH  
+##  4 PDX    CLT  
+##  5 SEA    ANC  
+##  6 SEA    DTW  
+##  7 SEA    ORD  
+##  8 SEA    DEN  
+##  9 SEA    EWR  
+## 10 PDX    DEN  
+## # … with 40 more rows</code></pre>
+<pre class="r"><code># all unique destinations from PDX (there are 49, so we&#39;ll just list the first few)
+from_pdx &lt;- flights %&gt;% 
+  filter(origin == &quot;PDX&quot;) %&gt;% 
+  select(origin, dest) %&gt;%
+  distinct(dest)
+head(from_pdx)</code></pre>
+<pre><code>## # A tibble: 6 × 1
+##   dest 
+##   &lt;chr&gt;
+## 1 ANC  
+## 2 IAH  
+## 3 CLT  
+## 4 DEN  
+## 5 PHX  
+## 6 ORD</code></pre>
+</div>
+<div id="dplyrmutate" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span>
+<code>dplyr::mutate</code></h2>
+<p><code>mutate</code> is used to transform existing variables or create
+new ones; here, we are using it to create an indicator variable that
+identifies flights that were entirely on-time.</p>
+<pre class="r"><code># add total delay variable
+flights %&gt;%
+  mutate(tot_delay = dep_delay + arr_delay) %&gt;%
+  select(origin, dest, ends_with(&quot;delay&quot;), everything()) %&gt;% 
+  head</code></pre>
+<pre><code>## # A tibble: 6 × 17
+##   origin dest  dep_delay arr_delay tot_delay  year month   day dep_time arr_time
+##   &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;    &lt;int&gt;
+## 1 PDX    ANC          96        70       166  2014     1     1        1      235
+## 2 SEA    CLT          -6       -23       -29  2014     1     1        4      738
+## 3 PDX    IAH          13        -4         9  2014     1     1        8      548
+## 4 PDX    CLT          -2       -23       -25  2014     1     1       28      800
+## 5 SEA    ANC          44        43        87  2014     1     1       34      325
+## 6 SEA    DTW          82        88       170  2014     1     1       37      747
+## # … with 7 more variables: carrier &lt;chr&gt;, tailnum &lt;chr&gt;, flight &lt;int&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+<pre class="r"><code># flights that were delayed at departure had on time or early arrivals?
+arrivals &lt;- flights %&gt;%
+  mutate(arr_ok = ifelse(dep_delay &gt; 0 &amp; arr_delay &lt;= 0, 1, 0)) %&gt;% 
+  select(origin, dest, ends_with(&quot;delay&quot;), carrier, arr_ok)
+
+# peek at it
+arrivals %&gt;%
+  filter(arr_ok == 1) %&gt;%
+  head</code></pre>
+<pre><code>## # A tibble: 6 × 6
+##   origin dest  dep_delay arr_delay carrier arr_ok
+##   &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;
+## 1 PDX    IAH          13        -4 UA           1
+## 2 SEA    EWR           1        -6 UA           1
+## 3 SEA    SAN           2       -12 AS           1
+## 4 PDX    EWR           2       -19 UA           1
+## 5 SEA    IAH          13        -4 UA           1
+## 6 PDX    IAD          10        -4 UA           1</code></pre>
+</div>
+<div id="dplyrsummarise-or-dplyrsummarize" class="section level2"
+number="2.6">
+<h2><span class="header-section-number">2.6</span>
+<code>dplyr::summarise</code> (or <code>dplyr::summarize</code>)</h2>
+<p>We have seen <code>summarise</code> used to calculate summary
+statistics, like so:</p>
+<pre class="r"><code>flights %&gt;%
+  summarise(mean(dep_delay, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##   `mean(dep_delay, na.rm = TRUE)`
+##                             &lt;dbl&gt;
+## 1                            6.13</code></pre>
+<p>But this can get tedious when we want to compute several summary
+statistics, like so:</p>
+<pre class="r"><code># we can also name that variable, and summarise multiple variables
+flights %&gt;%
+  summarise(mean_delay = mean(dep_delay, na.rm = TRUE),
+            sd_delay = sd(dep_delay, na.rm = TRUE),
+            median_delay = median(dep_delay, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 1 × 3
+##   mean_delay sd_delay median_delay
+##        &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;
+## 1       6.13     29.1           -2</code></pre>
+<p><code>summarise</code> together with <code>across()</code> lets us
+automate this process a bit:</p>
+<pre class="r"><code>flights %&gt;%
+  filter(!is.na(dep_delay)) %&gt;%
+  select(dep_delay) %&gt;%
+  summarise(
+    across(everything(), 
+           lst(mean, sd, median)) # making this a list gets us nice column names
+    )</code></pre>
+<pre><code>## # A tibble: 1 × 3
+##   dep_delay_mean dep_delay_sd dep_delay_median
+##            &lt;dbl&gt;        &lt;dbl&gt;            &lt;dbl&gt;
+## 1           6.13         29.1               -2</code></pre>
+<pre class="r"><code># same thing over all numeric columns
+flights %&gt;%
+  filter(!is.na(dep_delay)) %&gt;%
+  summarise(across(where(is.numeric), lst(mean, sd, median)))</code></pre>
+<pre><code>## # A tibble: 1 × 36
+##   year_mean year_sd year_median month_mean month_sd month_median day_mean day_sd
+##       &lt;dbl&gt;   &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+## 1      2014       0        2014       6.62     3.32            7     15.8   8.79
+## # … with 28 more variables: day_median &lt;dbl&gt;, dep_time_mean &lt;dbl&gt;,
+## #   dep_time_sd &lt;dbl&gt;, dep_time_median &lt;dbl&gt;, dep_delay_mean &lt;dbl&gt;,
+## #   dep_delay_sd &lt;dbl&gt;, dep_delay_median &lt;dbl&gt;, arr_time_mean &lt;dbl&gt;,
+## #   arr_time_sd &lt;dbl&gt;, arr_time_median &lt;int&gt;, arr_delay_mean &lt;dbl&gt;,
+## #   arr_delay_sd &lt;dbl&gt;, arr_delay_median &lt;dbl&gt;, flight_mean &lt;dbl&gt;,
+## #   flight_sd &lt;dbl&gt;, flight_median &lt;dbl&gt;, air_time_mean &lt;dbl&gt;,
+## #   air_time_sd &lt;dbl&gt;, air_time_median &lt;dbl&gt;, distance_mean &lt;dbl&gt;, …</code></pre>
+<pre class="r"><code># combine with pivot_longer, change names too
+flights %&gt;%
+  filter(!is.na(dep_delay)) %&gt;%
+  summarise(across(dep_delay, lst(mean, stdev=sd, median))) %&gt;% 
+  pivot_longer(everything(), names_to=&quot;delay_stat&quot;, values_to=&quot;value&quot;, names_prefix = &quot;dep_delay_&quot;)</code></pre>
+<pre><code>## # A tibble: 3 × 2
+##   delay_stat value
+##   &lt;chr&gt;      &lt;dbl&gt;
+## 1 mean        6.13
+## 2 stdev      29.1 
+## 3 median     -2</code></pre>
+<p>We can use aggregating functions in <code>summarise</code></p>
+<pre class="r"><code># how many unique destinations?
+summary_table &lt;- flights %&gt;% 
+  summarise(tot_flights = n(),
+            tot_planes = n_distinct(tailnum),
+            tot_carriers = n_distinct(carrier),
+            tot_dests = n_distinct(dest),
+            tot_origins = n_distinct(origin))
+
+summary_table</code></pre>
+<pre><code>## # A tibble: 1 × 5
+##   tot_flights tot_planes tot_carriers tot_dests tot_origins
+##         &lt;int&gt;      &lt;int&gt;        &lt;int&gt;     &lt;int&gt;       &lt;int&gt;
+## 1      162049       3023           11        71           2</code></pre>
+<p>The resulting table is a bit messy; we can reprocess using
+<code>pivot_longer</code> and <code>separate</code>:</p>
+<pre class="r"><code># chain with tidyr functions
+summary_table %&gt;% 
+  pivot_longer(everything(), names_to=&quot;key&quot;, values_to=&quot;value&quot;) %&gt;% 
+  separate(key, into = c(&quot;tot&quot;, &quot;entity&quot;)) %&gt;% 
+  select(-tot, total = value)</code></pre>
+<pre><code>## # A tibble: 5 × 2
+##   entity    total
+##   &lt;chr&gt;     &lt;int&gt;
+## 1 flights  162049
+## 2 planes     3023
+## 3 carriers     11
+## 4 dests        71
+## 5 origins       2</code></pre>
+<p>Or we can do it in a single call to <code>pivot_longer()</code>:</p>
+<pre class="r"><code>summary_table %&gt;% 
+  pivot_longer(
+    everything(), # grab all columns
+    names_to=&quot;entity&quot;, # make a new column called &quot;entity&quot; to store the old column names
+    names_prefix=&quot;tot_&quot;, # remove the &quot;tot_&quot; prefix from the old column names
+    values_to=&quot;total&quot;) # put the values in a column called &quot;total&quot;</code></pre>
+<pre><code>## # A tibble: 5 × 2
+##   entity    total
+##   &lt;chr&gt;     &lt;int&gt;
+## 1 flights  162049
+## 2 planes     3023
+## 3 carriers     11
+## 4 dests        71
+## 5 origins       2</code></pre>
+</div>
+</div>
+<div id="tidyr" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> <code>tidyr</code></h1>
+<p>We’ll work with a made up dataframe:</p>
+<pre class="r"><code>df &lt;- data.frame(
+  id = 1:10,
+  date = as.Date(&#39;2015-01-01&#39;) + 0:9,
+  q1_m1_w1 = rnorm(10, 0, 1),
+  q1_m1_w2 = rnorm(10, 0, 1),
+  q1_m2_w3 = rnorm(10, 0, 1),
+  q2_m1_w1 = rnorm(10, 0, 1),
+  q2_m2_w1 = rnorm(10, 0, 1),
+  q2_m2_w2 = rnorm(10, 0, 1)
+)</code></pre>
+<pre class="r"><code># HLO
+head(df)</code></pre>
+<pre><code>##   id       date   q1_m1_w1   q1_m1_w2    q1_m2_w3    q2_m1_w1   q2_m2_w1
+## 1  1 2015-01-01  1.4592594  0.4043851 -1.33897630 -1.05213883 -0.1921919
+## 2  2 2015-01-02  1.2058634  1.3033575 -0.80793239  0.36062454  0.1631436
+## 3  3 2015-01-03 -0.2412272  1.6721515  0.16423919  1.68975801 -1.2450500
+## 4  4 2015-01-04 -0.2089471 -0.1131111 -1.33219558 -1.12964540 -0.2212858
+## 5  5 2015-01-05  0.5670506 -0.3980167  0.45700431 -0.79716683 -0.9500570
+## 6  6 2015-01-06  0.6220989 -0.5284886  0.01433827 -0.03755558 -0.5447075
+##     q2_m2_w2
+## 1 -0.6339338
+## 2  0.3173936
+## 3  1.8919829
+## 4 -0.2941597
+## 5  0.9084951
+## 6 -0.2366068</code></pre>
+<pre class="r"><code>glimpse(df)</code></pre>
+<pre><code>## Rows: 10
+## Columns: 8
+## $ id       &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+## $ date     &lt;date&gt; 2015-01-01, 2015-01-02, 2015-01-03, 2015-01-04, 2015-01-05, 2…
+## $ q1_m1_w1 &lt;dbl&gt; 1.4592594, 1.2058634, -0.2412272, -0.2089471, 0.5670506, 0.6…
+## $ q1_m1_w2 &lt;dbl&gt; 0.40438514, 1.30335749, 1.67215147, -0.11311109, -0.39801671,…
+## $ q1_m2_w3 &lt;dbl&gt; -1.33897630, -0.80793239, 0.16423919, -1.33219558, 0.45700431…
+## $ q2_m1_w1 &lt;dbl&gt; -1.05213883, 0.36062454, 1.68975801, -1.12964540, -0.79716683…
+## $ q2_m2_w1 &lt;dbl&gt; -0.1921919, 0.1631436, -1.2450500, -0.2212858, -0.9500570, -0…
+## $ q2_m2_w2 &lt;dbl&gt; -0.6339338, 0.3173936, 1.8919829, -0.2941597, 0.9084951, -0.2…</code></pre>
+<div id="tidyrpivot_longer" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span>
+<code>tidyr::pivot_longer</code></h2>
+<p>First, let’s pivot…</p>
+<pre class="r"><code>df_tidy &lt;- df %&gt;%
+  pivot_longer(q1_m1_w1:q2_m2_w2, names_to=&quot;key&quot;, values_to=&quot;value&quot;)
+head(df_tidy)</code></pre>
+<pre><code>## # A tibble: 6 × 4
+##      id date       key       value
+##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;     &lt;dbl&gt;
+## 1     1 2015-01-01 q1_m1_w1  1.46 
+## 2     1 2015-01-01 q1_m1_w2  0.404
+## 3     1 2015-01-01 q1_m2_w3 -1.34 
+## 4     1 2015-01-01 q2_m1_w1 -1.05 
+## 5     1 2015-01-01 q2_m2_w1 -0.192
+## 6     1 2015-01-01 q2_m2_w2 -0.634</code></pre>
+</div>
+<div id="tidyrseparate" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span>
+<code>tidyr::separate</code></h2>
+<pre class="r"><code># separate 1 col into 3 cols
+df_sep &lt;- df_tidy %&gt;%
+  separate(key, into = c(&quot;quarter&quot;, &quot;month&quot;, &quot;week&quot;))
+head(df_sep)</code></pre>
+<pre><code>## # A tibble: 6 × 6
+##      id date       quarter month week   value
+##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;
+## 1     1 2015-01-01 q1      m1    w1     1.46 
+## 2     1 2015-01-01 q1      m1    w2     0.404
+## 3     1 2015-01-01 q1      m2    w3    -1.34 
+## 4     1 2015-01-01 q2      m1    w1    -1.05 
+## 5     1 2015-01-01 q2      m2    w1    -0.192
+## 6     1 2015-01-01 q2      m2    w2    -0.634</code></pre>
+<pre class="r"><code># separate 1 col into 2 cols
+df_sep2 &lt;- df_tidy %&gt;%
+  separate(key, into = c(&quot;quarter&quot;, &quot;period&quot;), extra = &quot;merge&quot;)
+head(df_sep2)</code></pre>
+<pre><code>## # A tibble: 6 × 5
+##      id date       quarter period  value
+##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;
+## 1     1 2015-01-01 q1      m1_w1   1.46 
+## 2     1 2015-01-01 q1      m1_w2   0.404
+## 3     1 2015-01-01 q1      m2_w3  -1.34 
+## 4     1 2015-01-01 q2      m1_w1  -1.05 
+## 5     1 2015-01-01 q2      m2_w1  -0.192
+## 6     1 2015-01-01 q2      m2_w2  -0.634</code></pre>
+<p>stringr vs. tidyr separate by regular expression</p>
+</div>
+<div id="tidyrextract" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span>
+<code>tidyr::extract</code></h2>
+<p><code>Extract</code> is essentially the same as
+<code>separate</code>, let’s see how…</p>
+<pre class="r"><code># extract
+df_ext &lt;- df_sep2 %&gt;%
+  extract(period, into = &quot;month&quot;)
+head(df_ext)</code></pre>
+<pre><code>## # A tibble: 6 × 5
+##      id date       quarter month  value
+##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt;
+## 1     1 2015-01-01 q1      m1     1.46 
+## 2     1 2015-01-01 q1      m1     0.404
+## 3     1 2015-01-01 q1      m2    -1.34 
+## 4     1 2015-01-01 q2      m1    -1.05 
+## 5     1 2015-01-01 q2      m2    -0.192
+## 6     1 2015-01-01 q2      m2    -0.634</code></pre>
+<p>We can see that, by default, it’s taking the first alphanumeric chunk
+of the value, and <code>extract</code>ing it. We can specify much more
+complex patterns:</p>
+<pre class="r"><code># this gives us same output as separate
+df_ext &lt;- df_sep2 %&gt;%
+  extract(period, into = c(&quot;month&quot;, &quot;week&quot;), 
+          regex = &quot;([[:alnum:]]+)_([[:alnum:]]+)&quot;)
+head(df_ext)</code></pre>
+<pre><code>## # A tibble: 6 × 6
+##      id date       quarter month week   value
+##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;
+## 1     1 2015-01-01 q1      m1    w1     1.46 
+## 2     1 2015-01-01 q1      m1    w2     0.404
+## 3     1 2015-01-01 q1      m2    w3    -1.34 
+## 4     1 2015-01-01 q2      m1    w1    -1.05 
+## 5     1 2015-01-01 q2      m2    w1    -0.192
+## 6     1 2015-01-01 q2      m2    w2    -0.634</code></pre>
+</div>
+<div id="tidyrunite" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span>
+<code>tidyr::unite</code></h2>
+<p>The <code>unite()</code> function lets us reverse the process:</p>
+<pre class="r"><code># let&#39;s say we want to combine quarter and month with an underscore
+df_uni &lt;- df_sep %&gt;%
+  unite(period, quarter:month) # sep = &quot;_&quot; is the default arg
+head(df_uni)</code></pre>
+<pre><code>## # A tibble: 6 × 5
+##      id date       period week   value
+##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt;
+## 1     1 2015-01-01 q1_m1  w1     1.46 
+## 2     1 2015-01-01 q1_m1  w2     0.404
+## 3     1 2015-01-01 q1_m2  w3    -1.34 
+## 4     1 2015-01-01 q2_m1  w1    -1.05 
+## 5     1 2015-01-01 q2_m2  w1    -0.192
+## 6     1 2015-01-01 q2_m2  w2    -0.634</code></pre>
+<pre class="r"><code># let&#39;s say we want to combine quarter and month with nothing
+df_uni &lt;- df_sep %&gt;%
+  unite(period, quarter:month, sep = &quot;&quot;)
+head(df_uni)</code></pre>
+<pre><code>## # A tibble: 6 × 5
+##      id date       period week   value
+##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt;
+## 1     1 2015-01-01 q1m1   w1     1.46 
+## 2     1 2015-01-01 q1m1   w2     0.404
+## 3     1 2015-01-01 q1m2   w3    -1.34 
+## 4     1 2015-01-01 q2m1   w1    -1.05 
+## 5     1 2015-01-01 q2m2   w1    -0.192
+## 6     1 2015-01-01 q2m2   w2    -0.634</code></pre>
+</div>
+<div id="tidyrpivot_wider" class="section level2" number="3.5">
+<h2><span class="header-section-number">3.5</span>
+<code>tidyr::pivot_wider</code></h2>
+<pre class="r"><code># finally let&#39;s spread
+df_spread &lt;- df_uni %&gt;%
+  pivot_wider(names_from=week, values_from=value)  # fill = NA is default arg
+head(df_spread)</code></pre>
+<pre><code>## # A tibble: 6 × 6
+##      id date       period     w1     w2     w3
+##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1     1 2015-01-01 q1m1    1.46   0.404 NA    
+## 2     1 2015-01-01 q1m2   NA     NA     -1.34 
+## 3     1 2015-01-01 q2m1   -1.05  NA     NA    
+## 4     1 2015-01-01 q2m2   -0.192 -0.634 NA    
+## 5     2 2015-01-02 q1m1    1.21   1.30  NA    
+## 6     2 2015-01-02 q1m2   NA     NA     -0.808</code></pre>
+</div>
+<div id="putting-it-all-together-pivot_longer-separate-pivot_wider"
+class="section level2" number="3.6">
+<h2><span class="header-section-number">3.6</span> Putting it all
+together
+(<code>pivot_longer() %&gt;% separate() %&gt;% pivot_wider()</code>)</h2>
+<p>All in one, if we had wanted to end up with one row per month:</p>
+<pre class="r"><code>df_tidiest &lt;- df %&gt;% 
+  pivot_longer(q1_m1_w1:q2_m2_w2, names_to=&quot;key&quot;, values_to=&quot;value&quot;) %&gt;% 
+  separate(key, into = c(&quot;quarter&quot;, &quot;month&quot;, &quot;week&quot;)) %&gt;% 
+  pivot_wider(names_from=week, values_from=value)
+head(df_tidiest)</code></pre>
+<pre><code>## # A tibble: 6 × 7
+##      id date       quarter month     w1     w2     w3
+##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1     1 2015-01-01 q1      m1     1.46   0.404 NA    
+## 2     1 2015-01-01 q1      m2    NA     NA     -1.34 
+## 3     1 2015-01-01 q2      m1    -1.05  NA     NA    
+## 4     1 2015-01-01 q2      m2    -0.192 -0.634 NA    
+## 5     2 2015-01-02 q1      m1     1.21   1.30  NA    
+## 6     2 2015-01-02 q1      m2    NA     NA     -0.808</code></pre>
+</div>
+</div>
+<div id="broom" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> <code>broom</code></h1>
+<p>“The broom package takes the messy output of built-in functions in R,
+such as <code>lm</code>, <code>nls</code>, or <code>t.test</code>, and
+turns them into tidy data frames.” So, broom tidies output from other R
+functions that are un-tidy.</p>
+<p>See here for list of functions: <a
+href="https://github.com/dgrtwo/broom"
+class="uri">https://github.com/dgrtwo/broom</a></p>
+<p>Vignette: <a
+href="ftp://cran.r-project.org/pub/R/web/packages/broom/vignettes/broom.html"
+class="uri">ftp://cran.r-project.org/pub/R/web/packages/broom/vignettes/broom.html</a></p>
+<pre class="r"><code>fit &lt;- lm(mpg ~ qsec + factor(am) + wt + factor(gear), 
+          data = mtcars)</code></pre>
+<p>Un-tidy output from <code>lm</code></p>
+<pre class="r"><code>summary(fit)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ qsec + factor(am) + wt + factor(gear), data = mtcars)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.5064 -1.5220 -0.7517  1.3841  4.6345 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)     9.3650     8.3730   1.118  0.27359    
+## qsec            1.2449     0.3828   3.252  0.00317 ** 
+## factor(am)1     3.1505     1.9405   1.624  0.11654    
+## wt             -3.9263     0.7428  -5.286 1.58e-05 ***
+## factor(gear)4  -0.2682     1.6555  -0.162  0.87257    
+## factor(gear)5  -0.2697     2.0632  -0.131  0.89698    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 2.55 on 26 degrees of freedom
+## Multiple R-squared:  0.8498, Adjusted R-squared:  0.8209 
+## F-statistic: 29.43 on 5 and 26 DF,  p-value: 6.379e-10</code></pre>
+<p>Tidy output from <code>broom</code></p>
+<pre class="r"><code>tidy(fit)</code></pre>
+<pre><code>## # A tibble: 6 × 5
+##   term          estimate std.error statistic   p.value
+##   &lt;chr&gt;            &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)      9.37      8.37      1.12  0.274    
+## 2 qsec             1.24      0.383     3.25  0.00317  
+## 3 factor(am)1      3.15      1.94      1.62  0.117    
+## 4 wt              -3.93      0.743    -5.29  0.0000158
+## 5 factor(gear)4   -0.268     1.66     -0.162 0.873    
+## 6 factor(gear)5   -0.270     2.06     -0.131 0.897</code></pre>
+<p>This is very helfpul for making e.g. regression tables for
+papers!</p>
+</div>
+
+<p>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="by-nc.png" width="133" height="25"/></a>
+</p>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

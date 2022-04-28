@@ -21,7 +21,7 @@ knitr::opts_chunk$set(error = TRUE, comment = NA, warning = FALSE, errors = FALS
 
 # Goals for Lab 05
 
-Become familiar with tools for generating publication-ready tables directly in R.
+Goal: Become familiar with tools for generating publication-ready tables directly in R.
 
 We will use data from the following paper: MacFarlane, H., Gorman, K., Ingham, R., Presmanes Hill, A., Papadakis, K., Kiss, G., & van Santen, J. (2017). [Quantitative analysis of disfluency in children with autism spectrum disorder or language impairment.](http://doi.org/10.1371/journal.pone.0173936) PLoS ONE, 12(3), e0173936. 
 
@@ -41,7 +41,7 @@ library(huxtable)
 ```
 
 ```{r}
-mazes <- read_csv("http://bit.ly/mazes-gist") %>% 
+mazes <- read_csv("data/mazes.csv") %>% 
   clean_names()  #janitor package
 
 glimpse(mazes)
@@ -51,13 +51,13 @@ glimpse(mazes)
 
 # TL;DR
 
-The workhorse for making tables in R Markdown documents is the `knitr` package's `kable` function. This function is really versatile, but also free of fancy formatting options, for better or worse.
+The workhorse for making simple tables in R Markdown documents is the `knitr` package's `kable` function. This function is really versatile, but also free of fancy formatting options, for better or worse.
 
 # `knitr::kable`
 
 ## `kable` all tables everywhere
 
-In order to tell RMarkdown to use `kable` to format all tabular output, update the YAML of your document. For HTML:
+In order to tell RMarkdown to use `kable` to format all tabular output, update the YAML header in your document and override the `df_print` option, when producing HTML output:
 
 ```{r eval = FALSE}
 ---
@@ -72,7 +72,7 @@ You can also define the html format in the global options.
 ```{r eval = FALSE}
 # If you don't define format here, you'll need put `format = "html"` in every kable function.
 options(knitr.table.format = "html") 
-# You may also wish to set this option
+# You may also wish to set this option, to handle number formatting
 options(scipen = 1, digits = 2)
 ```
 
@@ -124,6 +124,7 @@ head(mazes) %>%
   kable_styling(bootstrap_options = "striped", full_width = F)
 ```
 
+Note that by default the table will be centered; you can override this by specifying a `position`:
 
 ```{r}
 head(mazes) %>% 
@@ -144,7 +145,7 @@ head(mazes) %>%
 
 ## `kable` + `kableExtra` + `formattable`
 
-`color_tile` and `color_bar` are neat extras if used wisely!
+`color_tile` and `color_bar` are neat extras, if used wisely and in moderation!
 
 http://haozhu233.github.io/kableExtra/use_kableExtra_with_formattable.html
 
@@ -161,17 +162,16 @@ head(mazes) %>%
 
 ## `tibble` + `kable` + `kableExtra`
 
-You can also use any of these tools with plain text tables using the [`tibble` package](http://tibble.tidyverse.org) to create a table. Two main functions:
+Sometimes, when writing a document or preparing a report, you may have tabular information to present that is not already in a dataframe. 
+For example, consider the helpful table of vectorized math operators from one of the slide decks.
+I made this by first manually creating a data frame to hold the contents of the table (using the [`tibble` package's](http://tibble.tidyverse.org) `tribble()` function), and then formatting it as before.
 
-- `tribble`: enter tibble by rows
-- `tibble`: enter tibble by columns
+Manually creating a quick-and-dirty dataframe with `tribble()` is simple:
 
-
-For example, I used `tribble` to make this table in our slide decks:
 ```{r}
 math_table <- tibble::tribble(
-  ~Operator, ~Description, ~Usage,
-  "\\+", "addition", "x + y",
+  ~Operator, ~Description, ~Usage, # column names
+  "\\+", "addition", "x + y", # each column, for each row, separated by commas
   "\\-", "subtraction", "x - y",
   "\\*", "multiplication", "x * y",
   "/", "division", "x / y",
@@ -198,7 +198,7 @@ knitr::kable(math_table, format = "html", caption = "Helpful mutate functions") 
 
 # Markdown Tables
 
-Sometimes you may just want to type in a table in Markdown and ignore R. Four kinds of tables may be used. The first three kinds presuppose the use of a fixed-width font, such as Courier. The fourth kind can be used with proportionally spaced fonts, as it does not require lining up columns. All of the below will render when typed *outside* of an R code chunk since these are based on `pandoc` being used to render your markdown document. Note that these should all work whether you are knitting to either html or PDF.
+Alternatively, you may just want to type in a table in Markdown and ignore R. Four kinds of tables may be used. The first three kinds presuppose the use of a fixed-width (monospaced) font, such as Courier. The fourth method can be used with proportionally spaced fonts, as it does not require lining up columns. All of the below will render when typed *outside* of an R code chunk since these are based on `pandoc` being used to render your markdown document. Note that these should all work whether you are knitting to either html or PDF.
 
 
 ## Simple table
@@ -308,6 +308,8 @@ Produces this grid table:
 
 Alignments are not supported, nor are cells that span multiple columns or rows. 
 
+Note that if you find yourself making a lot of these kinds of tables, you may want to use software like [Monodraw](https://monodraw.helftone.com) to help.
+
 ## Pipe tables
 
 This code for a pipe table:
@@ -332,440 +334,12 @@ Produces this pipe table:
 
   : Demonstration of pipe table syntax.
 
+This method does not depend on using a monospaced font!
 
-# Making tables in R
 
-If you want to make tables that include R output (like output from functions like means, variances, or output from models), there are two steps: 
+# `gt`
 
-1. Get the numbers you need in tabular format; then
-2. Render that information in an aesthetically-pleasing way.
-
-This section covers (1). But, although there are some nice options for (2) within R Markdown via various packages, I am not dogmatic about doing *everything* in R Markdown, especially things like (2).
-
-Note that many of the tidying techniques we'll be using are ones we've seen before; you'll be using them in the challenge assignment this week on this dataset, so hopefully this walk-through will give you some ideas.
-
-## `dplyr`
-
-We'll use the `pnwflights14` package to practice our `dplyr` skills. We need to download the package from github using `devtools`.
-
-```{r eval = FALSE}
-# once per machine
-install.packages("devtools")
-devtools::install_github("ismayc/pnwflights14")
-```
-
-Now, we need to load the `flights` dataset from the `pnwflights14` package.
-
-```{r eval = FALSE}
-# once per work session
-data("flights", package = "pnwflights14")
-```
-
-
-### `dplyr::select`
-
-Recall that we use select to specify which columns in a dataframe you'd like to keep **by name**:
-
-```{r use-dplyr-select}
-# keep these 2 cols
-mini_flights <- flights %>% 
-  select(carrier, flight)
-glimpse(mini_flights)
-
-# keep first five cols
-first_five <- flights %>% 
-  select(year, month, day, dep_time, dep_delay)
-glimpse(first_five)
-
-# alternatively, specify range
-first_five <- flights %>% 
-  select(year:dep_delay)
-glimpse(first_five)
-```
-
-We can also choose the columns we want by negation, that is, you can specify which columns to drop instead of keep. This way, all variables **not** listed are kept.
-
-```{r drop-select}
-# we can also use negation
-all_but_year <- flights %>% 
-  select(-year)
-glimpse(all_but_year)
-```
-
-
-
-`dplyr::select` comes with several other helper functions...
-
-
-```{r dplyr-select-helpers}
-depart <- flights %>%
-  select(starts_with("dep_"))
-glimpse(depart)
-
-times <- flights %>%
-  select(contains("time"))
-glimpse(times)
-
-# note that we are not actually saving the new dataframe here
-flights %>%
-  select(-contains("time")) %>% head()
-
-
-delays <- flights %>%
-  select(ends_with("delay"))
-glimpse(delays)
-```
-
-One of my favorite select helper functions is `everything()`, which allows you to use select to keep **all** your variables, but easily rearrange the columns without having to list all the variables to keep/drop.
-
-```{r dplyr-select-everything}
-new_order <- flights %>% 
-  select(origin, dest, everything())
-head(new_order)
-
-# with negation
-new_order2 <- flights %>% 
-  select(origin, dest, everything(), -year)
-head(new_order2)
-```
-
-
-We can also rename variables within select.
-
-```{r rename-select}
-flights2 <- flights %>%
-  select(tail_num = tailnum, everything())
-head(flights2)
-```
-
-If you don't want to move the renamed variables within your dataframe, you can use the `rename` function.
-
-```{r rename}
-flights3 <- flights %>%
-  rename(tail_num = tailnum)
-glimpse(flights3)
-```
-
-### `dplyr::filter`
-
-As we have previously seen, `filter` has many flexible uses:
-
-
-```{r dplyr-filter}
-# flights taking off from PDX
-pdx <- flights %>% 
-  filter(origin == "PDX")
-head(pdx)
-
-# january flights from PDX
-pdx_jan <- flights %>% 
-  filter(origin == "PDX", month == 1) # the comma is an "and"
-head(pdx_jan)
-
-# flights to ATL (Atlanta) or BNA (Nashville)
-to_south <- flights %>% 
-  filter(dest == "ATL" | dest == "BNA") %>% # | is "or"
-  select(origin, dest, everything())
-head(to_south)
-
-# flights from PDX to ATL (Atlanta) or BNA (Nashville)
-pdx_to_south <- flights %>% 
-  filter(origin == "PDX", dest == "ATL" | dest == "BNA") %>% # | is "or"
-  select(origin, dest, everything())
-head(pdx_to_south)
-
-# alternatively, using group membership
-south_dests <- c("ATL", "BNA")
-pdx_to_south2 <- flights %>% 
-  filter(origin == "PDX", dest %in% south_dests) %>% 
-  select(origin, dest, everything())
-head(pdx_to_south2)
-
-# flights delayed by 1 hour or more
-delay_1plus <- flights %>%
-  filter(dep_delay >= 60)
-head(delay_1plus)
-
-# flights delayed by 1 hour, but not more than 2 hours
-delay_1hr <- flights %>%
-  filter(dep_delay >= 60, dep_delay < 120)
-head(delay_1hr)
-range(delay_1hr$dep_delay, na.rm = TRUE)
-
-# even more efficient using between (always inclusive)
-delay_bwn <- flights %>%
-  filter(between(dep_delay, 60, 119))
-head(delay_bwn)
-range(delay_bwn$dep_delay, na.rm = TRUE)
-```
-
-
-### `dplyr::arrange`
-
-```{r}
-# default is ascending order
-flights %>% 
-  arrange(year, month, day) %>% head(n=20)
-
-# descending order
-flights %>% 
-  arrange(desc(year), desc(month), desc(day)) %>% head(n=20)
-```
-
-
-### `dplyr::distinct`
-
-
-```{r}
-# unique origin-dest combinations
-flights %>% 
-  select(origin, dest) %>% 
-  distinct %>% head(n=50)
-
-# all unique destinations from PDX (there are 49, so we'll just list the first few)
-from_pdx <- flights %>% 
-  filter(origin == "PDX") %>% 
-  select(origin, dest) %>%
-  distinct(dest)
-head(from_pdx)
-```
-
-
-
-### `dplyr::mutate`
-
-`mutate` is used to transform existing variables or create new ones; here, we are using it to create an indicator variable that identifies flights that were entirely on-time.
-
-```{r}
-# add total delay variable
-flights %>%
-  mutate(tot_delay = dep_delay + arr_delay) %>%
-  select(origin, dest, ends_with("delay"), everything()) %>% 
-  head
-
-# flights that were delayed at departure had on time or early arrivals?
-arrivals <- flights %>%
-  mutate(arr_ok = ifelse(dep_delay > 0 & arr_delay <= 0, 1, 0)) %>% 
-  select(origin, dest, ends_with("delay"), carrier, arr_ok)
-
-# peek at it
-arrivals %>%
-  filter(arr_ok == 1) %>%
-  head
-```
-
-
-
-### `dplyr::summarise` (or `dplyr::summarize`)
-
-We have seen `summarise` used to calculate summary statistics, like so:
-
-```{r}
-flights %>%
-  summarise(mean(dep_delay, na.rm = TRUE))
-```
-
-But this can get tedious when we want to compute several summary statistics, like so:
-
-```{r}
-# we can also name that variable, and summarise multiple variables
-flights %>%
-  summarise(mean_delay = mean(dep_delay, na.rm = TRUE),
-            sd_delay = sd(dep_delay, na.rm = TRUE),
-            median_delay = median(dep_delay, na.rm = TRUE))
-```
-
-`summarise_each` lets us automate this process a bit:
-
-
-```{r}
-flights %>%
-  filter(!is.na(dep_delay)) %>%
-  select(dep_delay) %>%
-  summarise_each(lst(mean, sd, median))
-
-# same thing
-flights %>%
-  filter(!is.na(dep_delay)) %>%
-  summarise_each(lst(mean, sd, median), dep_delay)
-
-# combine with pivot_longer, change names too
-flights %>%
-  filter(!is.na(dep_delay)) %>%
-  summarise_each(lst(mean, stdev = sd, median), dep_delay) %>%
-  pivot_longer(everything(), names_to="delay_stat", values_to="value")
-```
-
-We can use aggregating functions in `summarise`
-
-```{r}
-# how many unique destinations?
-summary_table <- flights %>% 
-  summarise(tot_flights = n(),
-            tot_planes = n_distinct(tailnum),
-            tot_carriers = n_distinct(carrier),
-            tot_dests = n_distinct(dest),
-            tot_origins = n_distinct(origin))
-
-summary_table
-```
-
-The resulting table is a bit messy; we can reprocess using `pivot_longer` and `separate`:
-
-```{r}
-# chain with tidyr functions
-summary_table %>% 
-  pivot_longer(everything(), names_to="key", values_to="value") %>% 
-  separate(key, into = c("tot", "entity")) %>% 
-  select(-tot, total = value)
-```
-Or we can do it in a single call to `pivot_longer()`:
-
-```{r}
-summary_table %>% 
-  pivot_longer(
-    everything(), # grab all columns
-    names_to="entity", # make a new column called "entity" to store the old column names
-    names_prefix="tot_", # remove the "tot_" prefix from the old column names
-    values_to="total") # put the values in a column called "total"
-```
-
-
-## `tidyr`
-
-We'll work with a made up dataframe:
-
-```{r}
-df <- data.frame(
-  id = 1:10,
-  date = as.Date('2015-01-01') + 0:9,
-  q1_m1_w1 = rnorm(10, 0, 1),
-  q1_m1_w2 = rnorm(10, 0, 1),
-  q1_m2_w3 = rnorm(10, 0, 1),
-  q2_m1_w1 = rnorm(10, 0, 1),
-  q2_m2_w1 = rnorm(10, 0, 1),
-  q2_m2_w2 = rnorm(10, 0, 1)
-)
-```
-
-```{r}
-# HLO
-head(df)
-glimpse(df)
-```
-
-### `tidyr::pivot_longer`
-
-First, let's pivot...
-```{r}
-df_tidy <- df %>%
-  pivot_longer(q1_m1_w1:q2_m2_w2, names_to="key", values_to="value")
-head(df_tidy)
-```
-
-
-### `tidyr::separate`
-
-```{r}
-# separate 1 col into 3 cols
-df_sep <- df_tidy %>%
-  separate(key, into = c("quarter", "month", "week"))
-head(df_sep)
-
-# separate 1 col into 2 cols
-df_sep2 <- df_tidy %>%
-  separate(key, into = c("quarter", "period"), extra = "merge")
-head(df_sep2)
-```
-stringr vs. tidyr separate by regular expression
-
-### `tidyr::extract`
-
-`Extract` is essentially the same as `separate`, let's see how...
-
-```{r}
-# extract
-df_ext <- df_sep2 %>%
-  extract(period, into = "month")
-head(df_ext)
-```
-
-We can see that, by default, it's taking the first alphanumeric chunk of the value, and `extract`ing it. We can specify much more complex patterns: 
-
-```{r}
-# this gives us same output as separate
-df_ext <- df_sep2 %>%
-  extract(period, into = c("month", "week"), 
-          regex = "([[:alnum:]]+)_([[:alnum:]]+)")
-head(df_ext)
-```
-
-### `tidyr::unite`
-
-The `unite()` function lets us reverse the process:
-
-```{r}
-# let's say we want to combine quarter and month with an underscore
-df_uni <- df_sep %>%
-  unite(period, quarter:month) # sep = "_" is the default arg
-head(df_uni)
-
-# let's say we want to combine quarter and month with nothing
-df_uni <- df_sep %>%
-  unite(period, quarter:month, sep = "")
-head(df_uni)
-```
-
-### `tidyr::pivot_wider`
-
-```{r}
-# finally let's spread
-df_spread <- df_uni %>%
-  pivot_wider(names_from=week, values_from=value)  # fill = NA is default arg
-head(df_spread)
-```
-
-### Putting it all together (`pivot_longer() %>% separate() %>% pivot_wider()`)
-
-All in one, if we had wanted to end up with one row per month:
-
-```{r}
-df_tidiest <- df %>% 
-  pivot_longer(q1_m1_w1:q2_m2_w2, names_to="key", values_to="value") %>% 
-  separate(key, into = c("quarter", "month", "week")) %>% 
-  pivot_wider(names_from=week, values_from=value)
-head(df_tidiest)
-```
-
-## `broom`
-
-"The broom package takes the messy output of built-in functions in R, such as `lm`, `nls`, or `t.test`, and turns them into tidy data frames." So, broom tidies output from other R functions that are un-tidy.
-
-See here for list of functions: https://github.com/dgrtwo/broom
-
-Vignette: ftp://cran.r-project.org/pub/R/web/packages/broom/vignettes/broom.html
-
-```{r}
-fit <- lm(mpg ~ qsec + factor(am) + wt + factor(gear), 
-          data = mtcars)
-```
-
-Un-tidy output from `lm`
-```{r}
-summary(fit)
-```
-
-Tidy output from `broom`
-```{r}
-tidy(fit)
-```
-
-
-# Specialized Packages
-
-## `gt`
-
-`gt` is a [relatively new package from RStudio](https://gt.rstudio.com/reference/cols_align.html) designed for publication-ready figures.
+`gt` is a [package from RStudio](https://gt.rstudio.com/reference/cols_align.html) designed for publication-ready figures. It is my go-to tool for tables.
 
 <img src="https://gt.rstudio.com/reference/figures/gt_parts_of_a_table.svg"/>
 
@@ -822,6 +396,8 @@ As RTF, to put in Word:
 gt_formatted %>% gtsave("my_table.rtf")
 ```
 
+# Descriptive Stats tables
+
 ## `tableone`
 
 `tableone` is for generating "Table 1" in your paper. You know, the "Subject Characteristics" table- lots of boring summary statistics.
@@ -860,7 +436,30 @@ If we want the summary statistics to be computed on a per-strata basis, we can a
 tab3 <- CreateTableOne(vars = my_num_vars, strata = "dx" , data = mazes)
 tab3
 ```
-## The `DT` package
+
+## `table1`
+
+Note that there is a similarly-named package called `table` that does something very similar, but has a different API and slightly different formatting capabilities:
+
+```{r}
+library(table1)
+
+table1(~ ca + viq + content + filler + rep + rev+ fs+ cued + not_cued | dx, data=mazes) 
+
+```
+
+One nice thing about `table1` is that it makes more complex tables easier; for example, we can stratify by diagnosis _and_ ADOS activity as follows:
+
+```{r}
+table1(~ ca + viq + content + filler + rep + rev+ fs+ cued + not_cued | activity * dx, data=mazes) 
+
+```
+
+This is, of course, just for demonstration purposes! Please do not make a table this large. :-D
+
+Note that `table1`'s output is always HTML, which may or may not be what you want. It has numerous options for customization and formatting, etc.
+
+# The `DT` package
 
 `DT` lets us produce interactive data tables for use in HTML reports that go far beyond `kable`'s capabilities.
 
@@ -872,34 +471,7 @@ An excellent tutorial on DT is available at https://rstudio.github.io/DT/.
 datatable(mazes)
 ```
 
-
-
-## `pixiedust` (best for PDF)
-
-`Pixiedust` is a ggplot-inspired table package that includes a lot of flexibility and works well for PDF-based output. We can illustrate its use by making a regression table.
-
-Remember that `broom` package we used earlier? Here is what the model parameters look like; this is obviously not what a publicatio-ready version of the table would look like:
-
-```{r}
-tidy(fit)
-```
-Pixiedust gives us many controls for things like column names, row values, formatting for columns, etc.:
-
-```{r}
-dust(fit) %>% 
-  sprinkle(cols = "term", 
-           replace = c("Intercept", "Quarter Mile Time", "Automatic vs. Manual",
-                       "Weight", "Gears: 4 vs. 3", "Gears: 5 vs 3")) %>%
-  sprinkle(cols = c("estimate", "std.error", "statistic"),
-           round = 3) %>% 
-  sprinkle(cols = "p.value", fn = quote(pvalString(value))) %>% 
-  sprinkle_colnames("Term", "Coefficient", "SE", "T-statistic", "P-value")
-```
-For more information about Pixiedust, consult:
-
-  - https://cran.r-project.org/web/packages/pixiedust/vignettes/pixiedust.html
-  - http://www.suchanutter.net/pixiedust/index.html
-
+There are numerous ways we can customized and configure things from here!
 
 # Finally, fonts!
 
@@ -909,6 +481,8 @@ The [`extrafont` package](https://github.com/wch/extrafont) is the best place to
 
 ```{r}
 library(extrafont)
+# font_import() # build the font database; only need to call this once (or after installing new fonts)
+loadfonts() # _load_ the font database; should call this once per session
 ```
 
 
@@ -916,11 +490,16 @@ Note: Make sure to follow _all_ installation instructions from `github`!
 
 You can access fonts on your local system in `ggplot` by using the `theme()` function to set the relevant properties of your figure.
 
+```{r,echo=FALSE}
+library(palmerpenguins)
+```
+
+
 ```{r}
-demo_plt <- ggplot(iris, aes(Sepal.Length, Sepal.Width, color=Species)) + 
+demo_plt <- penguins %>% ggplot(aes(bill_length_mm, bill_depth_mm, color=species)) + 
   geom_point(size=3) +
-  scale_color_discrete(labels=c("Setosa", "Versicolor", "Virginica")) + 
-  labs(x="Sepal Length (cm)", y="Sepal Width (cm)", title="Fisher's Irises") 
+  scale_color_discrete("Species") +
+  labs(x="Bill Length (mm)", y="Bill Width (mm)", title="Palmer's Penguins") 
 demo_plt
 ```
 
@@ -987,6 +566,59 @@ demo_plt + theme(
 
 This part is a bit beyond the scope of this class, but the upshot is that after you install new fonts in your computer, you should tell `extrafont` about it using the `font_import()` command.
 
-### Caveats
+## OTF Fonts:
 
-`extrafont` only knows about TrueType fonts (ones whose file ends in `.ttf`). If you have an OpenType font you want to use with R, your best bet probably involves the [`showtext` package](https://cran.rstudio.com/web/packages/showtext/vignettes/introduction.html).
+`extrafont` only knows about TrueType fonts (ones whose file ends in `.ttf`); that's why `fonttable()`'s output is missing so many fonts on my system. 
+If you have an OpenType font you want to use with R, your best bet probably involves the [`showtext` package](https://cran.rstudio.com/web/packages/showtext/vignettes/introduction.html).
+
+You'll need to know the exact filename of the font you want to add; on a Mac, you can use the built-in FontBook application to help you find this:
+
+```{r}
+library(showtext)
+font_add("Sofa Sans Regular", "FaceType - SofaSansHand-Regular.otf") # register the OTF font
+```
+
+Then, you just refer to it in your `element_text()` like any other font:
+
+```{r}
+demo_plt + theme(
+  text=element_text(family="Sofa Sans")
+)
+```
+
+## Using Google Fonts
+
+`showtext` also has utility functions for working with Google Fonts. Google Fonts provides a wide variety of freely-usable font families, and is an amazing resource.
+
+Here, we install and use the ["Oleo Script"](https://fonts.google.com/specimen/Oleo+Script) font.
+
+```{r}
+font_add_google("Oleo Script")
+showtext_auto() # For Google Fonts specifically, showtext may need this
+demo_plt + theme(
+  text=element_text(family="Oleo Script")
+)
+
+```
+
+
+## A Caveat and a Plea
+
+It is important to note that both `extrafont` and `showtext` work best for _raster_ images; there are certain quirks that you are likely to encounter when producing PDF output using non-standard fonts (or, depending on the font, a plot that uses text containing text from the non-BMP regions of Unicode, like emojis). 
+The story of "making PDFs with non-standard fonts in R" is extremely long and tedious; if you are actually interested, set up a meeting and I will be happy to go over it with you.
+
+The upshot of it all is that if you want to make a PDF from `ggplot` using non-standard fonts or with non-BMP Unicode characters, your best bet is to use `showtext`, which _will_ produce a perfectly nice PDF file with whatever font and text you want... with one caveat: text selection (for search, copy-and-paste, etc.) will not be possible in the resulting PDFs. 
+The file will look fine for everybody, it will print fine for everybody, it will scale fine to any resolution, and will do all the things a PDF should do, _other_ than allow text extraction.
+
+If this is a dealbreaker for your particular situation, my honest advice is to find a different font to use- pick a TTF font (or figure out how to convert your OTF font to a TTF font), use `extrafont`, and move on with your life. 
+Life is short and fleeting, the grave is cold and lonely, the climate is changing, and the full day that you will spend debugging this situation is a day of your life that you can never get back.
+Nobody, on their deathbed, has ever wished that they had spent more time debugging mysterious error messages involving multiple obscure pieces of thirty-five-year-old software in order to get a PDF file to behave slightly better. 
+Please, spend that day with your family, or go enjoy the coastline while it's still there, or do literally anything else _other_ than try and get R to produce proper PDF output with OTF fonts.
+
+And note that this is advice coming from somebody who actually _enjoys_ dealing with bizarre font and Unicode issues, is a perfectionist when it comes to fonts and PDF files, and who eventually decided to acknowledge reality and just use `showtext`.
+
+If you absolutely _must_ ignore my advice, here are two places to start:
+
+- [Section 14.6](https://r-graphics.org/recipe-output-fonts-pdf) of the [R Graphics Cookbook](https://r-graphics.org)
+- [My own page](https://www.bedrick.org/notes/fonts-and-ggplot-and-pdf/) on the subject, which includes some more detailed discussion and a workaround for what is going wrong with PDFs made using `extrafont` and non-standard TTF fonts
+  - Note that this page will offer neither advice nor solace for those suffering from the OTF font situation
