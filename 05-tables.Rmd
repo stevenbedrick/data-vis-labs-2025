@@ -486,7 +486,9 @@ loadfonts() # _load_ the font database; should call this once per session
 ```
 
 
-Note: Make sure to follow _all_ installation instructions from `github`!
+**Note:** Make sure to follow _all_ installation instructions from `github`!
+
+**Note:** Also, you may need to install a custom version of one of `extrafont`'s dependencies; if you get a bunch of errors about "No Font Name" and no fonts end up being imported, see this [discussion](https://github.com/wch/extrafont/issues/88).
 
 You can access fonts on your local system in `ggplot` by using the `theme()` function to set the relevant properties of your figure.
 
@@ -565,6 +567,7 @@ demo_plt + theme(
 ## Installing new fonts
 
 This part is a bit beyond the scope of this class, but the upshot is that after you install new fonts in your computer, you should tell `extrafont` about it using the `font_import()` command.
+
 
 ## OTF Fonts:
 

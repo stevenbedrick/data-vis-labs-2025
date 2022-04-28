@@ -30,9 +30,15 @@ Make sure to keep in mind the design principles that we discussed on Tuesday reg
 
 # Fonts
 
-1. Spend some time on [Google Fonts](https://fonts.google.com) (or a different font repository) and pick out a serif, sanserif, and display font that "speaks to you". 
-2. Write a sentence or two about each one, including what sort of scenario you think it would work well for.
-3. Install them into your R project as shown in the reference lab, and if appropriate use them in a figure.
+1. Orient yourself to the built-in font library in RStudio.cloud. Using the `fonttable()` function (along with `dplyr` or your data-wrangling method of choice), answer the following:
+  - How many distinct font _families_ (not fonts!) are installed?
+  - What proportion of the installed font families include **bold** and _italic_ faces?
+  - Some font families include many fonts, others include only one. 
+    - Generate a plot of your choice illustrating this distribution.
+    - Compute a table with descriptive statistics about the built-in font library (e.g. mean/median number of fonts per family, etc.)
+2. Spend some time on [Google Fonts](https://fonts.google.com) (or a different font repository) and pick out a serif, sanserif, and display font that "speaks to you". 
+3. Write a sentence or two about each one, including what sort of scenario you think it would work well for.
+4. Install them into your R project as shown in the reference lab, and if appropriate use them in a figure.
 
 # Deliverable
 
