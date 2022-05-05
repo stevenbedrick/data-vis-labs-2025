@@ -1,7 +1,7 @@
 ---
 title: "Week 6 - Publishing"
 author: "Steven Bedrick"
-date: "5/5/2021"
+date: "5/5/2022"
 output:
   html_document:
     theme: flatly
@@ -10,7 +10,7 @@ output:
 
 This week, you will begin working on your academic portfolio site. The deliverable for the week is a URL (on Netlify, or wherever) for a simple personal site with the following criteria:
 
-1. A completed "About" page, containing a short professional bio following the methods & advice given on the [course site for today](https://cslu.ohsu.edu/~bedricks/courses/bmi525/syllabus/6-sixth.html)
+1. A completed "About" page, containing a short professional bio following the methods & advice given on the [course site for today](https://dmice.ohsu.edu/bedricks/courses/bmi525/syllabus/6-sixth.html)
 2. A photo (not necessarily of you)
 3. At least one stylistic aspect changed from the original template (font, color, etc.)
 4. A sub-page containing one of the visualizations that you have created for an assignment/lab in this class, with description. (Feel free just to post your entire graph exploration assignment)

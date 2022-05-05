@@ -110,6 +110,8 @@ File ➡️ New Project ➡️ New Directory ➡️ Website using blogdown
 
 &lt;img src="../images/install-cocoa-eh-theme.png" width="80%" style="display: block; margin: auto;" /&gt;
 
+Note: Use `stevenbedrick/cocoa-eh-hugo-theme`
+
 ---
 # Open your new project
 
@@ -224,7 +226,7 @@ with files in your project directory.
 class: middle, inverse, center
 
 # 🏡
-## Edit the configuration file
+## Edit/Review the configuration file
 
 ---
 # Open `config.toml`
@@ -419,12 +421,14 @@ article:
 [\*] https://gohugohq.com/howto/toml-json-yaml-comparison/
 ]
 
+
 ---
-# Edit `config.toml`
+# Edit `config.{toml|yaml}`
 
-- Set `baseurl = "/"`
-
-- Add `ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]`
+- Set `baseurl`
+- Change the `author` and `title` properties
+- Tell Hugo to ignore `Rmd` files 
+  - (`blogdown` will be taking care of those for us)
 
 
 ```r
@@ -440,8 +444,10 @@ publishdir = "public"
 *title = "Ada Lovelace"
 disqusshortname = ""
 pluralizelisttitles = false
-*ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+*ignoreFiles: ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 ```
+
+- Review the other entries
 
 ---
 class: center, inverse, middle
@@ -642,8 +648,8 @@ class: inverse, middle, center
 
 - [Blogdown demo site](https://blogdown-demo.rbind.io)
 - [Blogdown book](https://bookdown.org/yihui/blogdown/)
-- [I did a blog post on it](https://alison.rbind.io/post/up-and-running-with-blogdown/)
-- [Also did a workshop](https://alison.rbind.io/talk/blogdown-meetup/)
+- [Alison did a blog post on it](https://alison.rbind.io/post/up-and-running-with-blogdown/)
+  - [Also did a workshop](https://alison.rbind.io/talk/blogdown-meetup/)
 - [Yihui's slides from RStudio Conf](https://slides.yihui.name/2018-blogdown-rstudio-conf-Yihui-Xie.html)
 
 ---
@@ -655,12 +661,22 @@ We'll connect to GitHub and deploy to Netlify.
 ## What is hard about `blogdown`?
 
 - A lot!
-- TOML in `config` file, but YAML in posts
+- (Sometimes) TOML in `config` file, but YAML in posts
 - Themes vary a lot
 - Overriding versus editing directory structure
 - Related to ⬆️, you have to learn Hugo (in addition to `blogdown`)
 - For much customization, you'll also have to be comfortable with [CSS](https://bookdown.org/yihui/blogdown/css.html)
 - [File paths!](https://blogdown-demo.rbind.io/2018/02/27/r-file-paths/)
+
+---
+## What is _awesome_ about `blogdown`?
+
+- A lot!
+- Flexibility!
+  - Lots of types of sites, one set of tools
+- Reliability!
+  - Once you get it working, it will stay that way!
+- Integration with R!
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
