@@ -891,6 +891,8 @@ shinyApp(ui = ui, server = server)
 
 Once our list of common names has been made reactive, we can wire it up to other parts of the UI via `observeEvent()`. Code inside `observeEvent()` is run whenever the variable that it is connected to changes; in this case, `upateSelectInput()` will be run when a new year is entered. Pretty neat!
 
+Understanding `reactive()` is key to being able to use Shiny; I _strongly_ recommend reading [Chapter 3](https://mastering-shiny.org/basic-reactivity.html#basic-reactivity) of _Mastering Shiny_, as it gives a lucid and yet relatively concise description of what is going on.
+
 # Deployment
 
 See the [shinyapps.io user guide](https://docs.rstudio.com/shinyapps.io/) for information about deploying a simple Shiny app.
@@ -899,4 +901,4 @@ See the [shinyapps.io user guide](https://docs.rstudio.com/shinyapps.io/) for in
 
 For this week, you will construct and deploy a Shiny app that will let the user explore Kieran Healy's [`covdata` package](https://kjhealy.github.io/covdata/) containing up-to-date COVID-19 data. There are a variety of interesting data sets in this package, including ; feel free to draw inspiration from some of his blog posts (under "Articles" on the `covdata` home page). Think about the kinds of visualization and analysis tasks that are well-supported by interactivity, and recall Shneiderman's mantra ("Overview first, zoom and filter, then details on demand") as you work.
 
-I strongly recommend referring to the [Shiny links on the syllabus](https://cslu.ohsu.edu/~bedricks/courses/bmi525/syllabus/7-seventh.html) for additional information and ideas!
+I strongly recommend referring to the [Shiny links on the syllabus](https://dmice.ohsu.edu/bedricks/courses/bmi525/syllabus/7-seventh.html) for additional information and ideas!
