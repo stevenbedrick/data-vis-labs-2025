@@ -14,7 +14,7 @@
 
 <title>Lab 01: Nathan’s Hot-Dog Eating Contest</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -61,6 +61,7 @@ if (window.hljs) {
 
 
 
+
 <style type="text/css">
 #rmd-source-code {
   display: none;
@@ -91,6 +92,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -319,7 +323,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -350,7 +354,7 @@ div.tocify {
 <div id="header">
 
 <div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
 <ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
 <li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
 <li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
@@ -440,10 +444,10 @@ this!</p>
 <pre class="r"><code>glimpse(hot_dogs)</code></pre>
 <pre><code>Rows: 57
 Columns: 4
-$ year      &lt;dbl&gt; 2021, 2021, 2020, 2020, 2019, 2019, 2018, 2018, 2017, 2017, …
-$ gender    &lt;fct&gt; male, female, male, female, male, female, male, female, male…
-$ name      &lt;chr&gt; &quot;Joey Chestnut&quot;, &quot;Michelle Lesco&quot;, &quot;Joey Chestnut&quot;, &quot;Miki Su…
-$ num_eaten &lt;dbl&gt; 76.00, 30.75, 75.00, 48.50, 71.00, 31.00, 74.00, 37.00, 72.0…</code></pre>
+$ year      &lt;dbl&gt; 2021, 2021, 2020, 2020, 2019, 2019, 2018, 2018, 2017, 2017, 2016, 2016, 2015, 2015, 2014, 2014, 2013, …
+$ gender    &lt;fct&gt; male, female, male, female, male, female, male, female, male, female, male, female, male, female, male…
+$ name      &lt;chr&gt; &quot;Joey Chestnut&quot;, &quot;Michelle Lesco&quot;, &quot;Joey Chestnut&quot;, &quot;Miki Sudo&quot;, &quot;Joey Chestnut&quot;, &quot;Miki Sudo&quot;, &quot;Joey C…
+$ num_eaten &lt;dbl&gt; 76.000, 30.750, 75.000, 48.500, 71.000, 31.000, 74.000, 37.000, 72.000, 41.000, 70.000, 38.000, 62.000…</code></pre>
 <pre class="r"><code>hot_dogs</code></pre>
 <pre><code># A tibble: 57 × 4
     year gender name           num_eaten
@@ -614,12 +618,12 @@ after, and only for male competitors.</p>
 glimpse(hdm_affil)</code></pre>
 <pre><code>Rows: 41
 Columns: 6
-$ year       &lt;dbl&gt; 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012,…
-$ gender     &lt;fct&gt; male, male, male, male, male, male, male, male, male, male,…
-$ name       &lt;chr&gt; &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Ch…
-$ num_eaten  &lt;dbl&gt; 76.000, 75.000, 71.000, 74.000, 72.000, 70.000, 62.000, 61.…
-$ affiliated &lt;fct&gt; current, current, current, current, current, current, curre…
-$ post_ifoce &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…</code></pre>
+$ year       &lt;dbl&gt; 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005,…
+$ gender     &lt;fct&gt; male, male, male, male, male, male, male, male, male, male, male, male, male, male, male, male, male,…
+$ name       &lt;chr&gt; &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;,…
+$ num_eaten  &lt;dbl&gt; 76.000, 75.000, 71.000, 74.000, 72.000, 70.000, 62.000, 61.000, 69.000, 68.000, 62.000, 54.000, 68.00…
+$ affiliated &lt;fct&gt; current, current, current, current, current, current, current, current, current, current, current, cu…
+$ post_ifoce &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…</code></pre>
 <div class="panel panel-success">
 <div class="panel-heading">
 Challenge #4:
@@ -810,8 +814,7 @@ affil_plot +
   scale_x_continuous(expand = c(0, 0), 
                      breaks = hd_years$year,
                      labels = hd_years$year_lab)</code></pre>
-<pre><code>Scale for &#39;x&#39; is already present. Adding another scale for &#39;x&#39;, which will
-replace the existing scale.</code></pre>
+<pre><code>Scale for &#39;x&#39; is already present. Adding another scale for &#39;x&#39;, which will replace the existing scale.</code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
 </div>
 <div id="final-final-final-version" class="section level1" number="10">
@@ -869,8 +872,7 @@ how it works.</p>
   annotate(&#39;segment&#39;, x=2021.25, xend=2021.25, y= 79, yend=77, size=0.5, color=&quot;#E9602B&quot;) +
   annotate(&#39;segment&#39;, x=2012, xend=2012, y= 82, yend=79, size=0.5, color=&quot;#E9602B&quot;) +
   annotate(&#39;text&#39;, x=2012, y=86, label=&quot;MLE/IFOCE Current Member&quot;, color=&quot;#E9602B&quot;, family=&quot;Lato&quot;, hjust=0.5, size = 3)</code></pre>
-<pre><code>Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; =
-&quot;none&quot;)` instead.</code></pre>
+<pre><code>Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; = &quot;none&quot;)` instead.</code></pre>
 <pre><code>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</code></pre>
 <pre class="r"><code>nathan_ann</code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
@@ -886,12 +888,12 @@ female contestants:</p>
 glimpse(hdm_females)</code></pre>
 <pre><code>Rows: 11
 Columns: 6
-$ year       &lt;dbl&gt; 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012,…
-$ gender     &lt;fct&gt; female, female, female, female, female, female, female, fem…
-$ name       &lt;chr&gt; &quot;Michelle Lesco&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;M…
-$ num_eaten  &lt;dbl&gt; 30.75, 48.50, 31.00, 37.00, 41.00, 38.00, 38.00, 34.00, 36.…
-$ affiliated &lt;fct&gt; current, current, current, current, current, current, curre…
-$ post_ifoce &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…</code></pre>
+$ year       &lt;dbl&gt; 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011
+$ gender     &lt;fct&gt; female, female, female, female, female, female, female, female, female, female, female
+$ name       &lt;chr&gt; &quot;Michelle Lesco&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;Miki…
+$ num_eaten  &lt;dbl&gt; 30.75, 48.50, 31.00, 37.00, 41.00, 38.00, 38.00, 34.00, 36.75, 45.00, 40.00
+$ affiliated &lt;fct&gt; current, current, current, current, current, current, current, current, current, current, current
+$ post_ifoce &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE</code></pre>
 <pre class="r"><code>nathan_w_females &lt;- nathan_ann +
   # add in the female data, and manually set a fill color
   geom_col(data = hdm_females, 

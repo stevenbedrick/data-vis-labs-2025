@@ -479,6 +479,7 @@ There are numerous ways we can customized and configure things from here!
 
 The [`extrafont` package](https://github.com/wch/extrafont) is the best place to start with fonts in R and ggplot.
 
+
 ```{r}
 library(extrafont)
 # font_import() # build the font database; only need to call this once (or after installing new fonts)
@@ -492,18 +493,19 @@ loadfonts() # _load_ the font database; should call this once per session
 
 You can access fonts on your local system in `ggplot` by using the `theme()` function to set the relevant properties of your figure.
 
+Let's set up a basic scatterplot to start from:
+
 ```{r,echo=FALSE}
 library(palmerpenguins)
-```
 
-
-```{r}
 demo_plt <- penguins %>% ggplot(aes(bill_length_mm, bill_depth_mm, color=species)) + 
   geom_point(size=3) +
   scale_color_discrete("Species") +
   labs(x="Bill Length (mm)", y="Bill Width (mm)", title="Palmer's Penguins") 
 demo_plt
 ```
+
+Out of the box, the default `ggplot` theme uses pretty boring fonts. How might we change that?
 
 In `ggplot`, the `theme()` function lets us control the appearance of various aspects of the plot. There are [many, many properties](https://ggplot2.tidyverse.org/reference/theme.html) we can tweak; we will begin by setting the global `text` property for all text on the entire plot.
 

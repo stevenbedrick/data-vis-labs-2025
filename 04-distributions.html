@@ -14,7 +14,7 @@
 
 <title>Lab 04: Distributions &amp; Summary Statistics</title>
 
-<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -1154,8 +1154,8 @@ returns three values, specify the function with the argument
 mean(x) # use fun.y</code></pre>
 <pre><code>[1] 2</code></pre>
 <pre class="r"><code>mean_cl_normal(x) # use fun.data</code></pre>
-<pre><code>  y       ymin     ymax
-1 2 -0.4841377 4.484138</code></pre>
+<pre><code>Error in `mean_cl_normal()`:
+! The package `Hmisc` is required.</code></pre>
 <p>Confidence limits may give us a better idea than standard error
 limits of whether two means would be deemed statistically different when
 modeling, so we frequently use <code>mean_cl_normal</code> or

@@ -48,6 +48,7 @@ We'll use data from the Museum of Modern Art (MoMA)
 ```{r}
 library(here) # to set file path if working from local file
 library(tidyverse) # readr, ggplot2, dplyr
+library(dplyr) # just to make sure that dplyr's summarise, count, etc. "win"
 ```
 
 
@@ -60,14 +61,12 @@ The finished data set is available at [here](https://stevenbedrick.github.io/dat
 ```{r eval = FALSE}
 library(here)
 library(readr)
-library(dplyr)
 moma <- read_csv(here::here("data", "artworks-cleaned.csv"))
 ```
 
 ```{r echo=FALSE}
 library(here)
 library(readr)
-library(dplyr)
 moma <- read_csv(here::here("data", "artworks-cleaned.csv"))
 ```
 

@@ -14,7 +14,7 @@
 
 <title>Lab 05: Addendum</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -64,6 +64,7 @@ if (window.hljs) {
 
 
 
+
 <style type = "text/css">
 .main-container {
   max-width: 940px;
@@ -84,6 +85,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -309,7 +313,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -456,7 +460,9 @@ baby_letters &lt;- babynames %&gt;%
 letter_by_year &lt;- baby_letters %&gt;%
   count(year, sex, first_letter, wt = prop) %&gt;% 
   rename(total_prop = nn)</code></pre>
-<pre><code>Error in rename(., total_prop = nn): unused argument (total_prop = nn)</code></pre>
+<pre><code>Error in `chr_as_locations()`:
+! Can&#39;t rename columns that don&#39;t exist.
+✖ Column `nn` doesn&#39;t exist.</code></pre>
 <pre class="r"><code># label most popular for each year + sex
 letter_by_year &lt;- letter_by_year %&gt;% 
   group_by(sex, year) %&gt;% 
@@ -472,7 +478,7 @@ top_current &lt;- letter_by_year %&gt;%
   filter(!is.na(top_latest)) %&gt;% 
   rename(color_by = top_latest) %&gt;% 
   select(sex, first_letter, color_by)</code></pre>
-<pre><code>Error in rename(., color_by = top_latest): unused argument (color_by = top_latest)</code></pre>
+<pre><code>Error in filter(., !is.na(top_latest)): object &#39;letter_by_year&#39; not found</code></pre>
 <pre class="r"><code># now merge in
 letter_by_year &lt;- letter_by_year %&gt;% 
   left_join(top_current) %&gt;% 

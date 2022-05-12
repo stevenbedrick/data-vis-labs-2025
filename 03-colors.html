@@ -14,7 +14,7 @@
 
 <title>Lab 03: Colors with Animal Sounds</title>
 
-<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -1209,19 +1209,20 @@ my_sound_traj &lt;- sound_traj +
   scale_color_manual(values = beyonce_palette(18)[c(1, 4, 5)])</code></pre>
 <p>View that figure after color-vision-deficiency simulation:</p>
 <pre class="r"><code># remotes::install_github(&quot;clauswilke/colorblindr&quot;)
-library(colorblindr)
-cvd_grid(my_sound_traj)</code></pre>
-<p><img src="03-colors_files/figure-html/unnamed-chunk-57-1.png" width="672" /></p>
+library(colorblindr)</code></pre>
+<pre><code>Error in library(colorblindr): there is no package called &#39;colorblindr&#39;</code></pre>
+<pre class="r"><code>cvd_grid(my_sound_traj)</code></pre>
+<pre><code>Error in cvd_grid(my_sound_traj): could not find function &quot;cvd_grid&quot;</code></pre>
 <p>You can also use the colorblind-friendly palette in this package
 using <code>scale_color_OkabeIto</code> and
 <code>scale_fill_OkabeIto</code>:</p>
 <pre class="r"><code>cb_sound_traj &lt;- sound_traj +
-  scale_color_OkabeIto()
-
-cb_sound_traj</code></pre>
-<p><img src="03-colors_files/figure-html/unnamed-chunk-58-1.png" width="672" /></p>
+  scale_color_OkabeIto()</code></pre>
+<pre><code>Error in scale_color_OkabeIto(): could not find function &quot;scale_color_OkabeIto&quot;</code></pre>
+<pre class="r"><code>cb_sound_traj</code></pre>
+<pre><code>Error in eval(expr, envir, enclos): object &#39;cb_sound_traj&#39; not found</code></pre>
 <pre class="r"><code>cvd_grid(cb_sound_traj)</code></pre>
-<p><img src="03-colors_files/figure-html/unnamed-chunk-58-2.png" width="672" /></p>
+<pre><code>Error in cvd_grid(cb_sound_traj): could not find function &quot;cvd_grid&quot;</code></pre>
 <p>You can still use this colorblind-friendly palette without the
 <code>colorblindr</code> package though. <a
 href="http://jfly.iam.u-tokyo.ac.jp/color/">Here</a> are the colors!</p>
