@@ -79,7 +79,7 @@ These clearly refer to some sort of spatial coordinates, and by convention we ca
 
 The Portland Maps Open Data site allows us to download data in ESRI's format; let's take a look, using the `sf` package's `st_read` function:
 
-```{r loading trees shapefile}
+```{r loading trees shapefile, message=FALSE, warning=FALSE}
 trees_shape <- st_read("data/lab08/Parks_Tree_Inventory-shp")
 ```
 
@@ -103,8 +103,13 @@ For more information about this kind of file, see [the documentation](https://r-
 
 Our first map will be a simple one, showing the various neighborhood boundaries in Portland.
 
-```{r loading our spatial data, warning=FALSE, message=FALSE}
+```{r loading our spatial data, warning=FALSE, message=FALSE, results='hide'}
 pdx_boundaries <- st_read("data/lab08//Neighborhoods__Regions_-shp")
+```
+
+While we're at it, we will also load a second shapefile, that includes the geography of the Willamette and Columbia rivers:
+
+```{r loading river, warning=FALSE, message=FALSE, results='hide'}
 river_boundaries <- st_read("data/lab08//Willamette_Columbia_River_Ordinary_High_Water-shp/")
 ```
 
@@ -172,7 +177,7 @@ There's something missing from our map: the two lovely rivers that define our ci
 river_boundaries %>% glimpse()
 ```
 
-Unlike the `pdx_boundaries` data set, there's not a lot of additional information in this one beyond the raw geometry of the river (the Portland Maps site does ahve additional data sets available that include bathymetric and other data). What does this geometry look like?
+Unlike the `pdx_boundaries` data set, there's not a lot of additional information in this one beyond the raw geometry of the river (the Portland Maps site does have additional data sets available that include bathymetric and other data). What does this geometry look like?
 
 ```{r just river}
 river_boundaries %>% ggplot() + geom_sf()
@@ -212,7 +217,9 @@ pdx_boundaries %>% ggplot() +
   <div class="panel-heading">Challenge #2:</div>
   <div class="panel-body">
     
-    That blue is pretty deep and intense; change it to something a bit more river-like. While you're at it, the grey background for the neighborhoods is also a bit blah. Try changing it to something else.
+    That blue is pretty deep and intense; change it to something a bit more river-like. 
+    
+    While you're at it, the grey background for the neighborhoods is also a bit "blah." Try changing it to something else.
     
   </div>
 </div>
@@ -231,9 +238,9 @@ p1 <- data.frame(lon=c(-122.65), lat=c(45.5))
 
 Next, we figure out the EPSG numbers for our source and target CRS. Our source CRS is WGS84, whose CRS number is 4326; let's say that we wanted to project it into the space that the Portland Maps data is using, so that we could overlay the points or do some sort of distance calculation. The Portland Maps dataset uses EPSG 3857, also known as "Web Mercator". This is basically WGS84, but it has been "quasi-Mercator projected," and converted to use meters as units and easting/northing as its direction system (instead of lat/long). 
 
-Web Mercator is used by a variety of mapping software packages (including Google Maps, etc.), hence why it's what Portland Maps gives. The motivation behind Web Mercator is that it depends on a spherical projection geometry (rather than the ellipsoidal projection used by vanilla Mercator). This makes it vastly simpler to work with from a computational perspective... at the cost of substantially decreased accuracy at northern latitudes, even by Mercator standards. 
+Web Mercator is used by a variety of mapping software packages (including Google Maps, etc.), hence why it's what Portland Maps gives. The motivation behind Web Mercator is that it depends on a spherical projection geometry (rather than the ellipsoidal projection used by vanilla Mercator). This makes it vastly simpler to work with from a computational perspective... at the cost of substantially decreased accuracy at northern latitudes, even by Mercator standards. For this reason, the metadata includes a `USAGE` note saying that it is only specified for use at latitudes between 85º N and 85º S. In practice, it is best to not push things even that far; you'll see notable distortion by the time you get to Norway and Alaska. 
 
-Now that we know which CRS systems are in play, we can use `sf_project()`:
+Anyway now that we know which CRS systems are in play, we can use `sf_project()`:
 
 ```{r projection example}
 sf_project(
@@ -294,7 +301,7 @@ ggplot() + geom_sf(data = world3)
 
 Now that we can draw a base map, it's time to try plotting some data. Let's load up the tree census, farmer's marker, and grocery store data sets.
 
-```{r loading feature files, warning=FALSE, message=FALSE}
+```{r loading feature files, warning=FALSE, message=FALSE, results='hide'}
 trees_shape <- st_read("data/lab08/Parks_Tree_Inventory-shp")
 farmers_market <- st_read("data/lab08/Farmers_Markets-shp/")
 grocery_stores <- st_read("data/lab08/Grocery_Stores-shp/")
@@ -422,8 +429,8 @@ We can guesstimate some lon/lat coordinates, and project them into map units:
 ```{r}
 p3 <- data.frame(lon=c(-122.725, -122.7125), lat=c(45.4675, 45.478))
 sf_project(
-  sf::st_crs(4326), # to: default datum used by geom_sf
-  sf::st_crs(3857), # from: datum used by Portland Maps data
+  sf::st_crs(4326), # from: default datum used by geom_sf
+  sf::st_crs(3857), # to: datum used by Portland Maps data
   p3
 )
 ```
@@ -439,7 +446,10 @@ paste0("Number of trees in our bounding box: ", length(trees_in_park$geometry))
 If we zoom in to just this box, what does our map look like?
 
 ```{r}
-pdx_boundaries %>% ggplot() + geom_sf() + geom_sf(data=river_boundaries, fill="blue", size=0.0) + geom_sf(data=trees_in_park) + coord_sf(xlim=c(-13661685,-13660293), ylim=c(5695423, 5697089)) 
+pdx_boundaries %>% ggplot() + geom_sf() + 
+  geom_sf(data=river_boundaries, fill="blue", size=0.0) + 
+  geom_sf(data=trees_in_park) + 
+  coord_sf(xlim=c(-13661685,-13660293), ylim=c(5695423, 5697089)) 
 ```
 
 <div class="panel panel-success">
@@ -456,11 +466,15 @@ Note that, besides the trees themselves, this map is kind of boring. We can star
 
 ## `ggmap`
 
-``ggmap` is a package that tries to make it convenient to quickly access raster map tiles through either Google Maps or OpenStreetMap. Using Google Maps requires setting up an account with a credit card (though for reasonable numbers of requests, it is free); OSM via Stamen is free, so we'll use that today.
+``ggmap` is a package that tries to make it convenient to quickly access raster map tiles through either Google Maps or OpenStreetMap to use as a "basemap". Using Google Maps requires setting up an account with a credit card (though for reasonable numbers of requests, it is free); OSM via Stamen is free, so we'll use that today.
+
+`ggmap` We'll need the bounding box of the trees we want to plot; we can get that using `st_bbox()`:
 
 ```{r}
 st_bbox(trees_in_park)
 ```
+
+Next, we generate a basemap using `get_stamenmap()` (there are related functions for different tile sets).
 
 ```{r}
 park_base_map <- get_stamenmap(
@@ -470,16 +484,21 @@ park_base_map <- get_stamenmap(
 ggmap(park_base_map)
 ```
 
-Let's try plotting the trees over our base map:
+Now, we are ready to try plotting the trees over our base map. Our trees and basemap are in different projections, and `ggmap` can't quite handle that situation "on its own". We must manually re-project our trees' locations:
 
 ```{r, warning=FALSE, message=FALSE}
 # ggmap isn't smart enough to reproject, so we need to by hand
 trees_park_projected <- st_transform(trees_in_park, sf::st_crs(4326))
+```
+
+Now, we can use our re-projected trees and our basemap:
+
+```{r, warning=FALSE, message=FALSE}
 ggmap(park_base_map) + 
   geom_sf(data=trees_park_projected, inherit.aes = FALSE) # note - this is needed due to a slight quirk between ggmap, ggplot, and geom_sf
 ```
 
-Now that we have our points on a map, let's color by the type of tree:
+`geom_sf` still work the way we've been using it; now that we have our points on a map, let's color by the type of tree:
 
 ```{r}
 ggmap(park_base_map) + 
@@ -495,6 +514,7 @@ Clearly, there are too many levels for this variable to be truly useful; we woul
 `ggspatial` is another extension to `ggplot` that makes OpenStreetMap base data easy to work with. Unlike `ggmap`, it _is_ able to automatically deal with projections:
 
 ```{r, message=FALSE, warning=FALSE}
+# look, Ma, no re-projection needed!
 ggplot() + annotation_map_tile(type="osm") + layer_spatial(trees_in_park)
 ```
 
@@ -544,9 +564,17 @@ Note: Leaflet [works well with Shiny](https://rstudio.github.io/leaflet/shiny.ht
 
 # How about a chloropleth map?
 
-Changing gears, we now turn to chloropleth maps. We will be working with [2010 Cenus data from Portland](https://www.portlandoregon.gov/civic/28387). This data set includes a great deal of information about each neighborhood's demographics; for now, we will work with the total population.
+Changing gears, we now turn to chloropleth maps. As we discussed on Tuesday, a very important consideration when working with a chloropleth map is that one must _normalize_ quantities consistently across the regions of the map. 
+
+Continuing with our Portland-themed lab, we will be working with a [dataset produced by the City](https://www.portlandoregon.gov/civic/28387) that aligns our neighborhood districts with their corresponding data from the 2010 Census. 
+This data set includes a great deal of information about each neighborhood's demographics; for now, we will work with the total population.
+
+We will need to _join_ our existing dataframe of neighborhood boundaries with this Census dataset; while both include neighborhood names, there is some variability in how the neighborhoods are referred to ("PEARL" vs. "PEARL DISTRICT") that we must deal with. 
+This issue is extremely common when working with this kind of data, especially at the level of neighborhoods. 
+Many administrative regions/districts have standardized numerical codes, maintained by the USGS and the Census Bureau, and you will likely have better luck using those to merge datasets rather than relying on names.
 
 ```{r}
+# pull data out of the Excel file, by cell range
 pdx_population <- read_excel("data/lab08/Census_2010_Data_Cleanedup.xlsx",
                              sheet="Census_2010_Neighborhoods", 
                              range="A7:B101", 
@@ -579,7 +607,7 @@ pdx_population <- pdx_population %>% mutate(Neighborhood=recode(Neighborhood,
   "WILKES" = "WILKES COMMUNITY GROUP"
 ))
 
-# and now left join with our boundary data set- note that there will be some regions with no population data
+# and now left join with our boundary data set- note that there will be some regions with no population data, so we want a left-join
 boundaries_with_pop <- left_join(pdx_boundaries, pdx_population, by=c("NAME"="Neighborhood"))
 boundaries_with_pop %>% glimpse
 ```
@@ -594,7 +622,7 @@ boundaries_with_pop %>% ggplot() +
 
 ```
 
-Note, however, that this is forgetting the first rule of chloropleth maps: beware of differing region sizes! We should really be plotting _population density_- people per square kilometer, or something like that.
+This is, of course, ignoring the first rule of chloropleth maps: beware of differing region sizes! We should really be plotting _population density_- people per square kilometer, or something like that. Our shapefile with Portland's neighborhoods helpfully includes a column with each neighborhood's area, in square meters, for precisely this purpose.
 
 ```{r compute adjusted population}
 # compute people per square kilometer
@@ -630,7 +658,13 @@ That's much better!
 
 ## Setting Color Scales
 
-The default colors have two big issues: first, they are blue, so conflict with the river; second, we have some missing data (i.e., neighborhoods where we don't have population data) and those are not apparent in this scale; third, the scale may be highlighting certain differences at the expense of others. Let's explore some different coloring options! First, let's familiarize ourselves with the data distribution across neighborhoods.
+The default colors have three big issues: 
+
+1. They are blue, so conflict with the river
+2. We have some missing data (i.e., neighborhoods where we don't have population data) and those are not apparent in this scale
+3. The scale may be highlighting certain differences at the expense of others. 
+
+Let's explore some different coloring options! First, let's familiarize ourselves with the data distribution across neighborhoods.
 
 ```{r, echo=FALSE}
 boundaries_with_pop %>% 
@@ -660,10 +694,10 @@ If we have uniform distribution of data, a uniform color scale may be what we wa
 
 1. Equal spacing across the entire range of data
 2. Quantile spacing (i.e., color breaks at each quantile boundary)
-3. A simple breaking scheme that takes into account the data's variability
+3. A simple breaking scheme that takes into account the data's variability (i.e., more breaks for more variable data)
 4. A more sophisticated adaptive scheme (Jenks' algorithm), that looks for "natural" breaks in the range of data.
 
-```{r}
+```{r, warning=FALSE, error=FALSE, message=FALSE}
 # following https://blog.datawrapper.de/how-to-choose-a-color-palette-for-choropleth-maps/
 # and https://rpubs.com/danielkirsch/styling-choropleth-maps
 
@@ -678,12 +712,25 @@ quantile.interval <- quantile(boundaries_with_pop$adj_pop, probs=seq(0, 1, by = 
 std.interval <- c(seq(min.pop, max.pop, by=std.dev.pop), max.pop)
 jenks.interval <- classIntervals(boundaries_with_pop$adj_pop, n=6, style='jenks')$brks
 
-# now let's store the relevant break point in a variable:
+# now assign neighborhoods to their bin, using each of these methods:
+
+# 6 equal cut-points across the population range
 boundaries_with_pop$pop.equal = cut(boundaries_with_pop$adj_pop, breaks=equal.interval, include.lowest = TRUE)
+
+# Cut-points at population quantiles
 boundaries_with_pop$pop.quantile = cut(boundaries_with_pop$adj_pop, breaks=quantile.interval, include.lowest = TRUE)
+
+# Cut points at increments of the standard deviation of the dataset
 boundaries_with_pop$pop.std = cut(boundaries_with_pop$adj_pop, breaks=std.interval, include.lowest = TRUE)
+
+# Jenks's algorithm for adaptive breakpoints
 boundaries_with_pop$pop.jenks = cut(boundaries_with_pop$adj_pop, breaks=jenks.interval, include.lowest = TRUE)
 
+```
+
+Now we can visualize which neighborhoods would be colored similarly under the different schemes:
+
+```{r, warning=FALSE, error=FALSE, message=FALSE}
 popDensBarChart <- function(break_col) {
   boundaries_with_pop %>% 
   filter(!is.na(adj_pop)) %>% 
@@ -741,7 +788,7 @@ pop.plot("pop.equal")
 
 # Using `tmap`
 
-`tmap` is a powerful library for "thematic maps"- chloropleth maps, etc. It has some additional capabilities beyond what `ggplot` and `geom_sf` have to offer.
+`tmap` is a powerful library for "thematic maps"- chloropleth maps, etc. It has some additional capabilities beyond what `ggplot` and `geom_sf` have to offer, and if you find yourself doing a lot of mapping, it is probably worth checking out.
 
 ```{r tmap example}
 tm_shape(pdx_boundaries) + 
@@ -753,9 +800,9 @@ tm_shape(pdx_boundaries) +
 
 
 
-# Useful Shiny App for Bounding Box Calculation
+# Bonus: Useful Shiny App for Bounding Box Calculation
 
-This is a small Shiny app for helping with finding bounding box locations.
+This is a small Shiny app for helping with finding bounding box locations by clicking on a map.
 
 ```{r useful shiny app}
 library(shiny)
