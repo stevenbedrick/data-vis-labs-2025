@@ -277,7 +277,7 @@ world2 <- sf::st_transform(
 ggplot() + geom_sf(data = world2)
 ```
 
-A deep-dive into proj.4 strings is beyond the scope of this lab, but as a challenge: look closely at that string, and see if you can think of a way to modify it to project centered on Portland (lon: -122.65, lat: -45.5), to make the following plot:
+A deep-dive into proj.4 strings is beyond the scope of this lab, but as a challenge: look closely at that string, and see if you can think of a way to modify it to project centered on Portland (lon: -122.65, lat: 45.5), to make the following plot:
 
 ```{r echo=FALSE}
 world3 <- sf::st_transform(
