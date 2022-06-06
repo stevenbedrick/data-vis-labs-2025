@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+<meta name="date" content="2022-06-02" />
+
+<title>Lab 10: High-Dimensional Data &amp; Networks</title>
+
+<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2022</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="slides.html">Slides &amp; Reading</a>
+</li>
+<li>
+  <a href="data-vis-resources.html">Resources</a>
+</li>
+<li>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AJ-Sp22">Sakai</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Lab 10: High-Dimensional Data &amp;
+Networks</h1>
+<h4 class="date">2022-06-02</h4>
+
+</div>
+
+
+<div id="setup" class="section level1">
+<h1>Setup</h1>
+<pre class="r"><code>library(tidyverse)
+library(network)
+library(ggnet)
+library(igraph)
+library(networkD3)
+library(Rtsne)
+library(ggplotify)
+library(GGally)
+library(palmerpenguins)
+library(pheatmap)</code></pre>
+</div>
+<div id="multidimensional-visualizations" class="section level1">
+<h1>Multidimensional visualizations</h1>
+<p>As always, we begin with the Palmer Penguins:</p>
+<pre class="r"><code>penguins_working &lt;- penguins %&gt;% na.omit # get rid of any with missing data
+
+penguins_working &lt;- penguins_working %&gt;%  cbind(penguin_id=sample(1:nrow(penguins_working))) # compute a penguin ID column
+glimpse(penguins_working)</code></pre>
+<pre><code>## Rows: 333
+## Columns: 9
+## $ species           &lt;fct&gt; Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adel…
+## $ island            &lt;fct&gt; Torgersen, Torgersen, Torgersen, Torgersen, Torgerse…
+## $ bill_length_mm    &lt;dbl&gt; 39.1, 39.5, 40.3, 36.7, 39.3, 38.9, 39.2, 41.1, 38.6…
+## $ bill_depth_mm     &lt;dbl&gt; 18.7, 17.4, 18.0, 19.3, 20.6, 17.8, 19.6, 17.6, 21.2…
+## $ flipper_length_mm &lt;int&gt; 181, 186, 195, 193, 190, 181, 195, 182, 191, 198, 18…
+## $ body_mass_g       &lt;int&gt; 3750, 3800, 3250, 3450, 3650, 3625, 4675, 3200, 3800…
+## $ sex               &lt;fct&gt; male, female, female, female, male, female, male, fe…
+## $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…
+## $ penguin_id        &lt;int&gt; 20, 277, 45, 125, 244, 174, 28, 44, 122, 73, 330, 29…</code></pre>
+<div id="pairwise-bivariate-plot" class="section level2">
+<h2>Pairwise bivariate plot</h2>
+<p>One way to start: a “pairwise plot” grid of bivariate plots of all
+variables against each other. <code>ggpairs</code> automates this:</p>
+<pre class="r"><code>penguins_working %&gt;% ggpairs(columns=c(&quot;flipper_length_mm&quot;, &quot;bill_length_mm&quot;, &quot;bill_depth_mm&quot;, &quot;body_mass_g&quot; ))</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Note that this sort of plot can be very useful for exploratory data
+analysis, but is of limited use when it comes to presentations, posters,
+publications, etc.</p>
+</div>
+<div id="heatmaps" class="section level2">
+<h2>Heatmaps</h2>
+<p>Another method for visualizing a large number of dimensions
+simultaneously is a heatmap. Unfortunately, this is one area where
+<code>ggplot</code> may not be the best choice. It is certainly
+<em>possible</em> to do a heatmap with <code>ggplot</code>, using
+<code>geom_tile()</code>, but it is not really a “batteries included”
+solution.</p>
+<p>Things to note: - <code>geom_tile()</code> listens for <code>x</code>
+and <code>y</code> aesthetics. - As usual with <code>ggplot</code>, we
+want our data to be in a “long” (rather than “wide”) layout, so we’ll
+need to use <code>pivot_longer()</code></p>
+<pre class="r"><code>penguins_working %&gt;% select(-species, -island, -sex, -year) %&gt;% 
+  pivot_longer(-penguin_id, names_to=&quot;metric&quot;, values_to = &quot;value&quot;) %&gt;% 
+  ggplot(aes(x=penguin_id, y=metric, fill=value)) + geom_tile()</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<div id="issues-of-scale" class="section level3">
+<h3>Issues of scale</h3>
+<p>Note that because our different variables are at different scales,
+the colors on the heatmap are not particularly useful at this point. For
+this reason, heatmaps usually normalize all of their data to be on a
+common scale (or get fancy with color scales for different rows/columns,
+though this does begin to defeat the purpose of using a heatmap in the
+first place). Let’s re-scale our variables using <code>mutate()</code>,
+we use <code>across</code> here to tell <code>mutate()</code> to apply a
+function to multiple columns.</p>
+<pre class="r"><code>penguins_working %&gt;% select(-species, -island, -sex, -year) %&gt;% 
+  mutate(across(-penguin_id, scale)) %&gt;% 
+  pivot_longer(-penguin_id, names_to=&quot;metric&quot;, values_to = &quot;value&quot;) %&gt;% 
+  ggplot(aes(x=penguin_id, y=metric, fill=value)) +geom_tile()</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>The next thing to note is that our scaled data have a natural and
+meaningful zero point, which means that this is a good use-case for a
+two-tone diverging color scale, which we can get usign
+<code>scale_fill_gradient2()</code>.</p>
+<pre class="r"><code>penguins_working %&gt;% select(-species, -island, -sex, -year) %&gt;% 
+  mutate(across(-penguin_id, scale)) %&gt;% 
+  pivot_longer(-penguin_id, names_to=&quot;metric&quot;, values_to = &quot;value&quot;) %&gt;% 
+  ggplot(aes(x=penguin_id, y=metric, fill=value)) +geom_tile() + scale_fill_gradient2()</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="a-non-ggplot-option" class="section level3">
+<h3>A non-ggplot option</h3>
+<p>There are numerous other things we might want to do with a heatmap,
+including adding dendrogram/cluster diagrams, additional annotations,
+etc. <code>ggplot</code> doesn’t really make this easy, but fortunately
+there are numerous non-<code>ggplot</code> options. One that I quite
+like is <code>pheatmap</code>:</p>
+<pre class="r"><code>penguins_working %&gt;% select(-species, -island, -sex, -year, -penguin_id) %&gt;% pheatmap</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>“Out of the box”, <code>pheatmap</code> also does not scale our data;
+unlike <code>ggplot</code>, however, it will not force us to do it “by
+hand”. It has numerous parameters, one of which controls data scaling;
+we can specify whether we want columns or rows to be scaled:</p>
+<pre class="r"><code>penguins_working %&gt;% select(-species, -island, -sex, -year, -penguin_id) %&gt;% 
+  pheatmap(scale=&quot;column&quot;)</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Things to note - By default, <code>pheatmap</code> will reorganize
+the data according to the clustering results (unlike
+<code>ggplot</code>/<code>geom_tile()</code>, which will leave the data
+as-is) - <code>pheatmap</code> isn’t designed to work with dataframes
+(though it <em>can</em>); rather, it expects matrices, where each
+“sample” is a column - So if you want to swap rows and columns, you’ll
+want to use <code>t()</code> to transpose your data:</p>
+<pre class="r"><code>penguins_working %&gt;% select(-species, -island, -sex, -year) %&gt;% column_to_rownames(&quot;penguin_id&quot;) %&gt;% as.matrix %&gt;% t %&gt;% pheatmap(scale=&quot;row&quot;) # note that we need to change what we&#39;re scaling</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><code>pheatmap</code> is endlessly customizable; for example, we can
+disable labels on columns, since here there are too many for them to be
+legible:</p>
+<pre class="r"><code>penguins_working %&gt;% select(-species, -island, -sex, -year) %&gt;% column_to_rownames(&quot;penguin_id&quot;) %&gt;% t %&gt;% 
+  pheatmap(scale=&quot;row&quot;, show_colnames = FALSE)</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<div id="additional-layers-of-data" class="section level4">
+<h4>Additional layers of data</h4>
+<p>One nice feature of <code>pheatmap</code> is its annotation
+capabilities; we can compute additional layers of data, and it will
+include them as additional layers on the heatmap.</p>
+<pre class="r"><code>hm.annotation.df &lt;- penguins_working %&gt;% column_to_rownames(&quot;penguin_id&quot;) %&gt;% select(species) # a data frame with rownames that match up with our main data&#39;s
+
+
+penguins_working %&gt;% select(-species, -island, -sex, -year) %&gt;% column_to_rownames(&quot;penguin_id&quot;) %&gt;% t %&gt;% 
+  pheatmap(scale=&quot;row&quot;, show_colnames = FALSE, annotation_col = hm.annotation.df)</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>We can have multiple levels of annotations:</p>
+<pre class="r"><code>hm.annotation.df &lt;- penguins_working %&gt;% column_to_rownames(&quot;penguin_id&quot;) %&gt;% select(species, sex) # annotation by species _and_ sex
+ 
+penguins_working %&gt;% select(-species, -island, -sex, -year) %&gt;% column_to_rownames(&quot;penguin_id&quot;) %&gt;% t %&gt;% 
+  pheatmap(scale=&quot;row&quot;, show_colnames = FALSE, annotation_col = hm.annotation.df) </code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>`pheatmap is, again, endlessly customizable; one handy thing is that
+we can tell it to “break up” the spacing of the map a little bit based
+on the cut points in the clustering:</p>
+<pre class="r"><code>hm.annotation.df &lt;- penguins_working %&gt;% column_to_rownames(&quot;penguin_id&quot;) %&gt;% select(species, sex) # annotation by species _and_ sex
+ 
+penguins_working %&gt;% select(-species, -island, -sex, -year) %&gt;% column_to_rownames(&quot;penguin_id&quot;) %&gt;% t %&gt;% 
+  pheatmap(scale=&quot;row&quot;, show_colnames = FALSE, annotation_col = hm.annotation.df,
+           cutree_cols = 3, cutree_rows = 3)</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>Recall that <code>pheatmap</code>’s output is <em>not</em> a
+<code>ggplot</code> object, so ggsave etc. won’t work… if we really need
+it to be, we can convert it:</p>
+<pre class="r"><code>hm.ggplt &lt;- penguins_working %&gt;% select(-species, -island, -sex, -year) %&gt;% column_to_rownames(&quot;penguin_id&quot;) %&gt;% t %&gt;% 
+  pheatmap(scale=&quot;row&quot;, show_colnames = FALSE, annotation_col = hm.annotation.df, cutree_cols = 3, cutree_rows = 3) %&gt;% 
+  as.ggplot</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<pre class="r"><code># now that it&#39;s a ggplot object, we can do certain things to it using ggplot commands:
+hm.ggplt + labs(title=&quot;Title from ggplot&quot;, caption = &quot;Caption from ggplot!&quot;)</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-14-2.png" width="672" /></p>
+<p>If wneeded to, we could now combine with other ggplot objects using
+e.g. cowplot, etc.</p>
+</div>
+</div>
+</div>
+<div id="dimensionality-reduction" class="section level2">
+<h2>Dimensionality Reduction</h2>
+<p>When we have many dimensions, it can be helpful to come up with a
+lower-dimensional space to use for visualization and analysis. There are
+<em>many</em> ways to do this; and note that the Palmer Penguins dataset
+doen’t really have <em>that</em> many dimensions, so this is really just
+a demonstration of how you might perform this sort of analysis rather
+than an actual use case. :-)</p>
+<p>We will begin with Principal Components Analysis:</p>
+<pre class="r"><code>for.pca &lt;- penguins_working %&gt;% select(-species, -island, -sex, -year, -penguin_id)
+
+# compute PCA
+pc &lt;- for.pca %&gt;% prcomp(center=TRUE, scale=TRUE)
+pc # long but useful output</code></pre>
+<pre><code>## Standard deviations (1, .., p=4):
+## [1] 1.6569115 0.8821095 0.6071594 0.3284579
+## 
+## Rotation (n x k) = (4 x 4):
+##                          PC1         PC2        PC3        PC4
+## bill_length_mm     0.4537532 -0.60019490 -0.6424951  0.1451695
+## bill_depth_mm     -0.3990472 -0.79616951  0.4258004 -0.1599044
+## flipper_length_mm  0.5768250 -0.00578817  0.2360952 -0.7819837
+## body_mass_g        0.5496747 -0.07646366  0.5917374  0.5846861</code></pre>
+<p>Note that we have have one “Principal Component” for each input
+dimension, so we have not actually <em>reduced</em> our dimensionality,
+yet! However, recall that in PCA the components are ordered in terms of
+the variance they capture, with the idea being that by using the first
+several we can represent most of the variance in our dataset.</p>
+<pre class="r"><code># now add our PC values back
+penguins.pc &lt;- penguins_working %&gt;% cbind(predict(pc, for.pca))
+penguins.pc %&gt;% head</code></pre>
+<pre><code>##   species    island bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+## 1  Adelie Torgersen           39.1          18.7               181        3750
+## 2  Adelie Torgersen           39.5          17.4               186        3800
+## 3  Adelie Torgersen           40.3          18.0               195        3250
+## 4  Adelie Torgersen           36.7          19.3               193        3450
+## 5  Adelie Torgersen           39.3          20.6               190        3650
+## 6  Adelie Torgersen           38.9          17.8               181        3625
+##      sex year penguin_id       PC1         PC2         PC3        PC4
+## 1   male 2007         20 -1.850808 -0.03202119  0.23454869  0.5276026
+## 2 female 2007        277 -1.314276  0.44286031  0.02742880  0.4011230
+## 3 female 2007         45 -1.374537  0.16098821 -0.18940423 -0.5278675
+## 4 female 2007        125 -1.882455  0.01233268  0.62792772 -0.4721826
+## 5   male 2007        244 -1.917096 -0.81636958  0.69999797 -0.1961213
+## 6 female 2007        174 -1.770356  0.36567266 -0.02841769  0.5046092</code></pre>
+<p>We can see that if we plot the first few components against one
+another, much of the structure of the dataset is largely preserved (at
+least, the parts that are linear in nature):</p>
+<pre class="r"><code>penguins.pc %&gt;% ggplot(aes(x=PC1, y=PC2, color=species)) + geom_point()</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<pre class="r"><code>penguins.pc %&gt;% ggplot(aes(x=PC1, y=PC3, color=species)) + geom_point()</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<pre class="r"><code>penguins.pc %&gt;% ggpairs(mapping=aes(color=species), columns=c(&quot;PC1&quot;, &quot;PC2&quot;, &quot;PC3&quot;, &quot;PC4&quot;))</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>For <em>non-linear</em> dimensionality reduction, we have many
+options; one popular one is “T-Distributed Stochastic Neighbor
+Embedding”, or t-SNE. It does a very good job at handling a moderate
+number of dimensions (up to, say, 50) though can be run on much
+higher-dimensional data.</p>
+<p>The main thing to note about t-SNE is that it is <em>stochastic</em>,
+meaning that different “runs” will produce different results. The
+overall patterns/structure in the resulting lower-dimensional data will
+be very similar, but it will look different. In the interests of
+reproducibility, always make sure to initialize your random number
+generator in a consistent manner, using <code>set.seed()</code>!</p>
+<pre class="r"><code>set.seed(42)
+penguin.tsne &lt;- for.pca %&gt;% mutate(across(everything(), scale)) %&gt;%  Rtsne()
+
+penguin.tsne$Y %&gt;% as.data.frame %&gt;% cbind(penguins_working) %&gt;% ggplot(aes(x=V1, y=V2, color=species)) + geom_point()</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p>As an example, look what happens if we run <code>Rtsne()</code> a
+second time:</p>
+<pre class="r"><code>penguin.tsne2 &lt;- for.pca %&gt;% mutate(across(everything(), scale)) %&gt;%  Rtsne()
+
+penguin.tsne2$Y %&gt;% as.data.frame %&gt;% cbind(penguins_working) %&gt;% ggplot(aes(x=V1, y=V2, color=species)) + geom_point()</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>We get a completely differnet arrangement- though note some
+similarities, in that there are a few stray Chinstrap penguins that get
+grouped in with the Adelies.</p>
+<p>Running a third time, we will get a third arrangement:</p>
+<pre class="r"><code>penguin.tsne3 &lt;- for.pca %&gt;% mutate(across(everything(), scale)) %&gt;%  Rtsne()
+
+penguin.tsne3$Y %&gt;% as.data.frame %&gt;% cbind(penguins_working) %&gt;% ggplot(aes(x=V1, y=V2, color=species)) + geom_point()</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p>If we reset our RNG seed, we can get back our original layout:</p>
+<pre class="r"><code>set.seed(42)
+penguin.tsne4 &lt;- for.pca %&gt;% mutate(across(everything(), scale)) %&gt;%  Rtsne()
+
+penguin.tsne4$Y %&gt;% as.data.frame %&gt;% cbind(penguins_working) %&gt;% ggplot(aes(x=V1, y=V2, color=species)) + geom_point()</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<hr />
+</div>
+</div>
+<div id="networks" class="section level1">
+<h1>Networks</h1>
+<p>Note that this part of the walk-through is not particularly useful
+except as an example of how to use <code>igraph</code>; the actual
+analysis does not work out very well, and the graphs aren’t of very much
+interest.</p>
+<div id="data-ingest-setup" class="section level2">
+<h2>Data ingest &amp; setup</h2>
+<p>This file was generated using the SciVal bibliographic database, and
+contains information about publications with at least one
+OHSU-affiliated author.</p>
+<pre class="r"><code>d &lt;- read_csv(&quot;data/ohsu_pubs.csv&quot;) %&gt;% janitor::clean_names()</code></pre>
+<pre><code>## Rows: 17117 Columns: 12
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (11): Title, Authors, Scopus Author Ids, Scopus Source title, DOI, EID, ...
+## dbl  (1): Year
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>glimpse(d)</code></pre>
+<pre><code>## Rows: 17,117
+## Columns: 12
+## $ title                         &lt;chr&gt; &quot;2015 American Thyroid Association Manag…
+## $ authors                       &lt;chr&gt; &quot;Haugen, B.R.| Alexander, E.K.| Bible, K…
+## $ scopus_author_ids             &lt;chr&gt; &quot;7005966885| 7201383680| 6603907750| 700…
+## $ year                          &lt;dbl&gt; 2016, 2016, 2016, 2016, 2017, 2018, 2017…
+## $ scopus_source_title           &lt;chr&gt; &quot;Thyroid&quot;, &quot;The Lancet&quot;, &quot;Autophagy&quot;, &quot;T…
+## $ doi                           &lt;chr&gt; &quot;10.1089/thy.2015.0020&quot;, &quot;10.1016/S0140-…
+## $ eid                           &lt;chr&gt; &quot;2-s2.0-84954538661&quot;, &quot;2-s2.0-8499409204…
+## $ scopus_affiliation_i_ds       &lt;chr&gt; &quot;60000221| 60016782| 60002746| 60005558|…
+## $ scopus_affiliation_names      &lt;chr&gt; &quot;University of Colorado Boulder| Brigham…
+## $ scopus_author_id_first_author &lt;chr&gt; &quot;7005966885&quot;, &quot;57223885848&quot;, &quot;7004321762…
+## $ scopus_author_id_last_author  &lt;chr&gt; &quot;7006270360&quot;, &quot;57209027746&quot;, &quot;5720817050…
+## $ topic_name                    &lt;chr&gt; &quot;Thyroglobulin,Thyrotropin Alfa,Thyroid …</code></pre>
+<p>We can easily identify publications with a first or last author with
+an OHSU affiliation:</p>
+<pre class="r"><code>ohsu.scopus.id &lt;- &quot;60016733&quot;
+d.first.au &lt;- d %&gt;% mutate(first_aff_id=str_extract(scopus_affiliation_i_ds, &quot;^[^\\|]*&quot;), last_aff_id=str_extract(scopus_affiliation_i_ds, &quot;[^\\|]*$&quot;)) %&gt;% 
+  mutate(is_ohsu_pub=case_when(
+    first_aff_id == ohsu.scopus.id | last_aff_id == ohsu.scopus.id ~ TRUE, TRUE ~ FALSE
+  ))
+
+# as a sanity check, how many OHSU first/last author publications are there in the set?
+d.first.au %&gt;% select(is_ohsu_pub) %&gt;% group_by(is_ohsu_pub) %&gt;% tally</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   is_ohsu_pub     n
+##   &lt;lgl&gt;       &lt;int&gt;
+## 1 FALSE       11597
+## 2 TRUE         5520</code></pre>
+<p>Let’s build a graph where the <em>nodes</em> are journals, and edges
+shared authorship. That is, journals <em>X</em> and <em>Y</em> will get
+an edge if at least one author has published in both; weights of the
+edges will represent the number of shared authors.</p>
+<p>To get there, we will need several steps of processing. Currently,
+each row of the dataset is a single publication, but within each
+publication there is a delimited list of authors and institutional
+affiliations. We want to extract that list and make it into a nested
+data frame:</p>
+<pre class="r"><code>prep_au_df &lt;- function(some_pub) {
+  au_list = str_split(some_pub$authors, &quot;\\|&quot;)
+  # print(au_list)
+  au_id = str_split(some_pub$scopus_author_ids, &quot;\\|&quot;)
+    tibble(author_name=au_list, author_id=au_id)
+    
+}
+
+# let&#39;s only look at publications where the first or last author is an OHSU author
+pubs.to.use &lt;- d.first.au %&gt;% filter(is_ohsu_pub==TRUE)
+
+d.with.expanded.author.info &lt;- pubs.to.use %&gt;% pmap_dfr(function(...) {
+  current &lt;- tibble(...)
+  current %&gt;% prep_au_df
+}) %&gt;% bind_cols(pubs.to.use, .)</code></pre>
+<p>Now, we will turn that into a dataframe that has one row
+per-author-per-publication, with the journal title and author ID. This
+will form the basis for our graph:</p>
+<pre class="r"><code>author.id.and.name &lt;- d.with.expanded.author.info %&gt;% select(scopus_source_title, author_id) %&gt;% unnest(author_id)
+author.id.and.name %&gt;% head</code></pre>
+<pre><code>## # A tibble: 6 × 2
+##   scopus_source_title author_id     
+##   &lt;chr&gt;               &lt;chr&gt;         
+## 1 Journal of Pain     &quot;9334863700&quot;  
+## 2 Journal of Pain     &quot; 7403582623&quot; 
+## 3 Journal of Pain     &quot; 7005602051&quot; 
+## 4 Journal of Pain     &quot; 55430613700&quot;
+## 5 Journal of Pain     &quot; 6701572541&quot; 
+## 6 Journal of Pain     &quot; 15134993200&quot;</code></pre>
+</div>
+<div id="compute-node-and-edge-list" class="section level2">
+<h2>Compute node and edge list</h2>
+<p>The graphing libraries we will be working with can represent graphs
+in several ways, but the most common way is as an <em>edgelist</em> and
+a list of vertices. We’ll make the edgelist by joining our
+author/journal-title dataframe on itself a couple of times:</p>
+<pre class="r"><code>journal_graph &lt;- author.id.and.name %&gt;% inner_join(author.id.and.name, by=&quot;author_id&quot;) %&gt;% filter(scopus_source_title.x != scopus_source_title.y) %&gt;% rename(source=scopus_source_title.x, dest=scopus_source_title.y) %&gt;% 
+  group_by(source, dest) %&gt;% summarise(n.pubs=n()) %&gt;% ungroup</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;source&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre class="r"><code>sources &lt;- journal_graph %&gt;% distinct(source) %&gt;% rename(label=source)
+destinations &lt;- journal_graph %&gt;% distinct(dest) %&gt;% rename(label=dest)
+
+# list of all nodes
+nodes &lt;- full_join(sources, destinations, by=&quot;label&quot;)
+nodes &lt;- nodes %&gt;% mutate(id=1:nrow(nodes)) %&gt;% select(id, everything())
+
+journal_graph &lt;- journal_graph %&gt;% rename(weight=n.pubs)
+edges &lt;- journal_graph %&gt;% left_join(nodes, by=c(&quot;source&quot;=&quot;label&quot;)) %&gt;% rename(from=id)
+edges &lt;- edges %&gt;% left_join(nodes, by=c(&quot;dest&quot; = &quot;label&quot;)) %&gt;% rename(to=id)
+edges &lt;- edges %&gt;% select(from, to, weight)
+edges %&gt;% head</code></pre>
+<pre><code>## # A tibble: 6 × 3
+##    from    to weight
+##   &lt;int&gt; &lt;int&gt;  &lt;int&gt;
+## 1     1   853      2
+## 2     2   205      1
+## 3     2   236      1
+## 4     2  1242      1
+## 5     2  1376      1
+## 6     2  1536      1</code></pre>
+</div>
+<div id="igraph-the-swiss-army-knife-for-graphs" class="section level2">
+<h2><code>igraph</code>: The swiss-army knife for graphs</h2>
+<p>At this point, we can transform our data from a simple dataframe into
+an actual graph object; <code>igraph</code> is a very useful R library
+with many routines for manipulating graphs (computing metrics,
+identifying sub-graphs, etc.). It can read graphs represented in many
+ways, one of which is from a dataframe with edges:</p>
+<pre class="r"><code>library(igraph)
+
+# make network object
+first.with.igraph &lt;- graph_from_data_frame(d=edges, vertices=nodes, directed=FALSE)</code></pre>
+<p>Now that it’s loaded, we can plot our graph; note that this graph is
+<em>too big</em> to usefully plot this way!</p>
+<pre class="r"><code>set.seed(42)
+plot(first.with.igraph, layout=layout_with_graphopt)</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<p>What if we try filtering our graph, to only include edges
+representing at least four shared authors?</p>
+<pre class="r"><code>journal_graph &lt;- journal_graph %&gt;% filter(weight &gt; 4)
+edges &lt;- journal_graph %&gt;% left_join(nodes, by=c(&quot;source&quot;=&quot;label&quot;)) %&gt;% rename(from=id)
+edges &lt;- edges %&gt;% left_join(nodes, by=c(&quot;dest&quot; = &quot;label&quot;)) %&gt;% rename(to=id)
+edges &lt;- edges %&gt;% select(from, to, weight)
+edges</code></pre>
+<pre><code>## # A tibble: 6,364 × 3
+##     from    to weight
+##    &lt;int&gt; &lt;int&gt;  &lt;int&gt;
+##  1     3   234     11
+##  2     6   387     17
+##  3     7    99      8
+##  4     7   148     26
+##  5     7   155     50
+##  6     7   360     11
+##  7     7   399      6
+##  8     7   423      5
+##  9     7   443      8
+## 10     7   674      8
+## # … with 6,354 more rows</code></pre>
+<pre class="r"><code>nodes2&lt;-edges %&gt;% stack(select=c(from, to)) %&gt;% select(-ind) %&gt;% distinct %&gt;% inner_join(nodes, by=c(&quot;values&quot;=&quot;id&quot;)) %&gt;% rename(id=values)
+
+second.with.igraph &lt;- graph_from_data_frame(d=edges, vertices=nodes2, directed=FALSE)
+plot(second.with.igraph, layout=layout_with_graphopt)</code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<p>This is only moderately better; again, graphs with this many nodes
+are not especially effective to visualize, generally-speaking.</p>
+<p>Up to this point, we have used base-R plotting; it is worth knowing
+about <code>ggraph</code>, a more “modern” graphing library built on top
+of <code>ggplot</code>. It behaves very similarly to <code>ggplot</code>
+in that it uses geoms, aesthetic mappings, etc.</p>
+<pre class="r"><code>library(ggraph)
+
+second.with.igraph %&gt;% ggraph(layout=&quot;igraph&quot;, algorithm=&quot;kk&quot;) + geom_edge_link(alpha=0.1) + geom_node_point() </code></pre>
+<p><img src="10-high-d_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+</div>
+</div>
+
+<p>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="by-nc.png" width="133" height="25"/></a>
+</p>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

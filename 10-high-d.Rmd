@@ -1,0 +1,372 @@
+---
+title: 'Lab 10: High-Dimensional Data & Networks'
+output: html_document
+date: '2022-06-02'
+---
+
+# Setup
+
+```{r, warning=FALSE, message=FALSE, error=FALSE}
+library(tidyverse)
+library(network)
+library(ggnet)
+library(igraph)
+library(networkD3)
+library(Rtsne)
+library(ggplotify)
+library(GGally)
+library(palmerpenguins)
+library(pheatmap)
+```
+
+
+# Multidimensional visualizations
+
+As always, we begin with the Palmer Penguins:
+
+```{r}
+penguins_working <- penguins %>% na.omit # get rid of any with missing data
+
+penguins_working <- penguins_working %>%  cbind(penguin_id=sample(1:nrow(penguins_working))) # compute a penguin ID column
+glimpse(penguins_working)
+```
+
+## Pairwise bivariate plot
+
+One way to start: a "pairwise plot" grid of bivariate plots of all variables against each other. `ggpairs` automates this:
+
+```{r}
+penguins_working %>% ggpairs(columns=c("flipper_length_mm", "bill_length_mm", "bill_depth_mm", "body_mass_g" ))
+```
+
+Note that this sort of plot can be very useful for exploratory data analysis, but is of limited use when it comes to presentations, posters, publications, etc.
+
+## Heatmaps
+
+Another method for visualizing a large number of dimensions simultaneously is a heatmap. Unfortunately, this is one area where `ggplot` may not be the best choice. It is certainly _possible_ to do a heatmap with `ggplot`, using `geom_tile()`, but it is not really a "batteries included" solution.
+
+Things to note:
+  - `geom_tile()` listens for `x` and `y` aesthetics.
+  - As usual with `ggplot`, we want our data to be in a "long" (rather than "wide") layout, so we'll need to use `pivot_longer()`
+
+
+```{r}
+penguins_working %>% select(-species, -island, -sex, -year) %>% 
+  pivot_longer(-penguin_id, names_to="metric", values_to = "value") %>% 
+  ggplot(aes(x=penguin_id, y=metric, fill=value)) + geom_tile()
+  
+```
+
+### Issues of scale
+
+Note that because our different variables are at different scales, the colors on the heatmap are not particularly useful at this point. For this reason, heatmaps usually normalize all of their data to be on a common scale (or get fancy with color scales for different rows/columns, though this does begin to defeat the purpose of using a heatmap in the first place). Let's re-scale our variables using `mutate()`, we use `across` here to tell `mutate()` to apply a function to multiple columns.
+
+```{r}
+penguins_working %>% select(-species, -island, -sex, -year) %>% 
+  mutate(across(-penguin_id, scale)) %>% 
+  pivot_longer(-penguin_id, names_to="metric", values_to = "value") %>% 
+  ggplot(aes(x=penguin_id, y=metric, fill=value)) +geom_tile()
+```
+
+The next thing to note is that our scaled data have a natural and meaningful zero point, which means that this is a good use-case for a two-tone diverging color scale, which we can get usign `scale_fill_gradient2()`.
+
+```{r}
+penguins_working %>% select(-species, -island, -sex, -year) %>% 
+  mutate(across(-penguin_id, scale)) %>% 
+  pivot_longer(-penguin_id, names_to="metric", values_to = "value") %>% 
+  ggplot(aes(x=penguin_id, y=metric, fill=value)) +geom_tile() + scale_fill_gradient2()
+
+```
+
+### A non-ggplot option
+
+There are numerous other things we might want to do with a heatmap, including adding dendrogram/cluster diagrams, additional annotations, etc. `ggplot` doesn't really make this easy, but fortunately there are numerous non-`ggplot` options. One that I quite like is `pheatmap`:
+
+```{r}
+penguins_working %>% select(-species, -island, -sex, -year, -penguin_id) %>% pheatmap
+```
+
+"Out of the box", `pheatmap` also does not scale our data; unlike `ggplot`, however, it will not force us to do it "by hand". It has numerous parameters, one of which controls data scaling; we can specify whether we want columns or rows to be scaled:
+
+```{r}
+penguins_working %>% select(-species, -island, -sex, -year, -penguin_id) %>% 
+  pheatmap(scale="column")
+```
+
+Things to note
+  - By default, `pheatmap` will reorganize the data according to the clustering results (unlike `ggplot`/`geom_tile()`, which will leave the data as-is)
+  - `pheatmap` isn't designed to work with dataframes (though it _can_); rather, it expects matrices, where each "sample" is a column
+  - So if you want to swap rows and columns, you'll want to use `t()` to transpose your data:
+
+
+```{r}
+penguins_working %>% select(-species, -island, -sex, -year) %>% column_to_rownames("penguin_id") %>% as.matrix %>% t %>% pheatmap(scale="row") # note that we need to change what we're scaling
+```
+
+`pheatmap` is endlessly customizable; for example, we can disable labels on columns, since here there are too many for them to be legible:
+
+```{r}
+penguins_working %>% select(-species, -island, -sex, -year) %>% column_to_rownames("penguin_id") %>% t %>% 
+  pheatmap(scale="row", show_colnames = FALSE)
+```
+
+#### Additional layers of data
+
+One nice feature of `pheatmap` is its annotation capabilities; we can compute additional layers of data, and it will include them as additional layers on the heatmap.
+
+```{r}
+hm.annotation.df <- penguins_working %>% column_to_rownames("penguin_id") %>% select(species) # a data frame with rownames that match up with our main data's
+
+
+penguins_working %>% select(-species, -island, -sex, -year) %>% column_to_rownames("penguin_id") %>% t %>% 
+  pheatmap(scale="row", show_colnames = FALSE, annotation_col = hm.annotation.df)
+
+```
+
+
+We can have multiple levels of annotations:
+
+```{r}
+hm.annotation.df <- penguins_working %>% column_to_rownames("penguin_id") %>% select(species, sex) # annotation by species _and_ sex
+ 
+penguins_working %>% select(-species, -island, -sex, -year) %>% column_to_rownames("penguin_id") %>% t %>% 
+  pheatmap(scale="row", show_colnames = FALSE, annotation_col = hm.annotation.df) 
+
+```
+
+`pheatmap is, again, endlessly customizable; one handy thing is that we can tell it to "break up" the spacing of the map a little bit based on the cut points in the clustering:
+
+```{r}
+hm.annotation.df <- penguins_working %>% column_to_rownames("penguin_id") %>% select(species, sex) # annotation by species _and_ sex
+ 
+penguins_working %>% select(-species, -island, -sex, -year) %>% column_to_rownames("penguin_id") %>% t %>% 
+  pheatmap(scale="row", show_colnames = FALSE, annotation_col = hm.annotation.df,
+           cutree_cols = 3, cutree_rows = 3)
+```
+
+
+Recall that `pheatmap`'s output is _not_ a `ggplot` object, so ggsave etc. won't work... if we really need it to be, we can convert it:
+
+```{r}
+hm.ggplt <- penguins_working %>% select(-species, -island, -sex, -year) %>% column_to_rownames("penguin_id") %>% t %>% 
+  pheatmap(scale="row", show_colnames = FALSE, annotation_col = hm.annotation.df, cutree_cols = 3, cutree_rows = 3) %>% 
+  as.ggplot
+
+# now that it's a ggplot object, we can do certain things to it using ggplot commands:
+hm.ggplt + labs(title="Title from ggplot", caption = "Caption from ggplot!")
+
+```
+
+If wneeded to, we could now combine with other ggplot objects using e.g. cowplot, etc.
+
+## Dimensionality Reduction
+
+When we have many dimensions, it can be helpful to come up with a lower-dimensional space to use for visualization and analysis. There are _many_ ways to do this; and note that the Palmer Penguins dataset doen't really have _that_ many dimensions, so this is really just a demonstration of how you might perform this sort of analysis rather than an actual use case. :-)
+
+We will begin with Principal Components Analysis:
+
+```{r}
+for.pca <- penguins_working %>% select(-species, -island, -sex, -year, -penguin_id)
+
+# compute PCA
+pc <- for.pca %>% prcomp(center=TRUE, scale=TRUE)
+pc # long but useful output
+```
+Note that we have have one "Principal Component" for each input dimension, so we have not actually _reduced_ our dimensionality, yet! However, recall that in PCA the components are ordered in terms of the variance they capture, with the idea being that by using the first several we can represent most of the variance in our dataset.
+
+```{r}
+# now add our PC values back
+penguins.pc <- penguins_working %>% cbind(predict(pc, for.pca))
+penguins.pc %>% head
+```
+
+We can see that if we plot the first few components against one another, much of the structure of the dataset is largely preserved (at least, the parts that are linear in nature):
+
+```{r}
+penguins.pc %>% ggplot(aes(x=PC1, y=PC2, color=species)) + geom_point()
+```
+
+```{r}
+penguins.pc %>% ggplot(aes(x=PC1, y=PC3, color=species)) + geom_point()
+```
+
+```{r}
+penguins.pc %>% ggpairs(mapping=aes(color=species), columns=c("PC1", "PC2", "PC3", "PC4"))
+```
+
+For _non-linear_ dimensionality reduction, we have many options; one popular one is "T-Distributed Stochastic Neighbor Embedding", or t-SNE. It does a very good job at handling a moderate number of dimensions (up to, say, 50) though can be run on much higher-dimensional data.
+
+The main thing to note about t-SNE is that it is _stochastic_, meaning that different "runs" will produce different results. The overall patterns/structure in the resulting lower-dimensional data will be very similar, but it will look different. In the interests of reproducibility, always make sure to initialize your random number generator in a consistent manner, using `set.seed()`!
+
+```{r}
+set.seed(42)
+penguin.tsne <- for.pca %>% mutate(across(everything(), scale)) %>%  Rtsne()
+
+penguin.tsne$Y %>% as.data.frame %>% cbind(penguins_working) %>% ggplot(aes(x=V1, y=V2, color=species)) + geom_point()
+
+```
+
+As an example, look what happens if we run `Rtsne()` a second time:
+
+```{r}
+penguin.tsne2 <- for.pca %>% mutate(across(everything(), scale)) %>%  Rtsne()
+
+penguin.tsne2$Y %>% as.data.frame %>% cbind(penguins_working) %>% ggplot(aes(x=V1, y=V2, color=species)) + geom_point()
+
+```
+
+We get a completely differnet arrangement- though note some similarities, in that there are a few stray Chinstrap penguins that get grouped in with the Adelies.
+
+Running a third time, we will get a third arrangement:
+
+```{r}
+penguin.tsne3 <- for.pca %>% mutate(across(everything(), scale)) %>%  Rtsne()
+
+penguin.tsne3$Y %>% as.data.frame %>% cbind(penguins_working) %>% ggplot(aes(x=V1, y=V2, color=species)) + geom_point()
+
+```
+
+If we reset our RNG seed, we can get back our original layout:
+
+```{r}
+set.seed(42)
+penguin.tsne4 <- for.pca %>% mutate(across(everything(), scale)) %>%  Rtsne()
+
+penguin.tsne4$Y %>% as.data.frame %>% cbind(penguins_working) %>% ggplot(aes(x=V1, y=V2, color=species)) + geom_point()
+
+```
+
+-------------------------------
+
+# Networks
+
+Note that this part of the walk-through is not particularly useful except as an example of how to use `igraph`; the actual analysis does not work out very well, and the graphs aren't of very much interest.
+
+## Data ingest & setup
+
+This file was generated using the SciVal bibliographic database, and contains information about publications with at least one OHSU-affiliated author.
+
+```{r}
+d <- read_csv("data/ohsu_pubs.csv") %>% janitor::clean_names()
+```
+
+```{r}
+glimpse(d)
+```
+
+We can easily identify publications with a first or last author with an OHSU affiliation:
+
+```{r}
+ohsu.scopus.id <- "60016733"
+d.first.au <- d %>% mutate(first_aff_id=str_extract(scopus_affiliation_i_ds, "^[^\\|]*"), last_aff_id=str_extract(scopus_affiliation_i_ds, "[^\\|]*$")) %>% 
+  mutate(is_ohsu_pub=case_when(
+    first_aff_id == ohsu.scopus.id | last_aff_id == ohsu.scopus.id ~ TRUE, TRUE ~ FALSE
+  ))
+
+# as a sanity check, how many OHSU first/last author publications are there in the set?
+d.first.au %>% select(is_ohsu_pub) %>% group_by(is_ohsu_pub) %>% tally
+```
+
+Let's build a graph where the _nodes_ are journals, and edges shared authorship. That is, journals _X_ and _Y_ will get an edge if at least one author has published in both; weights of the edges will represent the number of shared authors.
+
+To get there, we will need several steps of processing. Currently, each row of the dataset is a single publication, but within each publication there is a delimited list of authors and institutional affiliations. We want to extract that list and make it into a nested data frame:
+
+```{r}
+
+prep_au_df <- function(some_pub) {
+  au_list = str_split(some_pub$authors, "\\|")
+  # print(au_list)
+  au_id = str_split(some_pub$scopus_author_ids, "\\|")
+    tibble(author_name=au_list, author_id=au_id)
+    
+}
+
+# let's only look at publications where the first or last author is an OHSU author
+pubs.to.use <- d.first.au %>% filter(is_ohsu_pub==TRUE)
+
+d.with.expanded.author.info <- pubs.to.use %>% pmap_dfr(function(...) {
+  current <- tibble(...)
+  current %>% prep_au_df
+}) %>% bind_cols(pubs.to.use, .)
+
+```
+
+Now, we will turn that into a dataframe that has one row per-author-per-publication, with the journal title and author ID. This will form the basis for our graph:
+
+```{r}
+author.id.and.name <- d.with.expanded.author.info %>% select(scopus_source_title, author_id) %>% unnest(author_id)
+author.id.and.name %>% head
+
+```
+
+## Compute node and edge list
+
+The graphing libraries we will be working with can represent graphs in several ways, but the most common way is as an _edgelist_ and a list of vertices. We'll make the edgelist by joining our author/journal-title dataframe on itself a couple of times:
+
+```{r}
+journal_graph <- author.id.and.name %>% inner_join(author.id.and.name, by="author_id") %>% filter(scopus_source_title.x != scopus_source_title.y) %>% rename(source=scopus_source_title.x, dest=scopus_source_title.y) %>% 
+  group_by(source, dest) %>% summarise(n.pubs=n()) %>% ungroup
+
+sources <- journal_graph %>% distinct(source) %>% rename(label=source)
+destinations <- journal_graph %>% distinct(dest) %>% rename(label=dest)
+
+# list of all nodes
+nodes <- full_join(sources, destinations, by="label")
+nodes <- nodes %>% mutate(id=1:nrow(nodes)) %>% select(id, everything())
+
+journal_graph <- journal_graph %>% rename(weight=n.pubs)
+edges <- journal_graph %>% left_join(nodes, by=c("source"="label")) %>% rename(from=id)
+edges <- edges %>% left_join(nodes, by=c("dest" = "label")) %>% rename(to=id)
+edges <- edges %>% select(from, to, weight)
+edges %>% head
+
+```
+
+
+## `igraph`: The swiss-army knife for graphs
+
+At this point, we can transform our data from a simple dataframe into an actual graph object; `igraph` is a very useful R library with many routines for manipulating graphs (computing metrics, identifying sub-graphs, etc.). It can read graphs represented in many ways, one of which is from a dataframe with edges:
+
+```{r}
+library(igraph)
+
+# make network object
+first.with.igraph <- graph_from_data_frame(d=edges, vertices=nodes, directed=FALSE)
+
+```
+
+Now that it's loaded, we can plot our graph; note that this graph is _too big_ to usefully plot this way!
+
+```{r}
+set.seed(42)
+plot(first.with.igraph, layout=layout_with_graphopt)
+```
+
+
+What if we try filtering our graph, to only include edges representing at least four shared authors?
+
+```{r}
+journal_graph <- journal_graph %>% filter(weight > 4)
+edges <- journal_graph %>% left_join(nodes, by=c("source"="label")) %>% rename(from=id)
+edges <- edges %>% left_join(nodes, by=c("dest" = "label")) %>% rename(to=id)
+edges <- edges %>% select(from, to, weight)
+edges
+
+nodes2<-edges %>% stack(select=c(from, to)) %>% select(-ind) %>% distinct %>% inner_join(nodes, by=c("values"="id")) %>% rename(id=values)
+
+second.with.igraph <- graph_from_data_frame(d=edges, vertices=nodes2, directed=FALSE)
+plot(second.with.igraph, layout=layout_with_graphopt)
+
+```
+
+This is only moderately better; again, graphs with this many nodes are not especially effective to visualize, generally-speaking.
+
+Up to this point, we have used base-R plotting; it is worth knowing about `ggraph`, a more "modern" graphing library built on top of `ggplot`. It behaves very similarly to `ggplot` in that it uses geoms, aesthetic mappings, etc.
+
+```{r}
+library(ggraph)
+
+second.with.igraph %>% ggraph(layout="igraph", algorithm="kk") + geom_edge_link(alpha=0.1) + geom_node_point() 
+
+```
+
