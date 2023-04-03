@@ -15,7 +15,7 @@
 
 <title>Lab 05: Data Wrangling for Tables</title>
 
-<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -146,11 +146,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -179,8 +183,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -188,16 +192,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -319,7 +316,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2022</a>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2023</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -330,7 +327,7 @@ div.tocify {
   <a href="data-vis-resources.html">Resources</a>
 </li>
 <li>
-  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AJ-Sp22">Sakai</a>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AK-Sp23">Sakai</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -456,15 +453,16 @@ glimpse(times)</code></pre>
 flights %&gt;%
   select(-contains(&quot;time&quot;)) %&gt;% head()</code></pre>
 <pre><code>## # A tibble: 6 × 13
-##    year month   day dep_delay arr_delay carrier tailnum flight origin dest 
-##   &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;
-## 1  2014     1     1        96        70 AS      N508AS     145 PDX    ANC  
-## 2  2014     1     1        -6       -23 US      N195UW    1830 SEA    CLT  
-## 3  2014     1     1        13        -4 UA      N37422    1609 PDX    IAH  
-## 4  2014     1     1        -2       -23 US      N547UW     466 PDX    CLT  
-## 5  2014     1     1        44        43 AS      N762AS     121 SEA    ANC  
-## 6  2014     1     1        82        88 DL      N806DN    1823 SEA    DTW  
-## # … with 3 more variables: distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+##    year month   day dep_de…¹ arr_d…² carrier tailnum flight origin dest  dista…³
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;dbl&gt;
+## 1  2014     1     1       96      70 AS      N508AS     145 PDX    ANC      1542
+## 2  2014     1     1       -6     -23 US      N195UW    1830 SEA    CLT      2279
+## 3  2014     1     1       13      -4 UA      N37422    1609 PDX    IAH      1825
+## 4  2014     1     1       -2     -23 US      N547UW     466 PDX    CLT      2282
+## 5  2014     1     1       44      43 AS      N762AS     121 SEA    ANC      1448
+## 6  2014     1     1       82      88 DL      N806DN    1823 SEA    DTW      1927
+## # … with 2 more variables: hour &lt;dbl&gt;, minute &lt;dbl&gt;, and abbreviated variable
+## #   names ¹​dep_delay, ²​arr_delay, ³​distance</code></pre>
 <pre class="r"><code>delays &lt;- flights %&gt;%
   select(ends_with(&quot;delay&quot;))
 glimpse(delays)</code></pre>
@@ -480,16 +478,17 @@ without having to list all the variables to keep/drop.</p>
   select(origin, dest, everything())
 head(new_order)</code></pre>
 <pre><code>## # A tibble: 6 × 16
-##   origin dest   year month   day dep_time dep_delay arr_time arr_delay carrier
-##   &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;  
-## 1 PDX    ANC    2014     1     1        1        96      235        70 AS     
-## 2 SEA    CLT    2014     1     1        4        -6      738       -23 US     
-## 3 PDX    IAH    2014     1     1        8        13      548        -4 UA     
-## 4 PDX    CLT    2014     1     1       28        -2      800       -23 US     
-## 5 SEA    ANC    2014     1     1       34        44      325        43 AS     
-## 6 SEA    DTW    2014     1     1       37        82      747        88 DL     
-## # … with 6 more variables: tailnum &lt;chr&gt;, flight &lt;int&gt;, air_time &lt;dbl&gt;,
-## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+##   origin dest   year month   day dep_t…¹ dep_d…² arr_t…³ arr_d…⁴ carrier tailnum
+##   &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;   &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  
+## 1 PDX    ANC    2014     1     1       1      96     235      70 AS      N508AS 
+## 2 SEA    CLT    2014     1     1       4      -6     738     -23 US      N195UW 
+## 3 PDX    IAH    2014     1     1       8      13     548      -4 UA      N37422 
+## 4 PDX    CLT    2014     1     1      28      -2     800     -23 US      N547UW 
+## 5 SEA    ANC    2014     1     1      34      44     325      43 AS      N762AS 
+## 6 SEA    DTW    2014     1     1      37      82     747      88 DL      N806DN 
+## # … with 5 more variables: flight &lt;int&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, and abbreviated variable names ¹​dep_time,
+## #   ²​dep_delay, ³​arr_time, ⁴​arr_delay</code></pre>
 <pre class="r"><code># with negation
 new_order2 &lt;- flights %&gt;% 
   select(origin, dest, everything(), -year)
@@ -510,16 +509,17 @@ head(new_order2)</code></pre>
   select(tail_num = tailnum, everything())
 head(flights2)</code></pre>
 <pre><code>## # A tibble: 6 × 16
-##   tail_num  year month   day dep_time dep_delay arr_time arr_delay carrier
-##   &lt;chr&gt;    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;  
-## 1 N508AS    2014     1     1        1        96      235        70 AS     
-## 2 N195UW    2014     1     1        4        -6      738       -23 US     
-## 3 N37422    2014     1     1        8        13      548        -4 UA     
-## 4 N547UW    2014     1     1       28        -2      800       -23 US     
-## 5 N762AS    2014     1     1       34        44      325        43 AS     
-## 6 N806DN    2014     1     1       37        82      747        88 DL     
-## # … with 7 more variables: flight &lt;int&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
-## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+##   tail_num  year month   day dep_time dep_delay arr_time arr_de…¹ carrier flight
+##   &lt;chr&gt;    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;    &lt;int&gt;
+## 1 N508AS    2014     1     1        1        96      235       70 AS         145
+## 2 N195UW    2014     1     1        4        -6      738      -23 US        1830
+## 3 N37422    2014     1     1        8        13      548       -4 UA        1609
+## 4 N547UW    2014     1     1       28        -2      800      -23 US         466
+## 5 N762AS    2014     1     1       34        44      325       43 AS         121
+## 6 N806DN    2014     1     1       37        82      747       88 DL        1823
+## # … with 6 more variables: origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, and abbreviated variable name
+## #   ¹​arr_delay</code></pre>
 <p>If you don’t want to move the renamed variables within your
 dataframe, you can use the <code>rename</code> function.</p>
 <pre class="r"><code>flights3 &lt;- flights %&gt;%
@@ -585,32 +585,34 @@ to_south &lt;- flights %&gt;%
   select(origin, dest, everything())
 head(to_south)</code></pre>
 <pre><code>## # A tibble: 6 × 16
-##   origin dest   year month   day dep_time dep_delay arr_time arr_delay carrier
-##   &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;  
-## 1 SEA    ATL    2014     1     1      624        -6     1401        -6 DL     
-## 2 SEA    ATL    2014     1     1      802        -3     1533       -17 AS     
-## 3 SEA    ATL    2014     1     1      824        -1     1546       -14 DL     
-## 4 PDX    ATL    2014     1     1      944        -6     1727        -8 AS     
-## 5 PDX    ATL    2014     1     1     1054        94     1807        84 DL     
-## 6 SEA    ATL    2014     1     1     1158         6     1915       -14 DL     
-## # … with 6 more variables: tailnum &lt;chr&gt;, flight &lt;int&gt;, air_time &lt;dbl&gt;,
-## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+##   origin dest   year month   day dep_t…¹ dep_d…² arr_t…³ arr_d…⁴ carrier tailnum
+##   &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;   &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  
+## 1 SEA    ATL    2014     1     1     624      -6    1401      -6 DL      N617DL 
+## 2 SEA    ATL    2014     1     1     802      -3    1533     -17 AS      N532AS 
+## 3 SEA    ATL    2014     1     1     824      -1    1546     -14 DL      N633DL 
+## 4 PDX    ATL    2014     1     1     944      -6    1727      -8 AS      N548AS 
+## 5 PDX    ATL    2014     1     1    1054      94    1807      84 DL      N377DA 
+## 6 SEA    ATL    2014     1     1    1158       6    1915     -14 DL      N6712B 
+## # … with 5 more variables: flight &lt;int&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, and abbreviated variable names ¹​dep_time,
+## #   ²​dep_delay, ³​arr_time, ⁴​arr_delay</code></pre>
 <pre class="r"><code># flights from PDX to ATL (Atlanta) or BNA (Nashville)
 pdx_to_south &lt;- flights %&gt;% 
   filter(origin == &quot;PDX&quot;, dest == &quot;ATL&quot; | dest == &quot;BNA&quot;) %&gt;% # | is &quot;or&quot;
   select(origin, dest, everything())
 head(pdx_to_south)</code></pre>
 <pre><code>## # A tibble: 6 × 16
-##   origin dest   year month   day dep_time dep_delay arr_time arr_delay carrier
-##   &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;  
-## 1 PDX    ATL    2014     1     1      944        -6     1727        -8 AS     
-## 2 PDX    ATL    2014     1     1     1054        94     1807        84 DL     
-## 3 PDX    ATL    2014     1     1     1323        -2     2038       -15 DL     
-## 4 PDX    ATL    2014     1     1     2253         8      611         4 DL     
-## 5 PDX    ATL    2014     1     2      627        -3     1350        -7 DL     
-## 6 PDX    ATL    2014     1     2      918        -2     1643        -2 DL     
-## # … with 6 more variables: tailnum &lt;chr&gt;, flight &lt;int&gt;, air_time &lt;dbl&gt;,
-## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+##   origin dest   year month   day dep_t…¹ dep_d…² arr_t…³ arr_d…⁴ carrier tailnum
+##   &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;   &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  
+## 1 PDX    ATL    2014     1     1     944      -6    1727      -8 AS      N548AS 
+## 2 PDX    ATL    2014     1     1    1054      94    1807      84 DL      N377DA 
+## 3 PDX    ATL    2014     1     1    1323      -2    2038     -15 DL      N393DA 
+## 4 PDX    ATL    2014     1     1    2253       8     611       4 DL      N371DA 
+## 5 PDX    ATL    2014     1     2     627      -3    1350      -7 DL      N3746H 
+## 6 PDX    ATL    2014     1     2     918      -2    1643      -2 DL      N3756  
+## # … with 5 more variables: flight &lt;int&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, and abbreviated variable names ¹​dep_time,
+## #   ²​dep_delay, ³​arr_time, ⁴​arr_delay</code></pre>
 <pre class="r"><code># alternatively, using group membership
 south_dests &lt;- c(&quot;ATL&quot;, &quot;BNA&quot;)
 pdx_to_south2 &lt;- flights %&gt;% 
@@ -618,16 +620,17 @@ pdx_to_south2 &lt;- flights %&gt;%
   select(origin, dest, everything())
 head(pdx_to_south2)</code></pre>
 <pre><code>## # A tibble: 6 × 16
-##   origin dest   year month   day dep_time dep_delay arr_time arr_delay carrier
-##   &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;  
-## 1 PDX    ATL    2014     1     1      944        -6     1727        -8 AS     
-## 2 PDX    ATL    2014     1     1     1054        94     1807        84 DL     
-## 3 PDX    ATL    2014     1     1     1323        -2     2038       -15 DL     
-## 4 PDX    ATL    2014     1     1     2253         8      611         4 DL     
-## 5 PDX    ATL    2014     1     2      627        -3     1350        -7 DL     
-## 6 PDX    ATL    2014     1     2      918        -2     1643        -2 DL     
-## # … with 6 more variables: tailnum &lt;chr&gt;, flight &lt;int&gt;, air_time &lt;dbl&gt;,
-## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+##   origin dest   year month   day dep_t…¹ dep_d…² arr_t…³ arr_d…⁴ carrier tailnum
+##   &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;   &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  
+## 1 PDX    ATL    2014     1     1     944      -6    1727      -8 AS      N548AS 
+## 2 PDX    ATL    2014     1     1    1054      94    1807      84 DL      N377DA 
+## 3 PDX    ATL    2014     1     1    1323      -2    2038     -15 DL      N393DA 
+## 4 PDX    ATL    2014     1     1    2253       8     611       4 DL      N371DA 
+## 5 PDX    ATL    2014     1     2     627      -3    1350      -7 DL      N3746H 
+## 6 PDX    ATL    2014     1     2     918      -2    1643      -2 DL      N3756  
+## # … with 5 more variables: flight &lt;int&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, and abbreviated variable names ¹​dep_time,
+## #   ²​dep_delay, ³​arr_time, ⁴​arr_delay</code></pre>
 <pre class="r"><code># flights delayed by 1 hour or more
 delay_1plus &lt;- flights %&gt;%
   filter(dep_delay &gt;= 60)
@@ -685,58 +688,60 @@ head(delay_bwn)</code></pre>
 flights %&gt;% 
   arrange(year, month, day) %&gt;% head(n=20)</code></pre>
 <pre><code>## # A tibble: 20 × 16
-##     year month   day dep_time dep_delay arr_time arr_delay carrier tailnum
-##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  
-##  1  2014     1     1        1        96      235        70 AS      N508AS 
-##  2  2014     1     1        4        -6      738       -23 US      N195UW 
-##  3  2014     1     1        8        13      548        -4 UA      N37422 
-##  4  2014     1     1       28        -2      800       -23 US      N547UW 
-##  5  2014     1     1       34        44      325        43 AS      N762AS 
-##  6  2014     1     1       37        82      747        88 DL      N806DN 
-##  7  2014     1     1      346       227      936       219 UA      N14219 
-##  8  2014     1     1      526        -4     1148        15 UA      N813UA 
-##  9  2014     1     1      527         7      917        24 UA      N75433 
-## 10  2014     1     1      536         1     1334        -6 UA      N574UA 
-## 11  2014     1     1      541         1      911         4 UA      N36476 
-## 12  2014     1     1      549        24      907        12 US      N548UW 
-## 13  2014     1     1      550         0      837       -12 DL      N660DL 
-## 14  2014     1     1      557        -3     1134       -16 AA      N3JLAA 
-## 15  2014     1     1      557        -3      825       -25 AS      N562AS 
-## 16  2014     1     1      558        -2      801        -2 AS      N402AS 
-## 17  2014     1     1      559        -1      916        -9 F9      N210FR 
-## 18  2014     1     1      600         0     1151       -19 AA      N3JFAA 
-## 19  2014     1     1      600       -10      842        -8 AS      N786AS 
-## 20  2014     1     1      602        -3      943         5 F9      N201FR 
-## # … with 7 more variables: flight &lt;int&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
-## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+##     year month   day dep_time dep_delay arr_time arr_de…¹ carrier tailnum flight
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;int&gt;
+##  1  2014     1     1        1        96      235       70 AS      N508AS     145
+##  2  2014     1     1        4        -6      738      -23 US      N195UW    1830
+##  3  2014     1     1        8        13      548       -4 UA      N37422    1609
+##  4  2014     1     1       28        -2      800      -23 US      N547UW     466
+##  5  2014     1     1       34        44      325       43 AS      N762AS     121
+##  6  2014     1     1       37        82      747       88 DL      N806DN    1823
+##  7  2014     1     1      346       227      936      219 UA      N14219    1481
+##  8  2014     1     1      526        -4     1148       15 UA      N813UA     229
+##  9  2014     1     1      527         7      917       24 UA      N75433    1576
+## 10  2014     1     1      536         1     1334       -6 UA      N574UA     478
+## 11  2014     1     1      541         1      911        4 UA      N36476    1569
+## 12  2014     1     1      549        24      907       12 US      N548UW     649
+## 13  2014     1     1      550         0      837      -12 DL      N660DL    1634
+## 14  2014     1     1      557        -3     1134      -16 AA      N3JLAA    1094
+## 15  2014     1     1      557        -3      825      -25 AS      N562AS      81
+## 16  2014     1     1      558        -2      801       -2 AS      N402AS     200
+## 17  2014     1     1      559        -1      916       -9 F9      N210FR     796
+## 18  2014     1     1      600         0     1151      -19 AA      N3JFAA    2240
+## 19  2014     1     1      600       -10      842       -8 AS      N786AS     426
+## 20  2014     1     1      602        -3      943        5 F9      N201FR     144
+## # … with 6 more variables: origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, and abbreviated variable name
+## #   ¹​arr_delay</code></pre>
 <pre class="r"><code># descending order
 flights %&gt;% 
   arrange(desc(year), desc(month), desc(day)) %&gt;% head(n=20)</code></pre>
 <pre><code>## # A tibble: 20 × 16
-##     year month   day dep_time dep_delay arr_time arr_delay carrier tailnum
-##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  
-##  1  2014    12    31        2        12      601        31 AA      N3JKAA 
-##  2  2014    12    31       27        -3      623         3 AA      N3EWAA 
-##  3  2014    12    31       39        14      324         4 AS      N762AS 
-##  4  2014    12    31       40         0      549         0 DL      N757AT 
-##  5  2014    12    31       52        -8      917       -21 AA      N3JFAA 
-##  6  2014    12    31       54         4      621        17 DL      N128DL 
-##  7  2014    12    31       56        61      848        80 DL      N655DL 
-##  8  2014    12    31      512        -3      904         4 US      N653AW 
-##  9  2014    12    31      515        -5      855         5 US      N580UW 
-## 10  2014    12    31      534         4      859         7 UA      N34460 
-## 11  2014    12    31      546         1      916        -4 WN      N8323C 
-## 12  2014    12    31      548        -2     1351       -13 UA      N461UA 
-## 13  2014    12    31      549         4     1208        12 UA      N68807 
-## 14  2014    12    31      550         0      922         2 WN      N797MX 
-## 15  2014    12    31      551        -4     1202        12 AA      N3HXAA 
-## 16  2014    12    31      551        -9      744       -15 AS      N570AS 
-## 17  2014    12    31      555       -10      824        -1 AS      N548AS 
-## 18  2014    12    31      558        -2      849         0 DL      N668DN 
-## 19  2014    12    31      558        -2     1149         4 AA      N436AA 
-## 20  2014    12    31      558        -2      738        -4 AS      N585AS 
-## # … with 7 more variables: flight &lt;int&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
-## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+##     year month   day dep_time dep_delay arr_time arr_de…¹ carrier tailnum flight
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;int&gt;
+##  1  2014    12    31        2        12      601       31 AA      N3JKAA    1230
+##  2  2014    12    31       27        -3      623        3 AA      N3EWAA    1431
+##  3  2014    12    31       39        14      324        4 AS      N762AS     135
+##  4  2014    12    31       40         0      549        0 DL      N757AT    2440
+##  5  2014    12    31       52        -8      917      -21 AA      N3JFAA     371
+##  6  2014    12    31       54         4      621       17 DL      N128DL    1670
+##  7  2014    12    31       56        61      848       80 DL      N655DL     929
+##  8  2014    12    31      512        -3      904        4 US      N653AW     480
+##  9  2014    12    31      515        -5      855        5 US      N580UW     425
+## 10  2014    12    31      534         4      859        7 UA      N34460    1075
+## 11  2014    12    31      546         1      916       -4 WN      N8323C     757
+## 12  2014    12    31      548        -2     1351      -13 UA      N461UA     665
+## 13  2014    12    31      549         4     1208       12 UA      N68807    1457
+## 14  2014    12    31      550         0      922        2 WN      N797MX    2121
+## 15  2014    12    31      551        -4     1202       12 AA      N3HXAA    1094
+## 16  2014    12    31      551        -9      744      -15 AS      N570AS     342
+## 17  2014    12    31      555       -10      824       -1 AS      N548AS     602
+## 18  2014    12    31      558        -2      849        0 DL      N668DN    1831
+## 19  2014    12    31      558        -2     1149        4 AA      N436AA    1534
+## 20  2014    12    31      558        -2      738       -4 AS      N585AS     406
+## # … with 6 more variables: origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, and abbreviated variable name
+## #   ¹​arr_delay</code></pre>
 </div>
 <div id="dplyrdistinct" class="section level2" number="2.4">
 <h2><span class="header-section-number">2.4</span>
@@ -787,16 +792,17 @@ flights %&gt;%
   select(origin, dest, ends_with(&quot;delay&quot;), everything()) %&gt;% 
   head</code></pre>
 <pre><code>## # A tibble: 6 × 17
-##   origin dest  dep_delay arr_delay tot_delay  year month   day dep_time arr_time
-##   &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;    &lt;int&gt;
-## 1 PDX    ANC          96        70       166  2014     1     1        1      235
-## 2 SEA    CLT          -6       -23       -29  2014     1     1        4      738
-## 3 PDX    IAH          13        -4         9  2014     1     1        8      548
-## 4 PDX    CLT          -2       -23       -25  2014     1     1       28      800
-## 5 SEA    ANC          44        43        87  2014     1     1       34      325
-## 6 SEA    DTW          82        88       170  2014     1     1       37      747
-## # … with 7 more variables: carrier &lt;chr&gt;, tailnum &lt;chr&gt;, flight &lt;int&gt;,
-## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
+##   origin dest  dep_d…¹ arr_d…² tot_d…³  year month   day dep_t…⁴ arr_t…⁵ carrier
+##   &lt;chr&gt;  &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;   &lt;int&gt;   &lt;int&gt; &lt;chr&gt;  
+## 1 PDX    ANC        96      70     166  2014     1     1       1     235 AS     
+## 2 SEA    CLT        -6     -23     -29  2014     1     1       4     738 US     
+## 3 PDX    IAH        13      -4       9  2014     1     1       8     548 UA     
+## 4 PDX    CLT        -2     -23     -25  2014     1     1      28     800 US     
+## 5 SEA    ANC        44      43      87  2014     1     1      34     325 AS     
+## 6 SEA    DTW        82      88     170  2014     1     1      37     747 DL     
+## # … with 6 more variables: tailnum &lt;chr&gt;, flight &lt;int&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, and abbreviated variable names
+## #   ¹​dep_delay, ²​arr_delay, ³​tot_delay, ⁴​dep_time, ⁵​arr_time</code></pre>
 <pre class="r"><code># flights that were delayed at departure had on time or early arrivals?
 arrivals &lt;- flights %&gt;%
   mutate(arr_ok = ifelse(dep_delay &gt; 0 &amp; arr_delay &lt;= 0, 1, 0)) %&gt;% 
@@ -857,16 +863,16 @@ flights %&gt;%
   filter(!is.na(dep_delay)) %&gt;%
   summarise(across(where(is.numeric), lst(mean, sd, median)))</code></pre>
 <pre><code>## # A tibble: 1 × 36
-##   year_mean year_sd year_median month_mean month_sd month_median day_mean day_sd
-##       &lt;dbl&gt;   &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
-## 1      2014       0        2014       6.62     3.32            7     15.8   8.79
-## # … with 28 more variables: day_median &lt;dbl&gt;, dep_time_mean &lt;dbl&gt;,
-## #   dep_time_sd &lt;dbl&gt;, dep_time_median &lt;dbl&gt;, dep_delay_mean &lt;dbl&gt;,
-## #   dep_delay_sd &lt;dbl&gt;, dep_delay_median &lt;dbl&gt;, arr_time_mean &lt;dbl&gt;,
-## #   arr_time_sd &lt;dbl&gt;, arr_time_median &lt;int&gt;, arr_delay_mean &lt;dbl&gt;,
-## #   arr_delay_sd &lt;dbl&gt;, arr_delay_median &lt;dbl&gt;, flight_mean &lt;dbl&gt;,
-## #   flight_sd &lt;dbl&gt;, flight_median &lt;dbl&gt;, air_time_mean &lt;dbl&gt;,
-## #   air_time_sd &lt;dbl&gt;, air_time_median &lt;dbl&gt;, distance_mean &lt;dbl&gt;, …</code></pre>
+##   year_…¹ year_sd year_…² month…³ month…⁴ month…⁵ day_m…⁶ day_sd day_m…⁷ dep_t…⁸
+##     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1    2014       0    2014    6.62    3.32       7    15.8   8.79      16   1278.
+## # … with 26 more variables: dep_time_sd &lt;dbl&gt;, dep_time_median &lt;dbl&gt;,
+## #   dep_delay_mean &lt;dbl&gt;, dep_delay_sd &lt;dbl&gt;, dep_delay_median &lt;dbl&gt;,
+## #   arr_time_mean &lt;dbl&gt;, arr_time_sd &lt;dbl&gt;, arr_time_median &lt;int&gt;,
+## #   arr_delay_mean &lt;dbl&gt;, arr_delay_sd &lt;dbl&gt;, arr_delay_median &lt;dbl&gt;,
+## #   flight_mean &lt;dbl&gt;, flight_sd &lt;dbl&gt;, flight_median &lt;dbl&gt;,
+## #   air_time_mean &lt;dbl&gt;, air_time_sd &lt;dbl&gt;, air_time_median &lt;dbl&gt;,
+## #   distance_mean &lt;dbl&gt;, distance_sd &lt;dbl&gt;, distance_median &lt;dbl&gt;, …</code></pre>
 <pre class="r"><code># combine with pivot_longer, change names too
 flights %&gt;%
   filter(!is.na(dep_delay)) %&gt;%
@@ -939,31 +945,31 @@ summary_table %&gt;%
 )</code></pre>
 <pre class="r"><code># HLO
 head(df)</code></pre>
-<pre><code>##   id       date   q1_m1_w1   q1_m1_w2   q1_m2_w3   q2_m1_w1   q2_m2_w1
-## 1  1 2015-01-01 -1.1700743 -1.3313873  0.7225514 -1.1991584 -1.1453316
-## 2  2 2015-01-02  0.7013156  0.4073680  1.4849110  0.9400779  0.8611532
-## 3  3 2015-01-03  1.6318222 -0.7944370  1.5842153  0.6983900 -2.6945197
-## 4  4 2015-01-04 -0.2343429  0.1907154 -0.9717708  0.1686624 -0.4788981
-## 5  5 2015-01-05  0.6487112 -0.1029043 -0.6050051 -0.5839066 -0.2390221
-## 6  6 2015-01-06  0.9597311  0.5272105  2.0258127 -1.6533158 -0.1458568
+<pre><code>##   id       date   q1_m1_w1   q1_m1_w2   q1_m2_w3    q2_m1_w1   q2_m2_w1
+## 1  1 2015-01-01 -1.1116773  0.6142841 -1.1714875  0.87494857 -0.3232590
+## 2  2 2015-01-02  1.1799015  0.8463138 -0.3389054  1.75723234 -1.4957872
+## 3  3 2015-01-03 -0.9506309 -0.6169158 -0.3153580 -0.07181477  0.4665644
+## 4  4 2015-01-04  0.1975220  0.7934394 -0.2378307  0.58933216 -0.8207184
+## 5  5 2015-01-05  0.5255518 -0.4919001 -0.9546156 -0.84600664  1.6570551
+## 6  6 2015-01-06 -0.4800159 -1.1043834 -0.1293722  0.82895860 -0.5542707
 ##     q2_m2_w2
-## 1 -0.9506309
-## 2  0.1975220
-## 3  0.5255518
-## 4 -0.4800159
-## 5  0.7514034
-## 6  0.2399251</code></pre>
+## 1  0.9876592
+## 2 -0.8978570
+## 3 -1.9269922
+## 4 -0.2030309
+## 5  0.1293742
+## 6  1.1216944</code></pre>
 <pre class="r"><code>glimpse(df)</code></pre>
 <pre><code>## Rows: 10
 ## Columns: 8
 ## $ id       &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 ## $ date     &lt;date&gt; 2015-01-01, 2015-01-02, 2015-01-03, 2015-01-04, 2015-01-05, 2…
-## $ q1_m1_w1 &lt;dbl&gt; -1.1700743, 0.7013156, 1.6318222, -0.2343429, 0.6487112, 0.9…
-## $ q1_m1_w2 &lt;dbl&gt; -1.33138729, 0.40736797, -0.79443701, 0.19071541, -0.10290434…
-## $ q1_m2_w3 &lt;dbl&gt; 0.7225514, 1.4849110, 1.5842153, -0.9717708, -0.6050051, 2.02…
-## $ q2_m1_w1 &lt;dbl&gt; -1.1991584, 0.9400779, 0.6983900, 0.1686624, -0.5839066, -1.6…
-## $ q2_m2_w1 &lt;dbl&gt; -1.1453316, 0.8611532, -2.6945197, -0.4788981, -0.2390221, -0…
-## $ q2_m2_w2 &lt;dbl&gt; -0.9506309, 0.1975220, 0.5255518, -0.4800159, 0.7514034, 0.23…</code></pre>
+## $ q1_m1_w1 &lt;dbl&gt; -1.1116773, 1.1799015, -0.9506309, 0.1975220, 0.5255518, -0.…
+## $ q1_m1_w2 &lt;dbl&gt; 0.6142841, 0.8463138, -0.6169158, 0.7934394, -0.4919001, -1.1…
+## $ q1_m2_w3 &lt;dbl&gt; -1.1714875, -0.3389054, -0.3153580, -0.2378307, -0.9546156, -…
+## $ q2_m1_w1 &lt;dbl&gt; 0.87494857, 1.75723234, -0.07181477, 0.58933216, -0.84600664,…
+## $ q2_m2_w1 &lt;dbl&gt; -0.3232590, -1.4957872, 0.4665644, -0.8207184, 1.6570551, -0.…
+## $ q2_m2_w2 &lt;dbl&gt; 0.9876592, -0.8978570, -1.9269922, -0.2030309, 0.1293742, 1.1…</code></pre>
 <div id="tidyrpivot_longer" class="section level2" number="3.1">
 <h2><span class="header-section-number">3.1</span>
 <code>tidyr::pivot_longer</code></h2>
@@ -974,12 +980,12 @@ head(df_tidy)</code></pre>
 <pre><code>## # A tibble: 6 × 4
 ##      id date       key       value
 ##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;     &lt;dbl&gt;
-## 1     1 2015-01-01 q1_m1_w1 -1.17 
-## 2     1 2015-01-01 q1_m1_w2 -1.33 
-## 3     1 2015-01-01 q1_m2_w3  0.723
-## 4     1 2015-01-01 q2_m1_w1 -1.20 
-## 5     1 2015-01-01 q2_m2_w1 -1.15 
-## 6     1 2015-01-01 q2_m2_w2 -0.951</code></pre>
+## 1     1 2015-01-01 q1_m1_w1 -1.11 
+## 2     1 2015-01-01 q1_m1_w2  0.614
+## 3     1 2015-01-01 q1_m2_w3 -1.17 
+## 4     1 2015-01-01 q2_m1_w1  0.875
+## 5     1 2015-01-01 q2_m2_w1 -0.323
+## 6     1 2015-01-01 q2_m2_w2  0.988</code></pre>
 </div>
 <div id="tidyrseparate" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span>
@@ -991,12 +997,12 @@ head(df_sep)</code></pre>
 <pre><code>## # A tibble: 6 × 6
 ##      id date       quarter month week   value
 ##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;
-## 1     1 2015-01-01 q1      m1    w1    -1.17 
-## 2     1 2015-01-01 q1      m1    w2    -1.33 
-## 3     1 2015-01-01 q1      m2    w3     0.723
-## 4     1 2015-01-01 q2      m1    w1    -1.20 
-## 5     1 2015-01-01 q2      m2    w1    -1.15 
-## 6     1 2015-01-01 q2      m2    w2    -0.951</code></pre>
+## 1     1 2015-01-01 q1      m1    w1    -1.11 
+## 2     1 2015-01-01 q1      m1    w2     0.614
+## 3     1 2015-01-01 q1      m2    w3    -1.17 
+## 4     1 2015-01-01 q2      m1    w1     0.875
+## 5     1 2015-01-01 q2      m2    w1    -0.323
+## 6     1 2015-01-01 q2      m2    w2     0.988</code></pre>
 <pre class="r"><code># separate 1 col into 2 cols
 df_sep2 &lt;- df_tidy %&gt;%
   separate(key, into = c(&quot;quarter&quot;, &quot;period&quot;), extra = &quot;merge&quot;)
@@ -1004,12 +1010,12 @@ head(df_sep2)</code></pre>
 <pre><code>## # A tibble: 6 × 5
 ##      id date       quarter period  value
 ##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;
-## 1     1 2015-01-01 q1      m1_w1  -1.17 
-## 2     1 2015-01-01 q1      m1_w2  -1.33 
-## 3     1 2015-01-01 q1      m2_w3   0.723
-## 4     1 2015-01-01 q2      m1_w1  -1.20 
-## 5     1 2015-01-01 q2      m2_w1  -1.15 
-## 6     1 2015-01-01 q2      m2_w2  -0.951</code></pre>
+## 1     1 2015-01-01 q1      m1_w1  -1.11 
+## 2     1 2015-01-01 q1      m1_w2   0.614
+## 3     1 2015-01-01 q1      m2_w3  -1.17 
+## 4     1 2015-01-01 q2      m1_w1   0.875
+## 5     1 2015-01-01 q2      m2_w1  -0.323
+## 6     1 2015-01-01 q2      m2_w2   0.988</code></pre>
 <p>stringr vs. tidyr separate by regular expression</p>
 </div>
 <div id="tidyrextract" class="section level2" number="3.3">
@@ -1024,12 +1030,12 @@ head(df_ext)</code></pre>
 <pre><code>## # A tibble: 6 × 5
 ##      id date       quarter month  value
 ##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt;
-## 1     1 2015-01-01 q1      m1    -1.17 
-## 2     1 2015-01-01 q1      m1    -1.33 
-## 3     1 2015-01-01 q1      m2     0.723
-## 4     1 2015-01-01 q2      m1    -1.20 
-## 5     1 2015-01-01 q2      m2    -1.15 
-## 6     1 2015-01-01 q2      m2    -0.951</code></pre>
+## 1     1 2015-01-01 q1      m1    -1.11 
+## 2     1 2015-01-01 q1      m1     0.614
+## 3     1 2015-01-01 q1      m2    -1.17 
+## 4     1 2015-01-01 q2      m1     0.875
+## 5     1 2015-01-01 q2      m2    -0.323
+## 6     1 2015-01-01 q2      m2     0.988</code></pre>
 <p>We can see that, by default, it’s taking the first alphanumeric chunk
 of the value, and <code>extract</code>ing it. We can specify much more
 complex patterns:</p>
@@ -1041,12 +1047,12 @@ head(df_ext)</code></pre>
 <pre><code>## # A tibble: 6 × 6
 ##      id date       quarter month week   value
 ##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;
-## 1     1 2015-01-01 q1      m1    w1    -1.17 
-## 2     1 2015-01-01 q1      m1    w2    -1.33 
-## 3     1 2015-01-01 q1      m2    w3     0.723
-## 4     1 2015-01-01 q2      m1    w1    -1.20 
-## 5     1 2015-01-01 q2      m2    w1    -1.15 
-## 6     1 2015-01-01 q2      m2    w2    -0.951</code></pre>
+## 1     1 2015-01-01 q1      m1    w1    -1.11 
+## 2     1 2015-01-01 q1      m1    w2     0.614
+## 3     1 2015-01-01 q1      m2    w3    -1.17 
+## 4     1 2015-01-01 q2      m1    w1     0.875
+## 5     1 2015-01-01 q2      m2    w1    -0.323
+## 6     1 2015-01-01 q2      m2    w2     0.988</code></pre>
 </div>
 <div id="tidyrunite" class="section level2" number="3.4">
 <h2><span class="header-section-number">3.4</span>
@@ -1059,12 +1065,12 @@ head(df_uni)</code></pre>
 <pre><code>## # A tibble: 6 × 5
 ##      id date       period week   value
 ##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt;
-## 1     1 2015-01-01 q1_m1  w1    -1.17 
-## 2     1 2015-01-01 q1_m1  w2    -1.33 
-## 3     1 2015-01-01 q1_m2  w3     0.723
-## 4     1 2015-01-01 q2_m1  w1    -1.20 
-## 5     1 2015-01-01 q2_m2  w1    -1.15 
-## 6     1 2015-01-01 q2_m2  w2    -0.951</code></pre>
+## 1     1 2015-01-01 q1_m1  w1    -1.11 
+## 2     1 2015-01-01 q1_m1  w2     0.614
+## 3     1 2015-01-01 q1_m2  w3    -1.17 
+## 4     1 2015-01-01 q2_m1  w1     0.875
+## 5     1 2015-01-01 q2_m2  w1    -0.323
+## 6     1 2015-01-01 q2_m2  w2     0.988</code></pre>
 <pre class="r"><code># let&#39;s say we want to combine quarter and month with nothing
 df_uni &lt;- df_sep %&gt;%
   unite(period, quarter:month, sep = &quot;&quot;)
@@ -1072,12 +1078,12 @@ head(df_uni)</code></pre>
 <pre><code>## # A tibble: 6 × 5
 ##      id date       period week   value
 ##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt;
-## 1     1 2015-01-01 q1m1   w1    -1.17 
-## 2     1 2015-01-01 q1m1   w2    -1.33 
-## 3     1 2015-01-01 q1m2   w3     0.723
-## 4     1 2015-01-01 q2m1   w1    -1.20 
-## 5     1 2015-01-01 q2m2   w1    -1.15 
-## 6     1 2015-01-01 q2m2   w2    -0.951</code></pre>
+## 1     1 2015-01-01 q1m1   w1    -1.11 
+## 2     1 2015-01-01 q1m1   w2     0.614
+## 3     1 2015-01-01 q1m2   w3    -1.17 
+## 4     1 2015-01-01 q2m1   w1     0.875
+## 5     1 2015-01-01 q2m2   w1    -0.323
+## 6     1 2015-01-01 q2m2   w2     0.988</code></pre>
 </div>
 <div id="tidyrpivot_wider" class="section level2" number="3.5">
 <h2><span class="header-section-number">3.5</span>
@@ -1089,12 +1095,12 @@ head(df_spread)</code></pre>
 <pre><code>## # A tibble: 6 × 6
 ##      id date       period     w1     w2     w3
 ##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-## 1     1 2015-01-01 q1m1   -1.17  -1.33  NA    
-## 2     1 2015-01-01 q1m2   NA     NA      0.723
-## 3     1 2015-01-01 q2m1   -1.20  NA     NA    
-## 4     1 2015-01-01 q2m2   -1.15  -0.951 NA    
-## 5     2 2015-01-02 q1m1    0.701  0.407 NA    
-## 6     2 2015-01-02 q1m2   NA     NA      1.48</code></pre>
+## 1     1 2015-01-01 q1m1   -1.11   0.614 NA    
+## 2     1 2015-01-01 q1m2   NA     NA     -1.17 
+## 3     1 2015-01-01 q2m1    0.875 NA     NA    
+## 4     1 2015-01-01 q2m2   -0.323  0.988 NA    
+## 5     2 2015-01-02 q1m1    1.18   0.846 NA    
+## 6     2 2015-01-02 q1m2   NA     NA     -0.339</code></pre>
 </div>
 <div id="putting-it-all-together-pivot_longer-separate-pivot_wider"
 class="section level2" number="3.6">
@@ -1110,12 +1116,12 @@ head(df_tidiest)</code></pre>
 <pre><code>## # A tibble: 6 × 7
 ##      id date       quarter month     w1     w2     w3
 ##   &lt;int&gt; &lt;date&gt;     &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-## 1     1 2015-01-01 q1      m1    -1.17  -1.33  NA    
-## 2     1 2015-01-01 q1      m2    NA     NA      0.723
-## 3     1 2015-01-01 q2      m1    -1.20  NA     NA    
-## 4     1 2015-01-01 q2      m2    -1.15  -0.951 NA    
-## 5     2 2015-01-02 q1      m1     0.701  0.407 NA    
-## 6     2 2015-01-02 q1      m2    NA     NA      1.48</code></pre>
+## 1     1 2015-01-01 q1      m1    -1.11   0.614 NA    
+## 2     1 2015-01-01 q1      m2    NA     NA     -1.17 
+## 3     1 2015-01-01 q2      m1     0.875 NA     NA    
+## 4     1 2015-01-01 q2      m2    -0.323  0.988 NA    
+## 5     2 2015-01-02 q1      m1     1.18   0.846 NA    
+## 6     2 2015-01-02 q1      m2    NA     NA     -0.339</code></pre>
 </div>
 </div>
 <div id="broom" class="section level1" number="4">

@@ -13,7 +13,7 @@
 
 <title>In-Class Slides &amp; Reading for BMI5/625 Labs</title>
 
-<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -141,11 +141,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +178,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +187,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -241,7 +238,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2022</a>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2023</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -252,7 +249,7 @@ $(document).ready(function () {
   <a href="data-vis-resources.html">Resources</a>
 </li>
 <li>
-  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AJ-Sp22">Sakai</a>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AK-Sp23">Sakai</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -282,8 +279,8 @@ class="uri">http://moderndive.com</a></li>
 <li>R for Data Science: <a href="http://r4ds.had.co.nz"
 class="uri">http://r4ds.had.co.nz</a></li>
 <li>Fundamentals of Data Visualization: <a
-href="http://serialmentor.com/dataviz/"
-class="uri">http://serialmentor.com/dataviz/</a></li>
+href="https://clauswilke.com/dataviz/"
+class="uri">https://clauswilke.com/dataviz/</a></li>
 <li>Data Visualization: A Practical Introduction: <a
 href="http://socviz.co" class="uri">http://socviz.co</a></li>
 </ul>
@@ -311,37 +308,6 @@ class="uri">https://github.com/rstudio/cheatsheets/blob/master/rstudio-ide.pdf</
 <div id="b-ggplot-refresher" class="section level3">
 <h3>01b: <code>ggplot</code> refresher</h3>
 <iframe src="slides/01b-slides.html" width="672" height="400px" data-external="1">
-</iframe>
-</div>
-<div id="working-in-the-tidyverse" class="section level3">
-<h3>02: Working in the Tidyverse</h3>
-<iframe src="slides/02-slides.html" width="672" height="400px" data-external="1">
-</iframe>
-<ul>
-<li><p>R for Data Science, Data Visualization Chapter: <a
-href="http://r4ds.had.co.nz/data-visualisation.html"
-class="uri">http://r4ds.had.co.nz/data-visualisation.html</a></p></li>
-<li><p>Modern Dive, Data Visualization Chapter: <a
-href="https://moderndive.com/2-viz.html"
-class="uri">https://moderndive.com/2-viz.html</a></p></li>
-<li><p>RStudio <code>ggplot2</code> Cheatsheet: <a
-href="https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf"
-class="uri">https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf</a></p></li>
-</ul>
-</div>
-<div id="working-with-data" class="section level3">
-<h3>03: Working with Data</h3>
-<iframe src="slides/03-slides.html" width="672" height="400px" data-external="1">
-</iframe>
-</div>
-<div id="working-with-tidy-data" class="section level3">
-<h3>04: Working with Tidy Data</h3>
-<iframe src="slides/04-slides.html" width="672" height="400px" data-external="1">
-</iframe>
-</div>
-<div id="blogdown" class="section level3">
-<h3>06: Blogdown!</h3>
-<iframe src="slides/06-slides_blogdown.html" width="672" height="400px" data-external="1">
 </iframe>
 </div>
 </div>

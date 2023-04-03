@@ -195,6 +195,19 @@ We may also note that this map took a few seconds to render. That is because the
 river_boundaries %>% ggplot() + geom_sf(fill="blue", size=0.0)
 ```
 
+Another option is to "simplify" the outline of the river, by smoothing out some of the very detailed parts of the polygon. Depending on the kind of map we are making, and the scale at which we are working, this may or may not be appropriate, but for our purposes today it's just fine:
+
+```{r river_simplified}
+river_boundaries %>% st_simplify(dTolerance = 10) %>% 
+  ggplot() + geom_sf(fill="blue", size=0.0)
+```
+
+For the rest of this lab, we will work with a simplified version of the river outline:
+
+```{r}
+river_boundaries <- river_boundaries %>% st_simplify(dTolerance = 10) 
+```
+
 
 Now, how do we combine our river layer with our neighborhood boundary layer? Regular `ggplot` geoms can be combined arbitrarily, and so can `geom_sf` layers:
 

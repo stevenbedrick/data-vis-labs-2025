@@ -13,7 +13,7 @@
 
 <title>Principles &amp; Practice of Data Visualization</title>
 
-<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -141,11 +141,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +178,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +187,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -241,7 +238,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2022</a>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2023</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -252,7 +249,7 @@ $(document).ready(function () {
   <a href="data-vis-resources.html">Resources</a>
 </li>
 <li>
-  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AJ-Sp22">Sakai</a>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AK-Sp23">Sakai</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -275,65 +272,39 @@ Visualization</h1>
 
 
 <p>This is the site for sharing our Data Visualization Labs for BMI
-5/625 at Oregon Health &amp; Science University, Spring 2022
+5/625 at Oregon Health &amp; Science University, Spring 2023
 edition.</p>
 <ul>
-<li><p><a href="00-install_name_plot.html">Lab 00: Introduce
-Yourself</a></p></li>
-<li><p><a href="01-eda_hot_dogs.html">Lab 01: Nathan’s Hot Dog Eating
-Context</a></p>
-<ul>
-<li>Slides
-<ul>
-<li><a href="slides/01-slides.html">R/Tidyverse Refresher</a> (<a
-href="slides/01-slides.pdf">pdf</a>)</li>
-<li><a href="slides/01b-slides.html">ggplot crash course</a></li>
-</ul></li>
-<li>Dataset 1: <a
-href="http://bit.ly/cs631-hotdog">http://bit.ly/cs631-hotdog</a></li>
-<li>Dataset 2: <a
-href="http://bit.ly/cs631-hotdog-affiliated">http://bit.ly/cs631-hotdog-affiliated</a>
-<!--     - Addendum: [01-addendum.html](01-addendum.html) --></li>
-</ul></li>
-<li><p><a href="02-moma.html">Lab 02: MoMA Museum Tour</a></p>
-<ul>
-<li><a href="slides/02-slides.html">Slides</a> (<a
-href="slides/02-slides.pdf">pdf</a>)</li>
-<li>Dataset: <a
-href="data/artworks-cleaned.csv">https://stevenbedrick.github.io/data-vis-labs-2022/data/artworks.csv</a>
-<!--     - Dataset Cleaning *(optional)*: [02a-moma-cleaning.html](02a-moma-cleaning.html) -->
-<!--     - Addendum: [02-addendum.html](02-addendum.html) --></li>
-</ul></li>
-<li><p><a href="03-colors.html">Lab 03: Colors with Animal
-Sounds</a></p>
-<ul>
-<li><a href="slides/03-slides.html">Slides</a> (<a
-href="slides/03-slides.pdf">pdf</a>)
-<!--     - Dataset: [http://bit.ly/cs631-meow](http://bit.ly/cs631-meow) -->
-<!--     - Dataset Cleaning *(optional)*: [03a-meow-cleaning.html](03a-meow-cleaning.html) --></li>
-</ul></li>
-<li><p><a href="04-challenge_rev.html">Lab 04: Tidy Data +
-Distributions</a></p>
-<ul>
-<li><a href="slides/04-slides.html">Slides</a> on data-tidying (<a
-href="slides/04-slides.pdf">pdf</a>)</li>
-<li><a
-href="https://stevenbedrick.github.io/data-vis-labs-2022/04-distributions.html">Visualizing
-Distributions</a></li>
-</ul></li>
-<li><p><a href="05-tables-challenge.html">Lab 05: Tables &amp;
-Fonts</a></p>
-<ul>
-<li><a href="05-tables.html">Reference Lab</a></li>
-<li><a href="05-tables-tidying.html">Data Tidying Tricks for
-Tables</a></li>
-</ul></li>
-<li><p><a href="06-blogdown.html">Lab 06: Publishing</a></p></li>
-<li><p><a href="07-shiny.html">Lab 07: Shiny</a></p></li>
-<li><p><a href="08-maps.html">Lab 08: Maps</a></p></li>
-<li><p><a href="10-high-d.html">Lab 10: Higher-dimensionality and
-Networks</a> <!-- - [Lab 09: Tableau](09-tableau.html) --></p></li>
+<li><a href="00-install_name_plot.html">Lab 00: Introduce
+Yourself</a></li>
 </ul>
+<!-- - [Lab 01: Nathan's Hot Dog Eating Context](01-eda_hot_dogs.html) -->
+<!--     - Slides -->
+<!--       - [R/Tidyverse Refresher](slides/01-slides.html) ([pdf](slides/01-slides.pdf)) -->
+<!--       - [ggplot crash course](slides/01b-slides.html) -->
+<!--     - Dataset 1: [http://bit.ly/cs631-hotdog](http://bit.ly/cs631-hotdog) -->
+<!--     - Dataset 2: [http://bit.ly/cs631-hotdog-affiliated](http://bit.ly/cs631-hotdog-affiliated) -->
+<!-- <!--     - Addendum: [01-addendum.html](01-addendum.html) -->
+<!-- - [Lab 02: MoMA Museum Tour](02-moma.html) -->
+<!--     - [Slides](slides/02-slides.html) ([pdf](slides/02-slides.pdf)) -->
+<!--     - Dataset: [https://stevenbedrick.github.io/data-vis-labs-2022/data/artworks.csv](data/artworks-cleaned.csv) -->
+<!-- <!--     - Dataset Cleaning *(optional)*: [02a-moma-cleaning.html](02a-moma-cleaning.html) -->
+<!-- <!--     - Addendum: [02-addendum.html](02-addendum.html) -->
+<!-- - [Lab 03: Colors with Animal Sounds](03-colors.html) -->
+<!--     - [Slides](slides/03-slides.html) ([pdf](slides/03-slides.pdf)) -->
+<!-- <!--     - Dataset: [http://bit.ly/cs631-meow](http://bit.ly/cs631-meow) -->
+<!-- <!--     - Dataset Cleaning *(optional)*: [03a-meow-cleaning.html](03a-meow-cleaning.html) -->
+<!-- - [Lab 04: Tidy Data + Distributions](04-challenge_rev.html) -->
+<!--     - [Slides](slides/04-slides.html) on data-tidying ([pdf](slides/04-slides.pdf)) -->
+<!--     - [Visualizing Distributions](https://stevenbedrick.github.io/data-vis-labs-2022/04-distributions.html) -->
+<!-- - [Lab 05: Tables & Fonts](05-tables-challenge.html) -->
+<!--     - [Reference Lab](05-tables.html) -->
+<!--     - [Data Tidying Tricks for Tables](05-tables-tidying.html) -->
+<!-- - [Lab 06: Publishing](06-blogdown.html) -->
+<!-- - [Lab 07: Shiny](07-shiny.html) -->
+<!-- - [Lab 08: Maps](08-maps.html) -->
+<!-- - [Lab 10: Higher-dimensionality and Networks](10-high-d.html) -->
+<!-- - [Lab 09: Tableau](09-tableau.html) -->
 <!-- 
 Old stuff from previous times around...
 #---

@@ -1,14 +1,14 @@
-name: "BMI 5/625 Labs, Spring 2022"
+name: "BMI 5/625 Labs, Spring 2023"
 output_dir: '.'
 navbar:
-  title: "BMI 5/625 Labs, Spring 2022"
+  title: "BMI 5/625 Labs, Spring 2023"
   left:
   - text: Slides & Reading
     href: slides.html
   - text: Resources
     href: data-vis-resources.html
   - text: Sakai
-    href: https://sakai.ohsu.edu/portal/site/BMI-525-1-AJ-Sp22
+    href: https://sakai.ohsu.edu/portal/site/BMI-525-1-AK-Sp23
   right:
   - text: About
     href: about.html
