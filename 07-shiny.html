@@ -454,7 +454,7 @@ Caused by error in `str_extract_all()`:
 element IDs are <em>links</em> that let the front-end and back-end
 communicate with one another. When you run this application, you should
 see something like this:</p>
-<pre><code>Error in &quot;get_result(out, private$options)&quot;: ! callr subprocess failed: could not start R, exited with non-zero status, has crashed or was killed</code></pre>
+<p><img src="07-shiny_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>If you reload the page in your web browser, you should see that the
 timestamp has been updated- it is recalculated <em>dynamically</em> each
 time the page is requested.</p>
@@ -505,11 +505,9 @@ Caused by error in `str_extract_all()`:
 ! `string` must be a vector, not a &lt;source&gt; object.</code></pre>
 <p>Try adding this line to your server function, and run the
 application. You should see something like this:</p>
-<pre><code>Error in &quot;get_result(out, private$options)&quot;: ! callr subprocess failed: could not start R, exited with non-zero status, has crashed or was killed</code></pre>
+<p><img src="07-shiny_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>What happens if you type your name in the text box?</p>
-<pre><code>Error in c(&quot;process_initialize(self, private, command, args, stdin, stdout, &quot;, : ! Native call to `processx_exec` failed
-Caused by error in `chain_call(c_processx_exec, command, c(command, args), pty, pty_options, …`:
-! Cannot fork when running &#39;/Library/Frameworks/R.framework/Resources/bin/R&#39; (system error -35, Unknown error: -35) @unix/processx.c:534 (processx_exec)</code></pre>
+<p><img src="07-shiny_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>Note that the contents of the UI automatically updates when fields
 change. Shiny uses a <em>reactive</em> programming model, in which
 elements on the page automatically react to one another.</p>

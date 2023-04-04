@@ -10,7 +10,7 @@ output:
 
 # Overview
 
-Both challenges are due by the end of the day via Sakai on Thursday April 28. For the first challenge, focused on data-tidying, you'll want to refer back to our [slides](slides/04-slides.html). For the second challenge, you'll want to refer to the [reference lab](04-distributions.html).
+Both challenges are due by the end of the day via Sakai on Wednesday May 3rd. For the first challenge, focused on data-tidying, you'll want to refer back to our [slides](slides/04-slides.html). For the second challenge, you'll want to refer to the [reference lab](04-distributions.html).
 
 # Data-Tidying
 

@@ -577,7 +577,7 @@ Note: Leaflet [works well with Shiny](https://rstudio.github.io/leaflet/shiny.ht
 
 # How about a chloropleth map?
 
-Changing gears, we now turn to chloropleth maps. As we discussed on Tuesday, a very important consideration when working with a chloropleth map is that one must _normalize_ quantities consistently across the regions of the map. 
+Changing gears, we now turn to chloropleth maps. As we discussed on Monday, a very important consideration when working with a chloropleth map is that one must _normalize_ quantities consistently across the regions of the map. 
 
 Continuing with our Portland-themed lab, we will be working with a [dataset produced by the City](https://www.portlandoregon.gov/civic/28387) that aligns our neighborhood districts with their corresponding data from the 2010 Census. 
 This data set includes a great deal of information about each neighborhood's demographics; for now, we will work with the total population.

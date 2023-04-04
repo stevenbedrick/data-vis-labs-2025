@@ -33,9 +33,13 @@ What is RStudio?
 
 * **RStudio** is a powerful and convenient user interface that allows you to access the R programming language along with a lot of other bells and whistles that enhance functionality (and sanity). 
 
-What is RStudio Cloud?
+What is Posit Cloud?
 
-* **RStudio Cloud** is web-based version of RStudio. Think Google Docs, but for R. Pretty much anything that you can do in RStudio, you can do in RStudio Cloud, but without having to install anything locally. For this class, you are certainly free to install RStudio on your local computer, but we will be using several features of RStudio Cloud to help manage assignments and save everybody time.
+* **Posit Cloud** is web-based version of RStudio, the R IDE that you may be familiar with. Think Google Docs, but for R. Pretty much anything that you can do in RStudio, you can do in Posit Cloud, but without having to install anything locally. For this class, you are certainly free to install RStudio on your local computer, but we will be using several features of Posit Cloud to help manage assignments and save everybody time.
+
+### Quick note
+
+Until _very_ recently, Posit Cloud was called "RStudio Cloud"; the screenshots below have the old name, but other than the logo the UI is basically identical.
 
 ### Our Goal for Today
 
@@ -43,9 +47,11 @@ Our end goal is to get you looking at a screen like this:
 
 ![](./images/00_final-screenshot.png)
 
-# Sign up for RStudio Cloud
+Along the way, you will get familiar with the tools and programming environment that we will be using this term, in preparation for our lab on Wednesday.
 
-Go to <https://rstudio.cloud> and sign up for an account.
+# Sign up for Posit Cloud
+
+Go to <https://posit.cloud> and sign up for an account.
 
 ![](./images/lab_00/01_landing_page.png)
 
@@ -205,7 +211,7 @@ name.plot
 
 # Make a new name plot
 
-Edit my code above to create a new dataset (don't worry if you're not sure about what every single bit of the code is doing, just dive in and go for it). 
+Now, edit my code above to create a new dataset (don't worry if you're not sure about what every single bit of the code is doing, just dive in and go for it). 
 Pick a handful of names to compare how popular they each are (these could be different spellings of your own name, like I did, but you can choose any pair (or trio, etc.) of names that are present in the dataset). 
 Make the new plot, changing the name of the first argument -- `steve` -- in `ggplot()` to the name of your new dataset.
 
@@ -222,7 +228,7 @@ help(ggsave)
 ggsave("steve_b.pdf", name.plot) # please make the filename unique!
 ```
 
-Upload this exported plot to Sakai before Thursday at noon.
+Upload this exported plot to Sakai before Wednesday at noon.
 
 (Note that _your_ plot, the one that you turn in, should not be called `steve_b.pdf`- it should be named something else).
 

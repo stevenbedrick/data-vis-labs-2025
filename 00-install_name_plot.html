@@ -369,27 +369,37 @@ interpreter (<code>&gt;</code>)</li>
 that allows you to access the R programming language along with a lot of
 other bells and whistles that enhance functionality (and sanity).</li>
 </ul>
-<p>What is RStudio Cloud?</p>
+<p>What is Posit Cloud?</p>
 <ul>
-<li><strong>RStudio Cloud</strong> is web-based version of RStudio.
-Think Google Docs, but for R. Pretty much anything that you can do in
-RStudio, you can do in RStudio Cloud, but without having to install
-anything locally. For this class, you are certainly free to install
-RStudio on your local computer, but we will be using several features of
-RStudio Cloud to help manage assignments and save everybody time.</li>
+<li><strong>Posit Cloud</strong> is web-based version of RStudio, the R
+IDE that you may be familiar with. Think Google Docs, but for R. Pretty
+much anything that you can do in RStudio, you can do in Posit Cloud, but
+without having to install anything locally. For this class, you are
+certainly free to install RStudio on your local computer, but we will be
+using several features of Posit Cloud to help manage assignments and
+save everybody time.</li>
 </ul>
-<div id="our-goal-for-today" class="section level3" number="1.0.1">
-<h3><span class="header-section-number">1.0.1</span> Our Goal for
+<div id="quick-note" class="section level3" number="1.0.1">
+<h3><span class="header-section-number">1.0.1</span> Quick note</h3>
+<p>Until <em>very</em> recently, Posit Cloud was called “RStudio Cloud”;
+the screenshots below have the old name, but other than the logo the UI
+is basically identical.</p>
+</div>
+<div id="our-goal-for-today" class="section level3" number="1.0.2">
+<h3><span class="header-section-number">1.0.2</span> Our Goal for
 Today</h3>
 <p>Our end goal is to get you looking at a screen like this:</p>
 <p><img src="images/00_final-screenshot.png" /></p>
+<p>Along the way, you will get familiar with the tools and programming
+environment that we will be using this term, in preparation for our lab
+on Wednesday.</p>
 </div>
 </div>
-<div id="sign-up-for-rstudio-cloud" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Sign up for RStudio
+<div id="sign-up-for-posit-cloud" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Sign up for Posit
 Cloud</h1>
-<p>Go to <a href="https://rstudio.cloud"
-class="uri">https://rstudio.cloud</a> and sign up for an account.</p>
+<p>Go to <a href="https://posit.cloud"
+class="uri">https://posit.cloud</a> and sign up for an account.</p>
 <p><img src="images/lab_00/01_landing_page.png" /></p>
 <p><img src="images/lab_00/02_signup_form.png" /></p>
 <p>Once you’re signed in, you should be looking at something like
@@ -659,14 +669,14 @@ for it. Here’s how:</p>
 <div id="make-a-new-name-plot" class="section level1" number="5">
 <h1><span class="header-section-number">5</span> Make a new name
 plot</h1>
-<p>Edit my code above to create a new dataset (don’t worry if you’re not
-sure about what every single bit of the code is doing, just dive in and
-go for it). Pick a handful of names to compare how popular they each are
-(these could be different spellings of your own name, like I did, but
-you can choose any pair (or trio, etc.) of names that are present in the
-dataset). Make the new plot, changing the name of the first argument –
-<code>steve</code> – in <code>ggplot()</code> to the name of your new
-dataset.</p>
+<p>Now, edit my code above to create a new dataset (don’t worry if
+you’re not sure about what every single bit of the code is doing, just
+dive in and go for it). Pick a handful of names to compare how popular
+they each are (these could be different spellings of your own name, like
+I did, but you can choose any pair (or trio, etc.) of names that are
+present in the dataset). Make the new plot, changing the name of the
+first argument – <code>steve</code> – in <code>ggplot()</code> to the
+name of your new dataset.</p>
 <div id="save-and-share" class="section level2" number="5.1">
 <h2><span class="header-section-number">5.1</span> Save and share</h2>
 <p>Save your work so you can share your favorite plot with us. You will
@@ -675,7 +685,7 @@ and save it. Instead, use <code>ggplot2</code>’s command for saving a
 plot with sensible defaults:</p>
 <pre class="r"><code>help(ggsave)</code></pre>
 <pre class="r"><code>ggsave(&quot;steve_b.pdf&quot;, name.plot) # please make the filename unique!</code></pre>
-<p>Upload this exported plot to Sakai before Thursday at noon.</p>
+<p>Upload this exported plot to Sakai before Wednesday at noon.</p>
 <p>(Note that <em>your</em> plot, the one that you turn in, should not
 be called <code>steve_b.pdf</code>- it should be named something
 else).</p>

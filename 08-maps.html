@@ -1055,8 +1055,8 @@ we have our points on a map, let’s color by the type of tree:</p>
   geom_sf(data=trees_park_projected, inherit.aes = FALSE, 
           alpha=0.5, 
           mapping=aes(color=Genus)) # just like any other ggplot geom</code></pre>
-<pre><code>## Coordinate system already present. Adding new coordinate system, which will
-## replace the existing one.</code></pre>
+<pre><code>## Coordinate system already present. Adding new coordinate system, which will replace
+## the existing one.</code></pre>
 <p><img src="08-maps_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
 <p>Clearly, there are too many levels for this variable to be truly
 useful; we would want to do some sort of additional categorizing. But it
@@ -1128,7 +1128,7 @@ functions that behave as you would expect.</p>
 <h1><span class="header-section-number">5</span> How about a chloropleth
 map?</h1>
 <p>Changing gears, we now turn to chloropleth maps. As we discussed on
-Tuesday, a very important consideration when working with a chloropleth
+Monday, a very important consideration when working with a chloropleth
 map is that one must <em>normalize</em> quantities consistently across
 the regions of the map.</p>
 <p>Continuing with our Portland-themed lab, we will be working with a <a
@@ -1394,7 +1394,7 @@ server &lt;- function(input, output, session) {
 
 shinyApp(ui = ui, server = server)</code></pre>
 <pre><code>## 
-## Listening on http://127.0.0.1:7335</code></pre>
+## Listening on http://127.0.0.1:6727</code></pre>
 <p><img src="08-maps_files/figure-html/useful%20shiny%20app-1.png" width="672" /></p>
 </div>
 
