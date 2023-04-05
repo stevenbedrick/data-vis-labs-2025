@@ -36,13 +36,14 @@ library(extrafont)
 These are important questions, and I want you to develop (well-informed) opinions on these matters!
 ![](images/theme-team-tweets.png)
 
+Most of the things we cover today, we will be re-visiting later in the term; you are not expected to be familiar with all of the R functions or patterns that we are using.
+
 Other things to think about for this lab:
 
 - Try not to copy-and-paste code:
   - Becoming efficient/proficient with R depends on building muscle memory, and the only way to do that is to type
   - By typing, you _will_ introduce errors, and this is a good chance to get practice at interpreting and fixing them.
-- Take note of steps or functions that you are unfamiliar with- we will likely learn more about them all as the term goes on, but this lab will help you identify particular areas that you are comfortable with as well as areas you will want to focus on.
-
+- Take note of steps or functions that involve bits of R that you are unfamiliar with- this lab will help you identify particular areas that you are comfortable with as well as areas you will want to focus on.
 
 # Nathan's Hot Dog Eating Contest
 
@@ -63,7 +64,7 @@ library(here)
 
 # Read in and wrangle data
 
-Next, we load some data. In the RStudio Cloud project for this lab, you will see a `data` directory with the necessary files. We can read it in using `read_csv`, and along the way use `col_factor` to tell it how to handle the gender column.
+Next, we load some data. In the Posit Cloud project for this lab, you will see a `data` directory with the necessary files. We can read it in using `read_csv`, and along the way use `col_factor` to tell it how to handle the gender column.
 
 ```{r}
 hot_dogs <- read_csv(here::here("data", "hot_dog_contest.csv"), 
@@ -72,6 +73,8 @@ hot_dogs <- read_csv(here::here("data", "hot_dog_contest.csv"),
     ))
 ```
 
+## Validation
+
 Check it out, once it is read in, and make sure it looks like this!
 
 ```{r}
@@ -79,7 +82,18 @@ glimpse(hot_dogs)
 hot_dogs
 ```
 
-At this point, follow the HLO process and familiarize yourself with the columns and their contents.
+At this point, follow the HLO process and familiarize yourself with the columns and their contents. Questions to ask:
+
+1. Are the types of the columns what you would expect? Note that this requires that you have some notion of what to expect! Possible things to think about:
+  1. What type makes sense for a column representing a year?
+  2. What about the `num_eaten` column?
+  3. What about the `gender` column? What assumptions
+2. What are the minimum and maximum values in the numeric columns? Are the values in the range you would expect?
+3. Are there any missing values?
+
+In addition to `glimpse()`, try loading (not installing) the `skimr` package and using its `skim()` function on the `hot_dogs` data frame.
+
+## Adding a variable
 
 In addition to the information that is already _in_ the dataset itself, we know that we will also be wanting to somehow include information about whether a given year was before or after the incorporation of the competitive eating league. Let's add an _indicator variable_ to the data using `mutate()`. Also, the data's a little sketchy pre-1981, and for our purposes today we'll be focusing on males only, so let's do some `filter`ing, as well:
 
@@ -112,7 +126,7 @@ We will now progressively improve this visualization, one step at a time.
 ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col() +
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2021", subtitle = "(Male contestants only)")
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2022", subtitle = "(Male contestants only)")
 ```
 
 # Play With Colors
@@ -137,21 +151,21 @@ _HINT:_ `color` and `fill` are two of `ggplot`'s aesthetic mapping variables (i.
 ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col(colour = "white") + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2021", subtitle = "(Male contestants only)")
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2022", subtitle = "(Male contestants only)")
 ```
 
 ```{r}
 ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col(colour = "white", fill = "navyblue") + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2021", subtitle = "(Male contestants only)")
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2022", subtitle = "(Male contestants only)")
 ```
 
 ```{r}
 ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col(aes(fill = post_ifoce), colour = "white") + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2021", subtitle = "(Male contestants only)")
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2022", subtitle = "(Male contestants only)")
 ```
 
 
@@ -173,14 +187,14 @@ HINT: in `ggplot`, legends are controlled by the relevant scale (color, fill, et
 ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col(aes(fill = post_ifoce), colour = "white") + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2021", subtitle = "(Male contestants only)") +
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2022", subtitle = "(Male contestants only)") +
   scale_fill_discrete(name = "",
                       labels=c("Pre-IFOCE", "Post-IFOCE"))
 ```
 
 # Change The Dataset
 
-Now, let's change the question a little bit. Up to this point, we have looked at HDB performance relative to  the _creation_ of the IFOCE. What if what matters is the _affiliation_ of the contestants (i.e., whether or not the contestants are members of the IFOCE or not)? We'll need some different data for this. Through the _Magic Of Data Science™_, we have dug that information up and put it into an expanded version of our CSV file available at [http://bit.ly/cs631-hotdog-affiliated](http://bit.ly/cs631-hotdog-affiliated).
+Now, let's change the question a little bit. Up to this point, we have looked at HDB performance relative to  the _creation_ of the IFOCE. What if what matters is the _affiliation_ of the contestants (i.e., whether or not the contestants are members of the IFOCE or not)? We'll need some different data for this. Through the _Magic Of Data Science™_, we have dug that information up and put it into an expanded version of our CSV file, which you can find in the data directory.
 
 
 <div class="panel panel-success">
@@ -240,7 +254,7 @@ Now let's plot this new data, and fill the columns according to our new `affilia
 ggplot(hdm_affil, aes(x = year, y = num_eaten)) + 
   geom_col(aes(fill = affiliated)) + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2021", subtitle = "(Male contestants only)")
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2022", subtitle = "(Male contestants only)")
 ```
 
 <div class="panel panel-success">
@@ -258,7 +272,7 @@ Do the following updates to the last plot we just made:
 affil_plot <- ggplot(hdm_affil, aes(x = year, y = num_eaten)) + 
   geom_col(aes(fill = affiliated)) + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2021", subtitle = "(Male contestants only)") +
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2022", subtitle = "(Male contestants only)") +
   scale_fill_manual(values = c('#E9602B','#2277A0','#CCB683'),
                     name = "IFOCE-affiliation")
 affil_plot
@@ -270,7 +284,7 @@ Now that the bones of the plot are in place, it's time to tweak the details.
 
 The spacing's a little funky down near the origin of the plot. The [documentation](http://ggplot2.tidyverse.org/reference/scale_continuous.html) tells us that the defaults are `c(0.05, 0)` for continuous variables. The first number is multiplicative and the second is additive. 
 
-The default was that 1.8 ((2017-1981)*.05+0) was added to the right and left sides of the x-axis as padding, so the effective default limits were `c(1979, 2019)`.
+The default was that 2.05 ((2022-1981)*.05+0) was added to the right and left sides of the x-axis as padding, so the effective default limits were `c(1979, 2024)`.
 
 Let's tighten that up with the `expand` property for the `scale_y_continuous` (we'll also change the breaks for y-axis tick marks here) and `scale_x_continuous` settings:
 
@@ -284,9 +298,7 @@ affil_plot
 
 
 
-But now the plot looks like it is wearing tight pants.
-
-<!-- ![](https://media.giphy.com/media/xT1XH07no2wZSq4mnm/giphy.gif) -->
+That is perhaps _too_ tight; note the lack of any space between the bars and the y-axis on hte left.
 
 Let's loosen things up a bit by updating the plot coordinates. 
 
@@ -295,23 +307,25 @@ Let's loosen things up a bit by updating the plot coordinates.
   <div class="panel-body">
 Use `coord_cartesian` to:
 
-* Set the x-axis range to 1980-2018
+* Set the x-axis range to 1980-2023
 * Set the y-axis range to 0-80
   </div>
 </div>
 
-Using `coord_cartesian` is the preferred layer here because "setting limits on the coordinate system will zoom the plot (like you're looking at it with a magnifying glass), and will not change the underlying data like setting `limits` on a scale will."  
+Using `coord_cartesian` is the preferred layer here because (from the `coord_cartesian` documentation): "setting limits on the coordinate system will zoom the plot (like you're looking at it with a magnifying glass), and will not change the underlying data like setting `limits` on a scale will."  
+
+In other words, setting `limits` will actually result in individual data points being included or excluded from the plot based on whether they fall within the specified limits, which could have unanticipated effects (for example, if your plot includes a line fit, that line fit will be done using only the included data rather than all of your data).
 
 <div class="panel panel-info">
   <div class="panel-heading">Lesson:</div>
   <div class="panel-body">
-Don't change `limits` unless you really know what you are doing! Most of the time, you want to change the coordinates instead.
+Don't directly change `limits` unless you really know what you are doing! Most of the time, you want to change the coordinates instead, and do any data point filtering outside of your plotting.
   </div>
 </div>
 
 ```{r}
 affil_plot <- affil_plot + 
-  coord_cartesian(xlim = c(1980, 2018), ylim = c(0, 80)) 
+  coord_cartesian(xlim = c(1980, 2023), ylim = c(0, 80)) 
 affil_plot
 ```
 
@@ -378,7 +392,7 @@ The final thing we have to mess with is the x-axis ticks and labels. We'll do th
 
 ```{r}
 # manually compute a list of years that we want labeled...
-years_to_label <- seq(from = 1981, to = 2021, by = 4) 
+years_to_label <- seq(from = 1981, to = 2022, by = 4) 
 years_to_label
 
 # add a column to the dataframe containing what we want each year's label to be
@@ -408,7 +422,7 @@ All together in one chunk, here is our final (for now) plot! I'm also adding som
 nathan_plot <- ggplot(hdm_affil, aes(x = year, y = num_eaten)) + 
   geom_col(aes(fill = affiliated)) + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2021", subtitle = "(Male contestants only)") +
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2022", subtitle = "(Male contestants only)") +
   scale_fill_manual(values = c('#E9602B','#2277A0','#CCB683'),
                     name = "IFOCE-affiliation") + 
   hot_diggity +
@@ -417,7 +431,7 @@ nathan_plot <- ggplot(hdm_affil, aes(x = year, y = num_eaten)) +
   scale_x_continuous(expand = c(0, 0), 
                      breaks = hd_years$year,
                      labels = hd_years$year_lab) + 
-  coord_cartesian(xlim = c(1980, 2022), ylim = c(0, 80)) 
+  coord_cartesian(xlim = c(1980, 2023), ylim = c(0, 80)) 
 nathan_plot
 ```
 
@@ -430,7 +444,7 @@ The fill legend is doing its job, here, but we might instead want to use direct 
 ```{r}
 nathan_ann <- nathan_plot +
   guides(fill = FALSE) +
-  coord_cartesian(xlim = c(1980, 2022), ylim = c(0, 90)) +
+  coord_cartesian(xlim = c(1980, 2023), ylim = c(0, 90)) +
   annotate('segment', x=1980.75, xend=2000.25, y= 30, yend=30, size=0.5, color="#CCB683")+
   annotate('segment', x=1980.75, xend=1980.75, y= 30, yend=28, size=0.5, color="#CCB683") +
   annotate('segment', x=2000.25, xend=2000.25, y= 30, yend=28, size=0.5, color="#CCB683") +
@@ -446,11 +460,11 @@ nathan_ann <- nathan_plot +
   annotate('text', x=2003.5, y=65, label="MLE/IFOCE\nFormer Member", color="#2277A0", family="Lato", hjust=0.5, size = 3) +
 
 
-  annotate('segment', x=2006.75, xend=2021.25, y= 79, yend=79, size=0.5, color="#E9602B") +
+  annotate('segment', x=2006.75, xend=2022.25, y= 79, yend=79, size=0.5, color="#E9602B") +
   annotate('segment', x=2006.75, xend=2006.75, y= 79, yend=77, size=0.5, color="#E9602B") +
-  annotate('segment', x=2021.25, xend=2021.25, y= 79, yend=77, size=0.5, color="#E9602B") +
-  annotate('segment', x=2012, xend=2012, y= 82, yend=79, size=0.5, color="#E9602B") +
-  annotate('text', x=2012, y=86, label="MLE/IFOCE Current Member", color="#E9602B", family="Lato", hjust=0.5, size = 3)
+  annotate('segment', x=2022.25, xend=2022.25, y= 79, yend=77, size=0.5, color="#E9602B") +
+  annotate('segment', x=2015, xend=2015, y= 82, yend=79, size=0.5, color="#E9602B") +
+  annotate('text', x=2015, y=86, label="MLE/IFOCE Current Member", color="#E9602B", family="Lato", hjust=0.5, size = 3)
 nathan_ann
 ```
 
@@ -484,7 +498,7 @@ caption <- paste(strwrap("* From 2011 on, separate Men's and Women's prizes have
 
 nathan_w_females +
   # now an asterisk to set off the female scores, and a caption
-  annotate('text', x = 2018.5, y = 39, label="*", family = "Lato", size = 8) +
+  annotate('text', x = 2011, y = 36, label="*", family = "Lato", size = 8) +
   labs(caption = caption) +
   theme(plot.caption = element_text(family = "Lato", size=8, hjust=0, margin=margin(t=15)))
 ```

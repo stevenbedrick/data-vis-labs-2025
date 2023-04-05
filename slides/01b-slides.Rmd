@@ -10,7 +10,7 @@ output:
       highlightStyle: atelier-lakeside-light
       highlightLines: true
       countIncrementalSlides: false
-knit: pagedown::chrome_print
+# knit: pagedown::chrome_print
 ---
 
 ```{r setup, include=FALSE}
@@ -133,9 +133,11 @@ class: center, middle
 ## Our first plot
 
 ```{r, eval=FALSE}
-penguins %>% ggplot(mapping=aes(
-  x=bill_length_mm, y=bill_depth_mm
-)) + geom_point()
+penguins %>% 
+  ggplot(mapping=aes(
+    x=bill_length_mm, y=bill_depth_mm
+  )) 
+  + geom_point()
 ```
 --
 ```{r, echo=FALSE, fig.height=4}
