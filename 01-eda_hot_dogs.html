@@ -444,27 +444,27 @@ read it in using <code>read_csv</code>, and along the way use
 <p>Check it out, once it is read in, and make sure it looks like
 this!</p>
 <pre class="r"><code>glimpse(hot_dogs)</code></pre>
-<pre><code>Rows: 57
+<pre><code>Rows: 59
 Columns: 4
-$ year      &lt;dbl&gt; 2021, 2021, 2020, 2020, 2019, 2019, 2018, 2018, 2017, 2017, 2016, 2016, 2015, 2015, 2014, 2014, 2013, …
-$ gender    &lt;fct&gt; male, female, male, female, male, female, male, female, male, female, male, female, male, female, male…
-$ name      &lt;chr&gt; &quot;Joey Chestnut&quot;, &quot;Michelle Lesco&quot;, &quot;Joey Chestnut&quot;, &quot;Miki Sudo&quot;, &quot;Joey Chestnut&quot;, &quot;Miki Sudo&quot;, &quot;Joey C…
-$ num_eaten &lt;dbl&gt; 76.000, 30.750, 75.000, 48.500, 71.000, 31.000, 74.000, 37.000, 72.000, 41.000, 70.000, 38.000, 62.000…</code></pre>
+$ year      &lt;dbl&gt; 2022, 2022, 2021, 2021, 2020, 2020, 2019, 2019, 2018, 2018, …
+$ gender    &lt;fct&gt; male, female, male, female, male, female, male, female, male…
+$ name      &lt;chr&gt; &quot;Joey Chestnut&quot;, &quot;Miki Sudo&quot;, &quot;Joey Chestnut&quot;, &quot;Michelle Les…
+$ num_eaten &lt;dbl&gt; 63.00, 40.00, 76.00, 30.75, 75.00, 48.50, 71.00, 31.00, 74.0…</code></pre>
 <pre class="r"><code>hot_dogs</code></pre>
-<pre><code># A tibble: 57 × 4
+<pre><code># A tibble: 59 × 4
     year gender name           num_eaten
    &lt;dbl&gt; &lt;fct&gt;  &lt;chr&gt;              &lt;dbl&gt;
- 1  2021 male   Joey Chestnut       76  
- 2  2021 female Michelle Lesco      30.8
- 3  2020 male   Joey Chestnut       75  
- 4  2020 female Miki Sudo           48.5
- 5  2019 male   Joey Chestnut       71  
- 6  2019 female Miki Sudo           31  
- 7  2018 male   Joey Chestnut       74  
- 8  2018 female Miki Sudo           37  
- 9  2017 male   Joey Chestnut       72  
-10  2017 female Miki Sudo           41  
-# … with 47 more rows</code></pre>
+ 1  2022 male   Joey Chestnut       63  
+ 2  2022 female Miki Sudo           40  
+ 3  2021 male   Joey Chestnut       76  
+ 4  2021 female Michelle Lesco      30.8
+ 5  2020 male   Joey Chestnut       75  
+ 6  2020 female Miki Sudo           48.5
+ 7  2019 male   Joey Chestnut       71  
+ 8  2019 female Miki Sudo           31  
+ 9  2018 male   Joey Chestnut       74  
+10  2018 female Miki Sudo           37  
+# … with 49 more rows</code></pre>
 <p>At this point, follow the HLO process and familiarize yourself with
 the columns and their contents. Questions to ask:</p>
 <ol style="list-style-type: decimal">
@@ -497,20 +497,20 @@ we’ll be focusing on males only, so let’s do some
   mutate(post_ifoce = year &gt;= 1997) %&gt;% 
   filter(year &gt;= 1981 &amp; gender == &#39;male&#39;)
 hot_dogs</code></pre>
-<pre><code># A tibble: 41 × 5
+<pre><code># A tibble: 42 × 5
     year gender name           num_eaten post_ifoce
    &lt;dbl&gt; &lt;fct&gt;  &lt;chr&gt;              &lt;dbl&gt; &lt;lgl&gt;     
- 1  2021 male   Joey Chestnut         76 TRUE      
- 2  2020 male   Joey Chestnut         75 TRUE      
- 3  2019 male   Joey Chestnut         71 TRUE      
- 4  2018 male   Joey Chestnut         74 TRUE      
- 5  2017 male   Joey Chestnut         72 TRUE      
- 6  2016 male   Joey Chestnut         70 TRUE      
- 7  2015 male   Matthew Stonie        62 TRUE      
- 8  2014 male   Joey Chestnut         61 TRUE      
- 9  2013 male   Joey Chestnut         69 TRUE      
-10  2012 male   Joey Chestnut         68 TRUE      
-# … with 31 more rows</code></pre>
+ 1  2022 male   Joey Chestnut         63 TRUE      
+ 2  2021 male   Joey Chestnut         76 TRUE      
+ 3  2020 male   Joey Chestnut         75 TRUE      
+ 4  2019 male   Joey Chestnut         71 TRUE      
+ 5  2018 male   Joey Chestnut         74 TRUE      
+ 6  2017 male   Joey Chestnut         72 TRUE      
+ 7  2016 male   Joey Chestnut         70 TRUE      
+ 8  2015 male   Matthew Stonie        62 TRUE      
+ 9  2014 male   Joey Chestnut         61 TRUE      
+10  2013 male   Joey Chestnut         69 TRUE      
+# … with 32 more rows</code></pre>
 </div>
 </div>
 <div id="plot-the-data" class="section level1" number="4">
@@ -637,14 +637,14 @@ after, and only for male competitors.</p>
   mutate(post_ifoce = year &gt;= 1997) %&gt;% 
   filter(year &gt;= 1981 &amp; gender == &quot;male&quot;) 
 glimpse(hdm_affil)</code></pre>
-<pre><code>Rows: 41
+<pre><code>Rows: 42
 Columns: 6
-$ year       &lt;dbl&gt; 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005,…
-$ gender     &lt;fct&gt; male, male, male, male, male, male, male, male, male, male, male, male, male, male, male, male, male,…
-$ name       &lt;chr&gt; &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;,…
-$ num_eaten  &lt;dbl&gt; 76.000, 75.000, 71.000, 74.000, 72.000, 70.000, 62.000, 61.000, 69.000, 68.000, 62.000, 54.000, 68.00…
-$ affiliated &lt;fct&gt; current, current, current, current, current, current, current, current, current, current, current, cu…
-$ post_ifoce &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…</code></pre>
+$ year       &lt;dbl&gt; 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,…
+$ gender     &lt;fct&gt; male, male, male, male, male, male, male, male, male, male,…
+$ name       &lt;chr&gt; &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Ch…
+$ num_eaten  &lt;dbl&gt; 63.000, 76.000, 75.000, 71.000, 74.000, 72.000, 70.000, 62.…
+$ affiliated &lt;fct&gt; current, current, current, current, current, current, curre…
+$ post_ifoce &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…</code></pre>
 <div class="panel panel-success">
 <div class="panel-heading">
 Challenge #4:
@@ -674,7 +674,7 @@ figure out how to sort the counts in descending order.</p>
   affiliated         n
   &lt;fct&gt;          &lt;int&gt;
 1 not affiliated    20
-2 current           15
+2 current           16
 3 former             6</code></pre>
 <p>Now let’s plot this new data, and fill the columns according to our
 new <code>affiliated</code> column.</p>
@@ -787,6 +787,11 @@ of the plot should look like.</p>
   theme(panel.background = element_blank()) +
   theme(axis.line.x = element_line(color = &quot;gray80&quot;, size = 0.5)) +
   theme(axis.ticks = element_line(color = &quot;gray80&quot;, size = 0.5))</code></pre>
+<pre><code>Warning: The `size` argument of `element_line()` is deprecated as of ggplot2 3.4.0.
+ℹ Please use the `linewidth` argument instead.
+This warning is displayed once every 8 hours.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+generated.</code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <div class="panel panel-info">
 <div class="panel-heading">
@@ -842,7 +847,8 @@ affil_plot +
   scale_x_continuous(expand = c(0, 0), 
                      breaks = hd_years$year,
                      labels = hd_years$year_lab)</code></pre>
-<pre><code>Scale for &#39;x&#39; is already present. Adding another scale for &#39;x&#39;, which will replace the existing scale.</code></pre>
+<pre><code>Scale for x is already present.
+Adding another scale for x, which will replace the existing scale.</code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
 </div>
 <div id="final-final-final-version" class="section level1" number="10">
@@ -901,11 +907,17 @@ how it works.</p>
   annotate(&#39;segment&#39;, x=2015, xend=2015, y= 82, yend=79, size=0.5, color=&quot;#E9602B&quot;) +
   annotate(&#39;text&#39;, x=2015, y=86, label=&quot;MLE/IFOCE Current Member&quot;, color=&quot;#E9602B&quot;, family=&quot;Lato&quot;, hjust=0.5, size = 3)</code></pre>
 <pre><code>Warning: The `&lt;scale&gt;` argument of `guides()` cannot be `FALSE`. Use &quot;none&quot; instead as
-of ggplot2 3.3.4.</code></pre>
+of ggplot2 3.3.4.
+This warning is displayed once every 8 hours.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+generated.</code></pre>
 <pre><code>Coordinate system already present. Adding new coordinate system, which will
 replace the existing one.</code></pre>
 <pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-ℹ Please use `linewidth` instead.</code></pre>
+ℹ Please use `linewidth` instead.
+This warning is displayed once every 8 hours.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+generated.</code></pre>
 <pre class="r"><code>nathan_ann</code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
 <p>Finally, adding in another layer of data, including information about
@@ -918,14 +930,14 @@ female contestants:</p>
   mutate(post_ifoce = year &gt;= 1997) %&gt;% 
   filter(year &gt;= 1981 &amp; gender == &quot;female&quot;) 
 glimpse(hdm_females)</code></pre>
-<pre><code>Rows: 11
+<pre><code>Rows: 12
 Columns: 6
-$ year       &lt;dbl&gt; 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011
-$ gender     &lt;fct&gt; female, female, female, female, female, female, female, female, female, female, female
-$ name       &lt;chr&gt; &quot;Michelle Lesco&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;Miki…
-$ num_eaten  &lt;dbl&gt; 30.75, 48.50, 31.00, 37.00, 41.00, 38.00, 38.00, 34.00, 36.75, 45.00, 40.00
-$ affiliated &lt;fct&gt; current, current, current, current, current, current, current, current, current, current, current
-$ post_ifoce &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE</code></pre>
+$ year       &lt;dbl&gt; 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,…
+$ gender     &lt;fct&gt; female, female, female, female, female, female, female, fem…
+$ name       &lt;chr&gt; &quot;Miki Sudo&quot;, &quot;Michelle Lesco&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;M…
+$ num_eaten  &lt;dbl&gt; 40.00, 30.75, 48.50, 31.00, 37.00, 41.00, 38.00, 38.00, 34.…
+$ affiliated &lt;fct&gt; current, current, current, current, current, current, curre…
+$ post_ifoce &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…</code></pre>
 <pre class="r"><code>nathan_w_females &lt;- nathan_ann +
   # add in the female data, and manually set a fill color
   geom_col(data = hdm_females, 
