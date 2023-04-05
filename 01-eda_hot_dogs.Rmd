@@ -439,31 +439,31 @@ nathan_plot
 
 The fill legend is doing its job, here, but we might instead want to use direct annotations on the plot itself, to make it easier and faster to read. 
 
-`ggplot` will let us add _annotatations_ to the plot- i.e., extra text, lines , etc. that are not derived from the data in the plot, but are manually specified - using the `annotate()` function, which adds additional layers to the plot. The way we are doing it below is a bit tedious but demonstrates how it works.
+`ggplot` will let us add _annotatations_ to the plot- i.e., extra text, lines , etc. that are not derived from the data in the plot, but are manually specified - using the `annotate()` function, which adds additional layers to the plot. The way we are doing it below is a bit tedious, but demonstrates how it works.
 
 ```{r}
 nathan_ann <- nathan_plot +
-  guides(fill = FALSE) +
+  guides(fill="none") + # turn off the legend/guide for the "fill" aesthetic
   coord_cartesian(xlim = c(1980, 2023), ylim = c(0, 90)) +
-  annotate('segment', x=1980.75, xend=2000.25, y= 30, yend=30, size=0.5, color="#CCB683")+
-  annotate('segment', x=1980.75, xend=1980.75, y= 30, yend=28, size=0.5, color="#CCB683") +
-  annotate('segment', x=2000.25, xend=2000.25, y= 30, yend=28, size=0.5, color="#CCB683") +
-  annotate('segment', x=1990, xend=1990, y= 33, yend=30, size=0.5, color="#CCB683") +
+  annotate('segment', x=1980.75, xend=2000.25, y= 30, yend=30, linewidth=0.5, color="#CCB683")+
+  annotate('segment', x=1980.75, xend=1980.75, y= 30, yend=28, linewidth=0.5, color="#CCB683") +
+  annotate('segment', x=2000.25, xend=2000.25, y= 30, yend=28, linewidth=0.5, color="#CCB683") +
+  annotate('segment', x=1990, xend=1990, y= 33, yend=30, linewidth=0.5, color="#CCB683") +
   annotate('text', x=1990, y=36, label="No MLE/IFOCE Affiliation", color="#CCB683", family="Lato", hjust=0.5, size = 3) +
 
 
 
-  annotate('segment', x=2000.75, xend=2006.25, y= 58, yend=58, size=0.5, color="#2277A0") +
-  annotate('segment', x=2000.75, xend=2000.75, y= 58, yend=56, size=0.5, color="#2277A0") +
-  annotate('segment', x=2006.25, xend=2006.25, y= 58, yend=56, size=0.5, color="#2277A0") +
-  annotate('segment', x=2003.5, xend=2003.5, y= 61, yend=58, size=0.5, color="#2277A0") +
+  annotate('segment', x=2000.75, xend=2006.25, y= 58, yend=58, linewidth=0.5, color="#2277A0") +
+  annotate('segment', x=2000.75, xend=2000.75, y= 58, yend=56, linewidth=0.5, color="#2277A0") +
+  annotate('segment', x=2006.25, xend=2006.25, y= 58, yend=56, linewidth=0.5, color="#2277A0") +
+  annotate('segment', x=2003.5, xend=2003.5, y= 61, yend=58, linewidth=0.5, color="#2277A0") +
   annotate('text', x=2003.5, y=65, label="MLE/IFOCE\nFormer Member", color="#2277A0", family="Lato", hjust=0.5, size = 3) +
 
 
-  annotate('segment', x=2006.75, xend=2022.25, y= 79, yend=79, size=0.5, color="#E9602B") +
-  annotate('segment', x=2006.75, xend=2006.75, y= 79, yend=77, size=0.5, color="#E9602B") +
-  annotate('segment', x=2022.25, xend=2022.25, y= 79, yend=77, size=0.5, color="#E9602B") +
-  annotate('segment', x=2015, xend=2015, y= 82, yend=79, size=0.5, color="#E9602B") +
+  annotate('segment', x=2006.75, xend=2022.25, y= 79, yend=79, linewidth=0.5, color="#E9602B") +
+  annotate('segment', x=2006.75, xend=2006.75, y= 79, yend=77, linewidth=0.5, color="#E9602B") +
+  annotate('segment', x=2022.25, xend=2022.25, y= 79, yend=77, linewidth=0.5, color="#E9602B") +
+  annotate('segment', x=2015, xend=2015, y= 82, yend=79, linewidth=0.5, color="#E9602B") +
   annotate('text', x=2015, y=86, label="MLE/IFOCE Current Member", color="#E9602B", family="Lato", hjust=0.5, size = 3)
 nathan_ann
 ```
