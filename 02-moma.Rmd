@@ -21,7 +21,7 @@ knitr::opts_chunk$set(error = TRUE, comment = NA, warning = FALSE, errors = FALS
 
 # Goals for Lab 02
 
-- Review `dplyr` functions learned last week
+- Review `dplyr` functions 
 - Practice using `dplyr` functions to get to know a new dataset
 - Map global plot aesthetics to variables in `ggplot2`
 - Create facetted plots with `ggplot2`
@@ -56,7 +56,7 @@ library(dplyr) # just to make sure that dplyr's summarise, count, etc. "win"
 
 Note! This is not the original data- We did a lot of cleaning and decision-making in the pre-processing, and stored the result in `data/artworks-cleaned.csv`. The below contains only paintings and drawings in the MoMA collection.
 
-The finished data set is available at [here](https://stevenbedrick.github.io/data-vis-labs-2023/data/artworks.csv), and is also present locally in the RStudio Cloud project:
+The finished data set is available at [here](https://stevenbedrick.github.io/data-vis-labs-2023/data/artworks.csv), and is also present locally in the Posit Cloud project:
 
 ```{r eval = FALSE}
 library(here)
