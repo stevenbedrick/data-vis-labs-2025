@@ -47,3 +47,9 @@ knitr::include_url("slides/02-slides.html")
 - Modern Dive, Data Visualization Chapter: http://moderndive.com/3-viz.html
 
 - RStudio `ggplot2` Cheatsheet: https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf
+
+### 03: Working with Data
+
+```{r}
+knitr::include_url("slides/03-slides.html")
+```

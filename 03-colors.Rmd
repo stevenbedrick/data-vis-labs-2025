@@ -116,7 +116,7 @@ Other variables in this dataset:
 <div class="panel panel-primary">
   <div class="panel-heading">Refresher Content:</div>
   <div class="panel-body">
-For a refresher (and more detailed deep-dive), check out: ["WHAT IS THE DIFFERENCE BETWEEN CATEGORICAL, ORDINAL AND NUMERICAL VARIABLES?"](https://stats.idre.ucla.edu/other/mult-pkg/whatstat/what-is-the-difference-between-categorical-ordinal-and-numerical-variables/)
+For a refresher (and more detailed deep-dive), check out: ["WHAT IS THE DIFFERENCE BETWEEN CATEGORICAL, ORDINAL AND NUMERICAL VARIABLES?"](https://stats.oarc.ucla.edu/other/mult-pkg/whatstat/what-is-the-difference-between-categorical-ordinal-and-interval-variables/)
 </div>
 </div>
 
@@ -507,6 +507,8 @@ sound_traj +
 
 ### Colorbrewer
 
+As we discussed on Monday, [Colorbrewer](https://colorbrewer2.org/) is a useful tool for designing color palettes, which can be used directly in R.
+
 To use Colorbrewer palettes, you'll need to install the `RColorBrewer` package from CRAN. This chunk of code tells you how:
 
 ```{r eval = FALSE}
@@ -514,7 +516,7 @@ install.packages("RColorBrewer")
 library(RColorBrewer)
 ```
 
-Colorbrewer has a few qualitative palettes named: Accent, Dark2, Paired, Pastel1, Pastel2, Set1, Set2, Set3. Here is how to view them:
+Colorbrewer has a few named (i.e., pre-set) _qualitative_ palettes: Accent, Dark2, Paired, Pastel1, Pastel2, Set1, Set2, Set3. Here is how to view them:
 
 ```{r}
 brewer.pal(5, "Dark2") # list 5 hex colors
