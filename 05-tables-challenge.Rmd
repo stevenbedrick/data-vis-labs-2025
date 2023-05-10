@@ -9,7 +9,7 @@ output:
 
 # Tables
 
-Using the data set from the reference lab of PNW flights, choose three analytical questions from the menu below, and design a  table for each one that answers it in a publication-ready format (using `gt`), _including appropriate column names, titles, captions, etc._ Unless otherwise specified, all questions should be explored for flights departing from Portland. Alternatively, please feel free to come up with your own analyses!
+Using the data set from the reference lab of PNW flights, choose three analytical questions from the menu below, and design a table for each one that answers it in a publication-ready format (using `gt`), _including appropriate column names, titles, captions, etc._ Unless otherwise specified, all questions should be explored for flights departing from Portland. Alternatively, please feel free to come up with your own analyses!
 
 - Which airlines had the _best_ and _worst_ track records of on-time departures in each month? Is it different between PDX and SEA?
 - Which airlines _improved_ the most in terms of on-time departures over time, and on which routes? Which airlines got worse?
@@ -43,3 +43,4 @@ Make sure to keep in mind the design principles that we discussed on Monday rega
 # Deliverable
 
 Your knitted .Rmd file (i.e., the HTML output).
+

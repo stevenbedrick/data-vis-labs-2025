@@ -1,7 +1,7 @@
 ---
 title: "Week 6 - Publishing"
 author: "Steven Bedrick"
-date: "5/5/2022"
+date: "5/10/2023"
 output:
   html_document:
     theme: flatly
@@ -13,6 +13,7 @@ This week, you will begin working on your academic portfolio site. The deliverab
 1. A completed "About" page, containing a short professional bio following the methods & advice given on the [course site for today](https://dmice.ohsu.edu/bedricks/courses/bmi525/syllabus/6-sixth.html)
 2. A photo (not necessarily of you)
 3. At least one stylistic aspect changed from the original template (font, color, etc.)
-4. A sub-page containing one of the visualizations that you have created for an assignment/lab in this class, with description. (Feel free just to post your entire graph exploration assignment)
-4. All boilerplate (example) content that came with the theme should be removed, and (if using Hugo Academic) all un-used widgets and sections disabled. 
+    - Remember to _not_ change the relevant part of the template directly, but instead to make your own copy in your project's `layouts` or `static` directories
+4. A sub-page containing one of the visualizations that you have created for an assignment/lab in this class, with description.
+5. All boilerplate (example) content that came with the theme should be removed, config settings updated (e.g., the page title should not be "New Blogdown Site" or something like that), etc. 
 
