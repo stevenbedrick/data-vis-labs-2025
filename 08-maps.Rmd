@@ -28,6 +28,8 @@ library(classInt)
 library(cowplot)
 library(maps)
 library(ggspatial)
+library(basemaps)
+library(mapview)
 ```
 
 ## Downloading the data
@@ -164,7 +166,7 @@ pdx_boundaries %>% ggplot() + geom_sf() +
 <div class="panel panel-success">
   <div class="panel-heading">Challenge #1:</div>
   <div class="panel-body">
-    Make a version of this map centered on _your_ neighborhood, zoomed such that each of the bordering neighborhoods is visible (if "each" is too many to be useful, go with "most" or "some").
+Make a version of this map centered on _your_ neighborhood, zoomed such that each of the bordering neighborhoods is visible (if "each" is too many to be useful, go with "most" or "some").
   </div>
 </div>
 
@@ -230,9 +232,9 @@ pdx_boundaries %>% ggplot() +
   <div class="panel-heading">Challenge #2:</div>
   <div class="panel-body">
     
-    That blue is pretty deep and intense; change it to something a bit more river-like. 
+That blue is pretty deep and intense; change it to something a bit more river-like. 
     
-    While you're at it, the grey background for the neighborhoods is also a bit "blah." Try changing it to something else.
+While you're at it, the grey background for the neighborhoods is also a bit "blah." Try changing it to something else.
     
   </div>
 </div>
@@ -305,7 +307,7 @@ ggplot() + geom_sf(data = world3)
   <div class="panel-heading">Challenge #3:</div>
   <div class="panel-body">
     
-    Pick a _different_ projection, and show how it looks with at least _two_ different center points. [Here is a guide](https://mgimond.github.io/Spatial/coordinate-systems-in-r.html#understanding-the-proj4-coordinate-syntax) to a little bit more information about the syntax for the proj4 specification.
+Pick a different_ projection, and show how it looks with at least _two_ different center points. [Here is a guide](https://mgimond.github.io/Spatial/coordinate-systems-in-r.html#understanding-the-proj4-coordinate-syntax) to a little bit more information about the syntax for the proj4 specification.
     
   </div>
 </div>
@@ -351,7 +353,7 @@ pdx_boundaries %>% ggplot() +geom_sf() +
   <div class="panel-heading">Challenge #4:</div>
   <div class="panel-body">
     
-  Create a map showing the location of grocery stores and farmer's markets, with a different point shape used to indicate which is which.
+Create a map showing the location of grocery stores and farmer's markets, with a different point shape used to indicate which is which.
     
   </div>
 </div>
@@ -469,10 +471,36 @@ pdx_boundaries %>% ggplot() + geom_sf() +
   <div class="panel-heading">Challenge #5:</div>
   <div class="panel-body">
     
-  Follow this process (cropping the data set to a bounding box, etc.) for a park in your neighborhood, and create a comparable map.
+Follow this process (cropping the data set to a bounding box, etc.) for a park in your neighborhood, and create a comparable map.
     
   </div>
 </div>
+
+#### Side-quest: Bounding Boxes
+
+"Eyeballing" bounding boxes is a little tedious and erorr prone, but is a good place to start. What are some other methods?
+
+##### Using tools!
+
+The `basemaps` package (which is fabulous, but also slightly buggy, so we won't be using it much this week), has a handy function called `draw_ext` that will let us interactively draw a bounding box (as well as other shape features, such as polygons). Invoke it like so:
+
+```{r, eval=FALSE}
+some.bbox.of.interest <- basemaps::draw_ext()
+```
+
+An interactive map will appear (implemented using Shiny!), looking something like this:
+
+![](images/draw_ext_screenshot.png)
+
+The result will be a `sfc` object with unprojected points in the WGS84 CRS, so you'll probably need to convert it into your map's CRS, but it can be a lot faster and easier than manually guessing coordinates.
+
+##### Let R do the work!
+
+Another option is to let R do the work- if you have a particular point of interest (the centroid of a neighborhood, a particular tree, etc.) you can use functions like `st_buffer()` to create a region extending out a certain radius from your point, and then use `st_bbox()` to compute that region's bounding box. 
+There exist a whole suite of other functions that can be used in a similar workflow (`st_touches`, etc.), as well. 
+This method can be a little more work for you as a programmer, but will be more versatile and --- importantly --- more amenable to automation.
+
+#### Continuing on!
 
 
 Note that, besides the trees themselves, this map is kind of boring. We can start to see the layout of trees in the park, but it's hard to know how to contextualize it. At this zoom level, our neighborhood boundary data set is no longer especially useful. We might instead want other features: roads, etc. Or, we might want to base our map on other data entirely, like perhaps an aerial photo. One option would be for us to find that data (roads, for instance, are available from Portland Maps) and manually add it, the way we did with the rivers. There are easier options, however. Let's look at how we might use a richer, pre-built map using OpenStreetMap data and `ggmap`.
@@ -491,7 +519,7 @@ Next, we generate a basemap using `get_stamenmap()` (there are related functions
 
 ```{r}
 park_base_map <- get_stamenmap(
-  c(left=-122.725, bottom=45.4675, right=-122.7125, top=45.478),
+  c(left=-122.725, bottom=45.4675, right=-122.7125, top=45.478), # note: in practice, we wouldn't enter these by hand!
   zoom=16,
   maptype="terrain") # try experimenting with "toner", etc.  
 ggmap(park_base_map)
@@ -537,16 +565,45 @@ ggplot() + annotation_map_tile(type="osm") + layer_spatial(trees_in_park)
   <div class="panel-heading">Challenge #6:</div>
   <div class="panel-body">
     
-  Using either `ggmap` or `ggspatial`, take your local park's tree map (from challenge #5) and place it on a OpenStreetMap raster tile. Use at least one aesthetic mapping (color, point shape, etc.) to visualize at least one type of data about the trees (other than genus).
+Using either `ggmap` or `ggspatial`, take your local park's tree map (from challenge #5) and place it on a OpenStreetMap raster tile. Use at least one aesthetic mapping (color, point shape, etc.) to visualize at least one type of data about the trees (other than genus).
   
-  Feel free to experiment with different map tile styles!
+Feel free to experiment with different map tile styles!
     
   </div>
 </div>
 
 ## Interactive Map
 
-What about interactivity? [Leaflet](https://leafletjs.com) is a powerful library for interactive maps, and has excellent R integration. We will also use the `leaflet.esri` extension, so we can use ESRI's aerial photos.
+What about interactivity? Here are two tools for making interactive maps, one a little fancier and one a little more basic.
+
+### Basics: `mapview`
+
+`[mapview](https://github.com/r-spatial/mapview)` is a fantastically useful library, and is an essential tool for your GIS workflow. 
+It is probably the fastest way to go from "I have geospatial data" to "a map I can look at", with the caveat that it is meant for quick-and-dirty data exploration, not presentation-quality graphics.
+
+In its simplest form, you simply pipe an `sf` object to `mapview()`:
+
+```{r}
+pdx_boundaries %>% mapview()
+```
+
+Note that, in addition to panning and zooming the map, you can click on a feature to see the associated data.
+
+Importantly, `mapview` can handle multiple datasets:
+
+```{r}
+mapview(list(pdx_boundaries, trees_in_park))
+```
+
+
+`mapview` has _many_ controls, for changing the basemap, to setting colors, etc. Note, also, that it is perfectly happy to deal with projection issues for us! We do not need to manually project or otherwise transform our data- it figures it out on its own.
+
+Again, it is _not_ for presentation-quality graphics, but more for data exploration. It integrates well with Shiny (via `mapviewOutput`/`renderMapview`), as well! 
+
+### Fancier: Leaflet
+
+
+[Leaflet](https://leafletjs.com) is a somewhat fancier and more powerful library for interactive maps that is widely used outside of the R ecosystem, but which has excellent R integration. We will also use the `leaflet.esri` extension, so we can use ESRI's aerial photos.
 
 ```{r}
 library(leaflet)
@@ -573,7 +630,7 @@ leaflet(trees_park_projected) %>%
   addCircleMarkers(label = ~Genus_spec) # we can refer to properties of the data frame this way
 ```
 
-Note: Leaflet [works well with Shiny](https://rstudio.github.io/leaflet/shiny.html), and has  `leafletOutput`/`renderLeaflet` functions that behave as you would expect.
+Note: Leaflet also [works well with Shiny](https://rstudio.github.io/leaflet/shiny.html), and has  `leafletOutput`/`renderLeaflet` functions that behave as you would expect.
 
 # How about a chloropleth map?
 
@@ -664,7 +721,7 @@ That's much better!
   <div class="panel-heading">Challenge #7:</div>
   <div class="panel-body">
     
-  Look at the original spreadsheet and pick another column of interest (besides total population); revise the data ingest process, and map _that_ column instead.
+Look at the original spreadsheet and pick another column of interest (besides total population); revise the data ingest process, and map _that_ column instead.
     
   </div>
 </div>
@@ -793,13 +850,13 @@ pop.plot("pop.equal")
   <div class="panel-heading">Challenge #8:</div>
   <div class="panel-body">
     
-  Perform a similar analysis for the census data column you are working with. Is six the right number of bins? Which method works best for your specific data?
+Perform a similar analysis for the census data column you are working with. Is six the right number of bins? Which method works best for your specific data?
   
   </div>
 </div>
 
 
-# Using `tmap`
+# Also of note: `tmap`
 
 `tmap` is a powerful library for "thematic maps"- chloropleth maps, etc. It has some additional capabilities beyond what `ggplot` and `geom_sf` have to offer, and if you find yourself doing a lot of mapping, it is probably worth checking out.
 
@@ -812,59 +869,4 @@ tm_shape(pdx_boundaries) +
 ```
 
 
-
-# Bonus: Useful Shiny App for Bounding Box Calculation
-
-This is a small Shiny app for helping with finding bounding box locations by clicking on a map.
-
-```{r useful shiny app}
-library(shiny)
-ui <- fluidPage(
-  titlePanel("Bounding Box Calculator"),
-  fluidRow(
-    column(6, plotOutput("boundaryPlot", click="plot_click")),
-    column(6, plotOutput("zoomedMap"))
-           ),
-  textOutput("clicked_pt")
-)
-
-server <- function(input, output, session) {
-  
-  pdx_bbox <- st_bbox(pdx_boundaries)
-  centerX <- pdx_bbox$xmin + ((pdx_bbox$xmax - pdx_bbox$xmin) / 2)
-  centerY <- pdx_bbox$ymin + ((pdx_bbox$ymax - pdx_bbox$ymin) / 2)
-  # initial values
-  vals <- reactiveValues(
-    x=centerX,
-    y=centerY
-  )
-  
-  # udpate on click
-  observeEvent(input$plot_click, {
-    vals$x = input$plot_click$x
-    vals$y = input$plot_click$y
-  })
-  
-  output$boundaryPlot <- renderPlot({
-    pdx_boundaries %>% ggplot() + geom_sf() +
-      geom_sf(data=river_boundaries, fill="blue", size=0.0)  +
-      geom_hline(yintercept=vals$y, linetype="dashed", color="red", alpha=0.7) + 
-      geom_vline(xintercept = vals$x, linetype="dashed", color="red", alpha=0.7)
-  })
-  
-  output$zoomedMap <- renderPlot({
-    pdx_boundaries %>% ggplot() + 
-      geom_sf() + 
-      geom_sf(data=river_boundaries, fill="blue", size=0.0) +
-      coord_sf(xlim=c(vals$x - 2000,vals$x + 2000), ylim=c(vals$y - 2000, vals$y + 2000))  + 
-      geom_sf_label(aes(label=MAPLABEL))
-  })
-  
-  output$clicked_pt <- renderText(paste0("lon: ", vals$x, " lat: ", vals$y))
-
-}
-
-shinyApp(ui = ui, server = server)
-
-```
 
