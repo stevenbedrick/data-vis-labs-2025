@@ -356,7 +356,19 @@ needs to be turned in to Sakai before Wednesday at noon!</p>
 <h1><span class="header-section-number">1</span> Overview</h1>
 <p>In this class, we will be working primarily with <a
 href="https://www.r-project.org">R, a free and open-source software
-environment for statistical computing and graphics.</a></p>
+environment for statistical computing and graphics.</a> The point of
+this lab is primarily to ensure that you are set up with Posit Cloud,
+and to help find out if there are any very fundamental R difficulties
+that we need to work out before we get much further in the class.</p>
+<p>If you have had significant prior R experience, basically all of what
+you will actually <em>do</em> during this lab will be review; if that is
+not the case for you, <em>don’t worry</em>: all of the various details
+are things you will see again in the course of the term. If there comes
+a point in the lab where you are unsure of how to proceed, please get in
+touch with me ASAP so I can get you un-stuck. 😀</p>
+<div id="some-vocabulary" class="section level3" number="1.0.1">
+<h3><span class="header-section-number">1.0.1</span> Some
+Vocabulary</h3>
 <p>What is R?</p>
 <ul>
 <li><strong>R</strong> is the name of the programming language itself,
@@ -379,14 +391,15 @@ certainly free to install RStudio on your local computer, but we will be
 using several features of Posit Cloud to help manage assignments and
 save everybody time.</li>
 </ul>
-<div id="quick-note" class="section level3" number="1.0.1">
-<h3><span class="header-section-number">1.0.1</span> Quick note</h3>
+</div>
+<div id="quick-note" class="section level3" number="1.0.2">
+<h3><span class="header-section-number">1.0.2</span> Quick note</h3>
 <p>Until <em>very</em> recently, Posit Cloud was called “RStudio Cloud”;
 the screenshots below have the old name, but other than the logo the UI
 is basically identical.</p>
 </div>
-<div id="our-goal-for-today" class="section level3" number="1.0.2">
-<h3><span class="header-section-number">1.0.2</span> Our Goal for
+<div id="our-goal-for-today" class="section level3" number="1.0.3">
+<h3><span class="header-section-number">1.0.3</span> Our Goal for
 Today</h3>
 <p>Our end goal is to get you looking at a screen like this:</p>
 <p><img src="images/00_final-screenshot.png" /></p>
@@ -497,7 +510,8 @@ help(&quot;dplyr&quot;)</code></pre>
 <pre class="r"><code>citation(&quot;ggplot2&quot;)</code></pre>
 <pre><code>To cite ggplot2 in publications, please use
 
-  H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
+  H. Wickham. ggplot2: Elegant Graphics for Data Analysis.
+  Springer-Verlag New York, 2016.
 
 A BibTeX entry for LaTeX users is
 
@@ -550,11 +564,11 @@ in R. We’ll call it saying hello to your dataset:</p>
 <pre class="r"><code>glimpse(babynames) # dplyr</code></pre>
 <pre><code>Rows: 1,924,665
 Columns: 5
-$ year &lt;dbl&gt; 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, …
-$ sex  &lt;chr&gt; &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;…
-$ name &lt;chr&gt; &quot;Mary&quot;, &quot;Anna&quot;, &quot;Emma&quot;, &quot;Elizabeth&quot;, &quot;Minnie&quot;, &quot;Margaret&quot;, &quot;Ida&quot;, &quot;Alice&quot;, &quot;Bertha&quot;, &quot;Sarah&quot;, &quot;Annie&quot;, &quot;Clara&quot;, &quot;Ella&quot;, &quot;Flore…
-$ n    &lt;int&gt; 7065, 2604, 2003, 1939, 1746, 1578, 1472, 1414, 1320, 1288, 1258, 1226, 1156, 1063, 1045, 1040, 1012, 995, 982, 949, 858, 808,…
-$ prop &lt;dbl&gt; 0.07238359, 0.02667896, 0.02052149, 0.01986579, 0.01788843, 0.01616720, 0.01508119, 0.01448696, 0.01352390, 0.01319605, 0.0128…</code></pre>
+$ year &lt;dbl&gt; 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880,…
+$ sex  &lt;chr&gt; &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, …
+$ name &lt;chr&gt; &quot;Mary&quot;, &quot;Anna&quot;, &quot;Emma&quot;, &quot;Elizabeth&quot;, &quot;Minnie&quot;, &quot;Margaret&quot;, &quot;Ida&quot;,…
+$ n    &lt;int&gt; 7065, 2604, 2003, 1939, 1746, 1578, 1472, 1414, 1320, 1288, 1258,…
+$ prop &lt;dbl&gt; 0.07238359, 0.02667896, 0.02052149, 0.01986579, 0.01788843, 0.016…</code></pre>
 <pre class="r"><code>head(babynames) # base R</code></pre>
 <pre><code># A tibble: 6 × 5
    year sex   name          n   prop
@@ -640,11 +654,11 @@ lists all of the variables that your current environment has loaded.</p>
 <pre class="r"><code>glimpse(steve)</code></pre>
 <pre><code>Rows: 414
 Columns: 5
-$ year &lt;dbl&gt; 1880, 1880, 1880, 1881, 1881, 1881, 1882, 1882, 1882, 1883, 1883, 1883, 1884, 1884, 1884, 1885, 1885, 1885, 1886, 1886, 1886, …
-$ sex  &lt;chr&gt; &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;…
-$ name &lt;chr&gt; &quot;Stephen&quot;, &quot;Steve&quot;, &quot;Steven&quot;, &quot;Stephen&quot;, &quot;Steve&quot;, &quot;Steven&quot;, &quot;Stephen&quot;, &quot;Steve&quot;, &quot;Steven&quot;, &quot;Stephen&quot;, &quot;Steve&quot;, &quot;Steven&quot;, &quot;Steph…
-$ n    &lt;int&gt; 176, 52, 17, 147, 44, 15, 201, 63, 22, 140, 62, 13, 165, 66, 20, 158, 60, 21, 181, 70, 20, 165, 54, 15, 187, 83, 20, 164, 64, …
-$ prop &lt;dbl&gt; 0.00148649, 0.00043919, 0.00014358, 0.00135757, 0.00040635, 0.00013853, 0.00164712, 0.00051626, 0.00018028, 0.00124470, 0.0005…</code></pre>
+$ year &lt;dbl&gt; 1880, 1880, 1880, 1881, 1881, 1881, 1882, 1882, 1882, 1883, 1883,…
+$ sex  &lt;chr&gt; &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, …
+$ name &lt;chr&gt; &quot;Stephen&quot;, &quot;Steve&quot;, &quot;Steven&quot;, &quot;Stephen&quot;, &quot;Steve&quot;, &quot;Steven&quot;, &quot;Step…
+$ n    &lt;int&gt; 176, 52, 17, 147, 44, 15, 201, 63, 22, 140, 62, 13, 165, 66, 20, …
+$ prop &lt;dbl&gt; 0.00148649, 0.00043919, 0.00014358, 0.00135757, 0.00040635, 0.000…</code></pre>
 <p>You should see that the structure of the <code>steve</code> dataframe
 looks just like that of the <code>babynames</code> dataframe, but with
 many fewer rows.</p>
@@ -683,7 +697,18 @@ and save it. Instead, use <code>ggplot2</code>’s command for saving a
 plot with sensible defaults:</p>
 <pre class="r"><code>help(ggsave)</code></pre>
 <pre class="r"><code>ggsave(&quot;steve_b.pdf&quot;, name.plot) # please make the filename unique!</code></pre>
-<p>Upload this exported plot to Sakai before Wednesday at noon.</p>
+<p><em>Download</em> this file from Posit Cloud by following these
+steps:</p>
+<ol style="list-style-type: decimal">
+<li>Find your new PDF file in the “Files” tab, in the lower-right-hand
+quadrant of the screen.</li>
+<li>Click on the checkbox next to the file.</li>
+<li>Click the “Gears” icon, then select the “Export…” menu option.</li>
+<li>When prompted, click the “Download” button.</li>
+</ol>
+<p>The file should now be downloaded to your local computer.
+<em>Upload</em> this exported plot to Sakai before Wednesday at noon
+using the appropriate entry on the Submissions page.</p>
 <p>(Note that <em>your</em> plot, the one that you turn in, should not
 be called <code>steve_b.pdf</code>- it should be named something
 else).</p>

@@ -23,7 +23,12 @@ library(babynames)
 
 # Overview
 
-In this class, we will be working primarily with [R, a free and open-source software environment for statistical computing and graphics.](https://www.r-project.org) 
+In this class, we will be working primarily with [R, a free and open-source software environment for statistical computing and graphics.](https://www.r-project.org) The point of this lab is primarily to ensure that you are set up with Posit Cloud, and to help find out if there are any very fundamental R difficulties that we need to work out before we get much further in the class. 
+
+If you have had significant prior R experience, basically all of what you will actually _do_ during this lab will be review; if that is not the case for you, _don't worry_: all of the various details are things you will see again in the course of the term.
+If there comes a point in the lab where you are unsure of how to proceed, please get in touch with me ASAP so I can get you un-stuck. 😀
+
+### Some Vocabulary
 
 What is R?
 
@@ -228,7 +233,15 @@ help(ggsave)
 ggsave("steve_b.pdf", name.plot) # please make the filename unique!
 ```
 
-Upload this exported plot to Sakai before Wednesday at noon.
+_Download_ this file from Posit Cloud by following these steps:
+
+1. Find your new PDF file in the "Files" tab, in the lower-right-hand quadrant of the screen.
+2. Click on the checkbox next to the file.
+3. Click the "Gears" icon, then select the "Export..." menu option.
+4. When prompted, click the "Download" button.
+
+The file should now be downloaded to your local computer.
+_Upload_ this exported plot to Sakai before Wednesday at noon using the appropriate entry on the Submissions page.
 
 (Note that _your_ plot, the one that you turn in, should not be called `steve_b.pdf`- it should be named something else).
 
