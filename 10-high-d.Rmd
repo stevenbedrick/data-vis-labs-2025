@@ -9,12 +9,12 @@ date: '2022-06-02'
 ```{r, warning=FALSE, message=FALSE, error=FALSE}
 library(tidyverse)
 library(network)
-library(ggnet)
+library(GGally)
 library(igraph)
 library(networkD3)
 library(Rtsne)
 library(ggplotify)
-library(GGally)
+
 library(palmerpenguins)
 library(pheatmap)
 ```

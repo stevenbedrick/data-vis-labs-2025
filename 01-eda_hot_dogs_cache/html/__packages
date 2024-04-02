@@ -9,3 +9,9 @@ stringr
 forcats
 extrafont
 ggthemes
+lubridate
+babynames
+here
+janitor
+RColorBrewer
+wesanderson

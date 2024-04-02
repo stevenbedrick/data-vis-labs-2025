@@ -14,7 +14,7 @@
 
 <title>Lab 07: Interactive Vis With Shiny</title>
 
-<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -30,7 +30,7 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
@@ -315,7 +315,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2023</a>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2024</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -326,7 +326,7 @@ div.tocify {
   <a href="data-vis-resources.html">Resources</a>
 </li>
 <li>
-  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AK-Sp23">Sakai</a>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AL-Sp24">Sakai</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -429,7 +429,6 @@ controlling the HTML that goes in to our UI.</p>
 <p>This is a complete application, but it doesn’t do anything
 interesting. Let’s make it a bit more interesting, and have it print the
 date and time that the page was loaded:</p>
-<pre class='prettyprint'><code>library(shiny)<br><br>ui <- fluidPage(<br>&nbsp;&nbsp;titlePanel("Hello, world!"),<br>&nbsp;&nbsp;"This is some text!",<br>&nbsp;&nbsp;<span style="background-color:#ffff7f">textOutput</span>("timestamp"),<br>)<br><br>server <- function(input, output, session) {<br><br>&nbsp;&nbsp;output$timestamp <- <span style="background-color:#ffff7f">renderText</span>({<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;paste0("The current time is: ", Sys.time())<br>&nbsp;&nbsp;&nbsp;&nbsp;})<br>}<br><br>shinyApp(ui = ui, server = server)</code></pre>
 <p>There are a few new pieces here:</p>
 <ol style="list-style-type: decimal">
 <li>We have added a <code>textOutput</code> element to our UI;</li>
@@ -443,7 +442,6 @@ see examples of that as we move forward.</p>
 <p>The other important thing to notice in this example is that we are
 giving our UI element an <em>identifier</em>, “<code>timestamp</code>”,
 which we then use later in the server function:</p>
-<pre class='prettyprint'><code>library(shiny)<br><br>ui <- fluidPage(<br>&nbsp;&nbsp;titlePanel("Hello, world!"),<br>&nbsp;&nbsp;"This is some text!",<br>&nbsp;&nbsp;textOutput("<span style="background-color:#ffff7f">timestamp</span>"),<br>)<br><br>server <- function(input, output, session) {<br><br>&nbsp;&nbsp;output$<span style="background-color:#ffff7f">timestamp</span> <- renderText({<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;paste0("The current time is: ", Sys.time())<br>&nbsp;&nbsp;&nbsp;&nbsp;})<br>}<br><br>shinyApp(ui = ui, server = server)</code></pre>
 <p>This is a key pattern in Shiny. A way to think about it is that the
 element IDs are <em>links</em> that let the front-end and back-end
 communicate with one another. When you run this application, you should
@@ -494,7 +492,6 @@ from the back-end? We have already seen that to <em>set</em> a value
 UI, we use the <code>input</code> variable. We will use
 <code>stringr</code>’s <code>str_length()</code> function, and send its
 output back via <code>renderText()</code>:</p>
-<pre class='prettyprint'><code>server <- function(<span style="background-color:#ffff7f">input</span>, output, session) {<br>&nbsp;&nbsp;output$nameLength <- renderText(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;paste0("Your name is ", str_length(<span style="background-color:#ffff7f">input</span>$name), " letters long.")<br>&nbsp;&nbsp;&nbsp;&nbsp;)<br>}</code></pre>
 <p>Try adding this line to your server function, and run the
 application. You should see something like this:</p>
 <p><img src="07-shiny_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
@@ -525,7 +522,6 @@ a particular name, split by sex:</p>
 <p>Nothing fancy, but that’s fine- let’s get it into our Shiny
 application. We will use the
 <code>plotOutput</code>/<code>renderPlot</code> function dyad:</p>
-<pre class='prettyprint'><code>library(shiny)<br>library(babynames)<br><br>ui <- fluidPage(<br>&nbsp;&nbsp;titlePanel("Name Measurement"),<br>&nbsp;&nbsp;textInput("name", label="What is your name?", value="Steven"),<br>&nbsp;&nbsp;<span style="background-color:#ffff7f">plotOutput</span>("namePlot")<br>)<br><br>server <- function(input, output, session) {<br>&nbsp;&nbsp;&nbsp;&nbsp;output$namePlot <- <span style="background-color:#ffff7f">renderPlot</span>({<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;babynames %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter(name==input$name) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ggplot(mapping=aes(x=year, y=prop, color=sex)) + <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;geom_line() + <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ggtitle(paste0("Name Frequency: ", input$name))<br>&nbsp;&nbsp;&nbsp;&nbsp;})<br>}<br><br>shinyApp(ui = ui, server = server)</code></pre>
 <p><code>plotOutput</code> can take display figures made with either
 <code>plot()</code> or <code>ggplot()</code>.</p>
 <p>Note that we are now providing the <code>name</code> text box a
@@ -554,7 +550,6 @@ generate the table will look like this:</p>
 2  1979 F       137 0.0000795</code></pre>
 <p>As you might imagine, Shiny has an
 <code>tableOutput()</code>/<code>renderTable()</code> pair:</p>
-<pre class='prettyprint'><code>library(shiny)<br>library(babynames)<br><br>ui <- fluidPage(<br>&nbsp;&nbsp;titlePanel("Name Measurement"),<br>&nbsp;&nbsp;textInput("name", label="What is your name?", value="Steven"),<br>&nbsp;&nbsp;plotOutput("namePlot"),<br>&nbsp;&nbsp;<span style="background-color:#ffff7f">tableOutput</span>("<span style="background-color:#ffff7f">nameTable</span>")<br>)<br><br>server <- function(input, output, session) {<br>&nbsp;&nbsp;&nbsp;&nbsp;output$namePlot <- renderPlot({<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;babynames %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter(name==input$name) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ggplot(mapping=aes(x=year, y=prop, color=sex)) + <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;geom_line() + <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ggtitle(paste0("Name Frequency: ", input$name)) <br>&nbsp;&nbsp;&nbsp;&nbsp;})<br>&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;output$<span style="background-color:#ffff7f">nameTable</span> <- <span style="background-color:#ffff7f">renderTable</span>({<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;babynames %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter(name==input$name) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;group_by(sex) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arrange(year) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;top_n(1, prop) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;select(-name) <br><br>&nbsp;&nbsp;&nbsp;&nbsp;})<br>}<br><br>shinyApp(ui = ui, server = server)</code></pre>
 <p><img src="07-shiny_files/figure-html/withTableToDisplay-1.png" width="672" /></p>
 <p>This is kind of basic-looking, but can be customized as much as one
 might wish, using any of the table formatting techniques we discussed
@@ -573,14 +568,26 @@ from above:</p>
     fmt_number(columns=c(prop), decimals=5) %&gt;% 
     tab_header(title=&quot;Year of Maximum Steven, by sex assigned at birth&quot;)  %&gt;% 
     tab_source_note(md(&quot;From `babynames` package&quot;))</code></pre>
-<div id="fyiusecdbn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>html {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+<div id="ilpithlfey" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ilpithlfey table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-#fyiusecdbn .gt_table {
+#ilpithlfey thead, #ilpithlfey tbody, #ilpithlfey tfoot, #ilpithlfey tr, #ilpithlfey td, #ilpithlfey th {
+  border-style: none;
+}
+
+#ilpithlfey p {
+  margin: 0;
+  padding: 0;
+}
+
+#ilpithlfey .gt_table {
   display: table;
   border-collapse: collapse;
+  line-height: normal;
   margin-left: auto;
   margin-right: auto;
   color: #333333;
@@ -603,24 +610,12 @@ from above:</p>
   border-left-color: #D3D3D3;
 }
 
-#fyiusecdbn .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#fyiusecdbn .gt_caption {
+#ilpithlfey .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#fyiusecdbn .gt_title {
+#ilpithlfey .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -632,25 +627,37 @@ from above:</p>
   border-bottom-width: 0;
 }
 
-#fyiusecdbn .gt_subtitle {
+#ilpithlfey .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
-  padding-top: 0;
-  padding-bottom: 6px;
+  padding-top: 3px;
+  padding-bottom: 5px;
   padding-left: 5px;
   padding-right: 5px;
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
 
-#fyiusecdbn .gt_bottom_border {
+#ilpithlfey .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ilpithlfey .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#fyiusecdbn .gt_col_headings {
+#ilpithlfey .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -665,7 +672,7 @@ from above:</p>
   border-right-color: #D3D3D3;
 }
 
-#fyiusecdbn .gt_col_heading {
+#ilpithlfey .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -685,7 +692,7 @@ from above:</p>
   overflow-x: hidden;
 }
 
-#fyiusecdbn .gt_column_spanner_outer {
+#ilpithlfey .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -697,15 +704,15 @@ from above:</p>
   padding-right: 4px;
 }
 
-#fyiusecdbn .gt_column_spanner_outer:first-child {
+#ilpithlfey .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#fyiusecdbn .gt_column_spanner_outer:last-child {
+#ilpithlfey .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#fyiusecdbn .gt_column_spanner {
+#ilpithlfey .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -717,7 +724,11 @@ from above:</p>
   width: 100%;
 }
 
-#fyiusecdbn .gt_group_heading {
+#ilpithlfey .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ilpithlfey .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -743,7 +754,7 @@ from above:</p>
   text-align: left;
 }
 
-#fyiusecdbn .gt_empty_group_heading {
+#ilpithlfey .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -758,15 +769,15 @@ from above:</p>
   vertical-align: middle;
 }
 
-#fyiusecdbn .gt_from_md > :first-child {
+#ilpithlfey .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#fyiusecdbn .gt_from_md > :last-child {
+#ilpithlfey .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#fyiusecdbn .gt_row {
+#ilpithlfey .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -785,7 +796,7 @@ from above:</p>
   overflow-x: hidden;
 }
 
-#fyiusecdbn .gt_stub {
+#ilpithlfey .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -798,7 +809,7 @@ from above:</p>
   padding-right: 5px;
 }
 
-#fyiusecdbn .gt_stub_row_group {
+#ilpithlfey .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -812,11 +823,15 @@ from above:</p>
   vertical-align: top;
 }
 
-#fyiusecdbn .gt_row_group_first td {
+#ilpithlfey .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#fyiusecdbn .gt_summary_row {
+#ilpithlfey .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ilpithlfey .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -826,16 +841,16 @@ from above:</p>
   padding-right: 5px;
 }
 
-#fyiusecdbn .gt_first_summary_row {
+#ilpithlfey .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#fyiusecdbn .gt_first_summary_row.thick {
+#ilpithlfey .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#fyiusecdbn .gt_last_summary_row {
+#ilpithlfey .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -845,7 +860,7 @@ from above:</p>
   border-bottom-color: #D3D3D3;
 }
 
-#fyiusecdbn .gt_grand_summary_row {
+#ilpithlfey .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -855,7 +870,7 @@ from above:</p>
   padding-right: 5px;
 }
 
-#fyiusecdbn .gt_first_grand_summary_row {
+#ilpithlfey .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -865,11 +880,21 @@ from above:</p>
   border-top-color: #D3D3D3;
 }
 
-#fyiusecdbn .gt_striped {
+#ilpithlfey .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ilpithlfey .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#fyiusecdbn .gt_table_body {
+#ilpithlfey .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -878,7 +903,7 @@ from above:</p>
   border-bottom-color: #D3D3D3;
 }
 
-#fyiusecdbn .gt_footnotes {
+#ilpithlfey .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -892,30 +917,8 @@ from above:</p>
   border-right-color: #D3D3D3;
 }
 
-#fyiusecdbn .gt_footnote {
+#ilpithlfey .gt_footnote {
   margin: 0px;
-  font-size: 90%;
-  padding-left: 4px;
-  padding-right: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#fyiusecdbn .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#fyiusecdbn .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -923,76 +926,95 @@ from above:</p>
   padding-right: 5px;
 }
 
-#fyiusecdbn .gt_left {
+#ilpithlfey .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ilpithlfey .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ilpithlfey .gt_left {
   text-align: left;
 }
 
-#fyiusecdbn .gt_center {
+#ilpithlfey .gt_center {
   text-align: center;
 }
 
-#fyiusecdbn .gt_right {
+#ilpithlfey .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#fyiusecdbn .gt_font_normal {
+#ilpithlfey .gt_font_normal {
   font-weight: normal;
 }
 
-#fyiusecdbn .gt_font_bold {
+#ilpithlfey .gt_font_bold {
   font-weight: bold;
 }
 
-#fyiusecdbn .gt_font_italic {
+#ilpithlfey .gt_font_italic {
   font-style: italic;
 }
 
-#fyiusecdbn .gt_super {
+#ilpithlfey .gt_super {
   font-size: 65%;
 }
 
-#fyiusecdbn .gt_footnote_marks {
-  font-style: italic;
-  font-weight: normal;
+#ilpithlfey .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
+  position: initial;
 }
 
-#fyiusecdbn .gt_asterisk {
+#ilpithlfey .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#fyiusecdbn .gt_indent_1 {
+#ilpithlfey .gt_indent_1 {
   text-indent: 5px;
 }
 
-#fyiusecdbn .gt_indent_2 {
+#ilpithlfey .gt_indent_2 {
   text-indent: 10px;
 }
 
-#fyiusecdbn .gt_indent_3 {
+#ilpithlfey .gt_indent_3 {
   text-indent: 15px;
 }
 
-#fyiusecdbn .gt_indent_4 {
+#ilpithlfey .gt_indent_4 {
   text-indent: 20px;
 }
 
-#fyiusecdbn .gt_indent_5 {
+#ilpithlfey .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
-<table class="gt_table">
-  <thead class="gt_header">
-    <tr>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
       <td colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border" style>Year of Maximum Steven, by sex assigned at birth</td>
     </tr>
     
-  </thead>
-  <thead class="gt_col_headings">
-    <tr>
+    <tr class="gt_col_headings">
       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Sex">Sex</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Year">Year</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Proportion">Proportion</th>
@@ -1016,7 +1038,6 @@ from above:</p>
 </div>
 <p>We can integrate that into our Shiny display using <code>gt</code>’s
 <code>render_gt()</code> and <code>gt_output()</code> functions:</p>
-<pre class='prettyprint'><code>library(shiny)<br>library(babynames)<br>library(gt)<br><br>ui <- fluidPage(<br>&nbsp;&nbsp;titlePanel("Name Measurement"),<br>&nbsp;&nbsp;textInput("name", label="What is your name?", value="Steven"),<br>&nbsp;&nbsp;plotOutput("namePlot"),<br>&nbsp;&nbsp;<span style="background-color:#ffff7f">gt_output</span>("<span style="background-color:#ffff7f">nameTable</span>")<br>)<br><br>server <- function(input, output, session) {<br>&nbsp;&nbsp;&nbsp;&nbsp;output$namePlot <- renderPlot({<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;babynames %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter(name==input$name) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ggplot(mapping=aes(x=year, y=prop, color=sex)) + <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;geom_line() + <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ggtitle(paste0("Name Frequency: ", input$name)) <br>&nbsp;&nbsp;&nbsp;&nbsp;})<br>&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;output$<span style="background-color:#ffff7f">nameTable</span> <- <span style="background-color:#ffff7f">render_gt</span>({<br>&nbsp;&nbsp;&nbsp;&nbsp;babynames %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter(name==input$name) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;group_by(sex) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arrange(year) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;top_n(1, prop) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;select(-name) %>% ungroup() %>% select(sex, year, prop) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arrange(sex) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;gt() %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cols_label(sex="Sex", year="Year", prop="Proportion") %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fmt_number(columns=c(prop), decimals=5) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tab_header(title=paste0("Year of Maximum ", input$name, ", by sex assigned at birth")) &nbsp;%>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tab_source_note(md("From `babynames` package"))<br><br>&nbsp;&nbsp;&nbsp;&nbsp;})<br>}<br><br>shinyApp(ui = ui, server = server)</code></pre>
 </div>
 </div>
 <div id="organizing-our-app" class="section level1" number="3">
@@ -1024,7 +1045,6 @@ from above:</p>
 <p>At this point, our <code>server</code> function is getting a bit
 unruly. A good practice is to <em>encapsulate</em> various parts of the
 display into separate functions, like so:</p>
-<pre class='prettyprint'><code>library(shiny)<br>library(babynames)<br>library(gt)<br><br><span style="background-color:#ffff7f">makePlot</span> <- function(nameToUse) {<br>&nbsp;&nbsp;babynames %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter(name==nameToUse) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ggplot(mapping=aes(x=year, y=prop, color=sex)) + <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;geom_line() + <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ggtitle(paste0("Name Frequency: ", nameToUse))<br>}<br><br><span style="background-color:#ffff7f">makeTable</span> <- function(nameToUse) {<br>&nbsp;&nbsp;babynames %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter(name==nameToUse) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;group_by(sex) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arrange(year) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;top_n(1, prop) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;select(-name) %>% ungroup() %>% select(sex, year, prop) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arrange(sex) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;gt() %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cols_label(sex="Sex", year="Year", prop="Proportion") %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fmt_number(columns=c(prop), decimals=5) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tab_header(title=paste0("Year of Maximum ", nameToUse, ", by sex assigned at birth")) &nbsp;%>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tab_source_note(md("From `babynames` package"))<br>}<br><br>ui <- fluidPage(<br>&nbsp;&nbsp;titlePanel("Name Measurement"),<br>&nbsp;&nbsp;textInput("name", label="What is your name?", value="Steven"),<br>&nbsp;&nbsp;plotOutput("namePlot"),<br>&nbsp;&nbsp;gt_output("nameTable")<br>)<br><br>server <- function(input, output, session) {<br>&nbsp;&nbsp;&nbsp;&nbsp;output$namePlot <- renderPlot(<span style="background-color:#ffff7f">makePlot</span>(input$name))<br>&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;output$nameTable <- render_gt(<span style="background-color:#ffff7f">makeTable</span>(input$name))<br>}<br><br>shinyApp(ui = ui, server = server)</code></pre>
 <p>Note that the functions that make the plot and the table do not
 directly reference the <code>input</code> variable provided by Shiny-
 they would work just fine “one their own”, independent of whether we
@@ -1049,11 +1069,9 @@ the simplest is to arrange things in <em>rows</em> and <em>columns</em>.
 Shiny uses the “Bootstrap” CSS library, which is built around a
 12-column layout. We can use the <code>fluidRow()</code> and
 <code>column()</code> functions to set things up a bit differently:</p>
-<pre class='prettyprint'><code>ui <- fluidPage(<br>&nbsp;&nbsp;titlePanel("Name Measurement"),<br>&nbsp;&nbsp;textInput("name", label="What is your name?", value="Steven"),<br>&nbsp;&nbsp;<span style="background-color:#ffff7f">fluidRow</span>(<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:#ffff7f">column</span>(6, plotOutput("namePlot")),<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:#ffff7f">column</span>(6, gt_output("nameTable"))<br>&nbsp;&nbsp;)<br>)</code></pre>
 <p>Between <code>fluidRow()</code> and <code>column()</code>, you can
 put together pretty much any layout you might want, but a useful
 shortcut may be to use the <code>sidebarLayout()</code> function:</p>
-<pre class='prettyprint'><code>ui <- fluidPage(<br>&nbsp;&nbsp;titlePanel("Name Plot"),<br>&nbsp;&nbsp;<span style="background-color:#ffff7f">sidebarLayout</span>(<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:#ffff7f">sidebarPanel</span>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;textInput("name", label="What is your name?", value="Steven")<br>&nbsp;&nbsp;&nbsp;&nbsp;),<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:#ffff7f">mainPanel</span>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;plotOutput("namePlot"),<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gt_output("nameTable")<br>&nbsp;&nbsp;&nbsp;&nbsp;)<br>&nbsp;&nbsp;)<br>)</code></pre>
 <p><code>sidebarLayout()</code> is one of several built-in layout helper
 functions in Shiny, and can be used to quickly build a more complex
 interface. Note that in the screenshot below, our “sidebar” is actually
@@ -1069,7 +1087,6 @@ will automatically reflow to a vertical layout.</p>
 <h2><span class="header-section-number">5.1</span> Drop-down menus</h2>
 <p>What if, instead of letting the user type any name in, we wanted to
 restrict them to a pre-set list of names?</p>
-<pre class='prettyprint'><code>ui <- fluidPage(<br>&nbsp;&nbsp;&nbsp;&nbsp;titlePanel("Name Measurement"),<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:#ffff7f">selectInput</span>("name", label="What is your name?", c("Steven", "Alison", "Jackie")),<br>&nbsp;&nbsp;&nbsp;&nbsp;fluidRow(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;column(6, plotOutput("namePlot")),<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;column(6, gt_output("nameTable"))<br>&nbsp;&nbsp;&nbsp;&nbsp;)<br>)</code></pre>
 <p><img src="07-shiny_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
 <p>Of course, there’s nothing saying that this list has to be
 manually-entered! Imagine if we wanted it to be set to the top ten names
@@ -1101,7 +1118,6 @@ set the list of names to be the top 10 names from 2017. Let’s allow the
 user to specify a year, using <code>numericInput</code>. This will
 involve a few new concepts, specifically around linking the value of one
 field to the value of another. First, let’s look at the UI:</p>
-<pre class='prettyprint'><code>ui <- fluidPage(<br>&nbsp;&nbsp;&nbsp;&nbsp;titlePanel("Name Measurement"),<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:#ffff7f">numericInput</span>("year", label="Year", min=1880, max=2017, value=2017),<br>&nbsp;&nbsp;&nbsp;&nbsp;selectInput("name", label="Which Name?", <span style="background-color:#ffff7f">c()</span>),<br>&nbsp;&nbsp;&nbsp;&nbsp;fluidRow(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;column(6, plotOutput("namePlot")),<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;column(6, gt_output("nameTable"))<br>&nbsp;&nbsp;&nbsp;&nbsp;)<br>)</code></pre>
 <p>We’ve added a new input control, which will only allow numeric input
 that is within a certain range. We’ve also stopped manually specifying
 our select box options, since we want the list to be dynamic: it should
@@ -1109,7 +1125,6 @@ contain the top ten names <em>for the selected year</em>. We need to
 somehow connect the <code>numericInput</code> box that we have created
 to the <code>selectInput</code>. We’ll do this in the server
 function:</p>
-<pre class='prettyprint'><code>server <- function(input, output, session) {<br>&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;namesToUse <- <span style="background-color:#ffff7f">reactive</span>({<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;babynames %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filter(year==input$year) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;group_by(sex) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;arrange(prop) %>% top_n(5) %>% <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ungroup() %>% select(name)<br>&nbsp;&nbsp;&nbsp;&nbsp;})<br>&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:#ffff7f">observeEvent</span>(namesToUse(), {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updateSelectInput(session, "name", <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;choices=namesToUse(),<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label=paste0("Popular names in ", input$year)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br>&nbsp;&nbsp;&nbsp;&nbsp;})<br>&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;# note: don't forget the code to actually make the plot and table!<br>&nbsp;&nbsp;<br>}</code></pre>
 <p>There are two new things here. First is the use of the
 <code>reactive()</code> function, which sets up a new variable that
 Shiny will be in charge of. Any R variable that we want to either

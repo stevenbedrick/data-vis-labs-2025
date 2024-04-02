@@ -14,7 +14,7 @@
 
 <title>Introduce Yourself</title>
 
-<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -30,7 +30,7 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
@@ -315,7 +315,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2023</a>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2024</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -326,7 +326,7 @@ div.tocify {
   <a href="data-vis-resources.html">Resources</a>
 </li>
 <li>
-  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AK-Sp23">Sakai</a>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AL-Sp24">Sakai</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -411,7 +411,7 @@ you will do all of the assignments. To join the workspace, look on Sakai
 for the sharing link. When you click the link, you should be prompted to
 join the class workspace:</p>
 <p><img src="images/lab_00/04_join_workspace.png" /> <img
-src="images/lab_00/05_workspace_landing.png" /> Click the “Projects”
+src="./images/lab_00/05_workspace_landing.png" /> Click the “Projects”
 tab at the top to see the various labs and assignments (right now, there
 should just be one):</p>
 <p><img src="images/lab_00/06_project_list.png" /></p>
@@ -495,11 +495,9 @@ credit where credit is due), ask R as in
 <pre class="r"><code>library(dplyr)
 help(&quot;dplyr&quot;)</code></pre>
 <pre class="r"><code>citation(&quot;ggplot2&quot;)</code></pre>
-<pre><code>
-To cite ggplot2 in publications, please use
+<pre><code>To cite ggplot2 in publications, please use
 
-  H. Wickham. ggplot2: Elegant Graphics for Data Analysis.
-  Springer-Verlag New York, 2016.
+  H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
 
 A BibTeX entry for LaTeX users is
 
@@ -552,11 +550,11 @@ in R. We’ll call it saying hello to your dataset:</p>
 <pre class="r"><code>glimpse(babynames) # dplyr</code></pre>
 <pre><code>Rows: 1,924,665
 Columns: 5
-$ year &lt;dbl&gt; 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880,…
-$ sex  &lt;chr&gt; &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, …
-$ name &lt;chr&gt; &quot;Mary&quot;, &quot;Anna&quot;, &quot;Emma&quot;, &quot;Elizabeth&quot;, &quot;Minnie&quot;, &quot;Margaret&quot;, &quot;Ida&quot;,…
-$ n    &lt;int&gt; 7065, 2604, 2003, 1939, 1746, 1578, 1472, 1414, 1320, 1288, 1258,…
-$ prop &lt;dbl&gt; 0.07238359, 0.02667896, 0.02052149, 0.01986579, 0.01788843, 0.016…</code></pre>
+$ year &lt;dbl&gt; 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, …
+$ sex  &lt;chr&gt; &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;F&quot;, &quot;…
+$ name &lt;chr&gt; &quot;Mary&quot;, &quot;Anna&quot;, &quot;Emma&quot;, &quot;Elizabeth&quot;, &quot;Minnie&quot;, &quot;Margaret&quot;, &quot;Ida&quot;, &quot;Alice&quot;, &quot;Bertha&quot;, &quot;Sarah&quot;, &quot;Annie&quot;, &quot;Clara&quot;, &quot;Ella&quot;, &quot;Flore…
+$ n    &lt;int&gt; 7065, 2604, 2003, 1939, 1746, 1578, 1472, 1414, 1320, 1288, 1258, 1226, 1156, 1063, 1045, 1040, 1012, 995, 982, 949, 858, 808,…
+$ prop &lt;dbl&gt; 0.07238359, 0.02667896, 0.02052149, 0.01986579, 0.01788843, 0.01616720, 0.01508119, 0.01448696, 0.01352390, 0.01319605, 0.0128…</code></pre>
 <pre class="r"><code>head(babynames) # base R</code></pre>
 <pre><code># A tibble: 6 × 5
    year sex   name          n   prop
@@ -638,15 +636,15 @@ lists all of the variables that your current environment has loaded.</p>
  8  1882 M     Steve      63 0.000516
  9  1882 M     Steven     22 0.000180
 10  1883 M     Stephen   140 0.00124 
-# … with 404 more rows</code></pre>
+# ℹ 404 more rows</code></pre>
 <pre class="r"><code>glimpse(steve)</code></pre>
 <pre><code>Rows: 414
 Columns: 5
-$ year &lt;dbl&gt; 1880, 1880, 1880, 1881, 1881, 1881, 1882, 1882, 1882, 1883, 1883,…
-$ sex  &lt;chr&gt; &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, …
-$ name &lt;chr&gt; &quot;Stephen&quot;, &quot;Steve&quot;, &quot;Steven&quot;, &quot;Stephen&quot;, &quot;Steve&quot;, &quot;Steven&quot;, &quot;Step…
-$ n    &lt;int&gt; 176, 52, 17, 147, 44, 15, 201, 63, 22, 140, 62, 13, 165, 66, 20, …
-$ prop &lt;dbl&gt; 0.00148649, 0.00043919, 0.00014358, 0.00135757, 0.00040635, 0.000…</code></pre>
+$ year &lt;dbl&gt; 1880, 1880, 1880, 1881, 1881, 1881, 1882, 1882, 1882, 1883, 1883, 1883, 1884, 1884, 1884, 1885, 1885, 1885, 1886, 1886, 1886, …
+$ sex  &lt;chr&gt; &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;…
+$ name &lt;chr&gt; &quot;Stephen&quot;, &quot;Steve&quot;, &quot;Steven&quot;, &quot;Stephen&quot;, &quot;Steve&quot;, &quot;Steven&quot;, &quot;Stephen&quot;, &quot;Steve&quot;, &quot;Steven&quot;, &quot;Stephen&quot;, &quot;Steve&quot;, &quot;Steven&quot;, &quot;Steph…
+$ n    &lt;int&gt; 176, 52, 17, 147, 44, 15, 201, 63, 22, 140, 62, 13, 165, 66, 20, 158, 60, 21, 181, 70, 20, 165, 54, 15, 187, 83, 20, 164, 64, …
+$ prop &lt;dbl&gt; 0.00148649, 0.00043919, 0.00014358, 0.00135757, 0.00040635, 0.00013853, 0.00164712, 0.00051626, 0.00018028, 0.00124470, 0.0005…</code></pre>
 <p>You should see that the structure of the <code>steve</code> dataframe
 looks just like that of the <code>babynames</code> dataframe, but with
 many fewer rows.</p>

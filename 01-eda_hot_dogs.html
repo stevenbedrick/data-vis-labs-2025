@@ -14,7 +14,7 @@
 
 <title>Lab 01: Nathan’s Hot-Dog Eating Contest</title>
 
-<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -30,7 +30,7 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
@@ -325,7 +325,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2023</a>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2024</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -336,7 +336,7 @@ div.tocify {
   <a href="data-vis-resources.html">Resources</a>
 </li>
 <li>
-  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AK-Sp23">Sakai</a>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AL-Sp24">Sakai</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -446,10 +446,10 @@ this!</p>
 <pre class="r"><code>glimpse(hot_dogs)</code></pre>
 <pre><code>Rows: 59
 Columns: 4
-$ year      &lt;dbl&gt; 2022, 2022, 2021, 2021, 2020, 2020, 2019, 2019, 2018, 2018, …
-$ gender    &lt;fct&gt; male, female, male, female, male, female, male, female, male…
-$ name      &lt;chr&gt; &quot;Joey Chestnut&quot;, &quot;Miki Sudo&quot;, &quot;Joey Chestnut&quot;, &quot;Michelle Les…
-$ num_eaten &lt;dbl&gt; 63.00, 40.00, 76.00, 30.75, 75.00, 48.50, 71.00, 31.00, 74.0…</code></pre>
+$ year      &lt;dbl&gt; 2022, 2022, 2021, 2021, 2020, 2020, 2019, 2019, 2018, 2018, 2017, 2017, 2016, 2016, 2015, 2015, 2014, 2014, 2013, 2013, 2…
+$ gender    &lt;fct&gt; male, female, male, female, male, female, male, female, male, female, male, female, male, female, male, female, male, fem…
+$ name      &lt;chr&gt; &quot;Joey Chestnut&quot;, &quot;Miki Sudo&quot;, &quot;Joey Chestnut&quot;, &quot;Michelle Lesco&quot;, &quot;Joey Chestnut&quot;, &quot;Miki Sudo&quot;, &quot;Joey Chestnut&quot;, &quot;Miki Sud…
+$ num_eaten &lt;dbl&gt; 63.000, 40.000, 76.000, 30.750, 75.000, 48.500, 71.000, 31.000, 74.000, 37.000, 72.000, 41.000, 70.000, 38.000, 62.000, 3…</code></pre>
 <pre class="r"><code>hot_dogs</code></pre>
 <pre><code># A tibble: 59 × 4
     year gender name           num_eaten
@@ -464,7 +464,7 @@ $ num_eaten &lt;dbl&gt; 63.00, 40.00, 76.00, 30.75, 75.00, 48.50, 71.00, 31.00, 
  8  2019 female Miki Sudo           31  
  9  2018 male   Joey Chestnut       74  
 10  2018 female Miki Sudo           37  
-# … with 49 more rows</code></pre>
+# ℹ 49 more rows</code></pre>
 <p>At this point, follow the HLO process and familiarize yourself with
 the columns and their contents. Questions to ask:</p>
 <ol style="list-style-type: decimal">
@@ -510,7 +510,7 @@ hot_dogs</code></pre>
  8  2015 male   Matthew Stonie        62 TRUE      
  9  2014 male   Joey Chestnut         61 TRUE      
 10  2013 male   Joey Chestnut         69 TRUE      
-# … with 32 more rows</code></pre>
+# ℹ 32 more rows</code></pre>
 </div>
 </div>
 <div id="plot-the-data" class="section level1" number="4">
@@ -639,12 +639,12 @@ after, and only for male competitors.</p>
 glimpse(hdm_affil)</code></pre>
 <pre><code>Rows: 42
 Columns: 6
-$ year       &lt;dbl&gt; 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,…
-$ gender     &lt;fct&gt; male, male, male, male, male, male, male, male, male, male,…
-$ name       &lt;chr&gt; &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Ch…
-$ num_eaten  &lt;dbl&gt; 63.000, 76.000, 75.000, 71.000, 74.000, 72.000, 70.000, 62.…
-$ affiliated &lt;fct&gt; current, current, current, current, current, current, curre…
-$ post_ifoce &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…</code></pre>
+$ year       &lt;dbl&gt; 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, …
+$ gender     &lt;fct&gt; male, male, male, male, male, male, male, male, male, male, male, male, male, male, male, male, male, male, male, male, …
+$ name       &lt;chr&gt; &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;Joey Chestnut&quot;, &quot;…
+$ num_eaten  &lt;dbl&gt; 63.000, 76.000, 75.000, 71.000, 74.000, 72.000, 70.000, 62.000, 61.000, 69.000, 68.000, 62.000, 54.000, 68.000, 59.000, …
+$ affiliated &lt;fct&gt; current, current, current, current, current, current, current, current, current, current, current, current, current, cur…
+$ post_ifoce &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, …</code></pre>
 <div class="panel panel-success">
 <div class="panel-heading">
 Challenge #4:
@@ -787,11 +787,6 @@ of the plot should look like.</p>
   theme(panel.background = element_blank()) +
   theme(axis.line.x = element_line(color = &quot;gray80&quot;, size = 0.5)) +
   theme(axis.ticks = element_line(color = &quot;gray80&quot;, size = 0.5))</code></pre>
-<pre><code>Warning: The `size` argument of `element_line()` is deprecated as of ggplot2 3.4.0.
-ℹ Please use the `linewidth` argument instead.
-This warning is displayed once every 8 hours.
-Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-generated.</code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <div class="panel panel-info">
 <div class="panel-heading">
@@ -906,8 +901,7 @@ how it works.</p>
   annotate(&#39;segment&#39;, x=2022.25, xend=2022.25, y= 79, yend=77, linewidth=0.5, color=&quot;#E9602B&quot;) +
   annotate(&#39;segment&#39;, x=2015, xend=2015, y= 82, yend=79, linewidth=0.5, color=&quot;#E9602B&quot;) +
   annotate(&#39;text&#39;, x=2015, y=86, label=&quot;MLE/IFOCE Current Member&quot;, color=&quot;#E9602B&quot;, family=&quot;Lato&quot;, hjust=0.5, size = 3)</code></pre>
-<pre><code>Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.</code></pre>
+<pre><code>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</code></pre>
 <pre class="r"><code>nathan_ann</code></pre>
 <p><img src="01-eda_hot_dogs_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
 <p>Finally, adding in another layer of data, including information about
@@ -922,12 +916,12 @@ female contestants:</p>
 glimpse(hdm_females)</code></pre>
 <pre><code>Rows: 12
 Columns: 6
-$ year       &lt;dbl&gt; 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013,…
-$ gender     &lt;fct&gt; female, female, female, female, female, female, female, fem…
-$ name       &lt;chr&gt; &quot;Miki Sudo&quot;, &quot;Michelle Lesco&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;M…
-$ num_eaten  &lt;dbl&gt; 40.00, 30.75, 48.50, 31.00, 37.00, 41.00, 38.00, 38.00, 34.…
-$ affiliated &lt;fct&gt; current, current, current, current, current, current, curre…
-$ post_ifoce &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…</code></pre>
+$ year       &lt;dbl&gt; 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011
+$ gender     &lt;fct&gt; female, female, female, female, female, female, female, female, female, female, female, female
+$ name       &lt;chr&gt; &quot;Miki Sudo&quot;, &quot;Michelle Lesco&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;, &quot;Miki Sudo&quot;…
+$ num_eaten  &lt;dbl&gt; 40.00, 30.75, 48.50, 31.00, 37.00, 41.00, 38.00, 38.00, 34.00, 36.75, 45.00, 40.00
+$ affiliated &lt;fct&gt; current, current, current, current, current, current, current, current, current, current, current, current
+$ post_ifoce &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE</code></pre>
 <pre class="r"><code>nathan_w_females &lt;- nathan_ann +
   # add in the female data, and manually set a fill color
   geom_col(data = hdm_females, 

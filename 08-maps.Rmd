@@ -27,6 +27,7 @@ library(readxl)
 library(classInt)
 library(cowplot)
 library(maps)
+library(prettymapr)
 library(ggspatial)
 library(basemaps)
 library(mapview)
@@ -517,11 +518,17 @@ st_bbox(trees_in_park)
 
 Next, we generate a basemap using `get_stamenmap()` (there are related functions for different tile sets).
 
+```{r,echo=FALSE}
+register_stadiamaps("e8736240-6bd5-4531-9a62-2418120de3d9", write=FALSE)
+```
+
+
+
 ```{r}
-park_base_map <- get_stamenmap(
+park_base_map <- get_stadiamap(
   c(left=-122.725, bottom=45.4675, right=-122.7125, top=45.478), # note: in practice, we wouldn't enter these by hand!
   zoom=16,
-  maptype="terrain") # try experimenting with "toner", etc.  
+  maptype="stamen_terrain") # try experimenting with "toner", etc.  
 ggmap(park_base_map)
 ```
 

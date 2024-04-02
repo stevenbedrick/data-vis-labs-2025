@@ -14,7 +14,7 @@
 
 <title>Lab 04: Distributions &amp; Summary Statistics</title>
 
-<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -30,7 +30,7 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
@@ -315,7 +315,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2023</a>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2024</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -326,7 +326,7 @@ div.tocify {
   <a href="data-vis-resources.html">Resources</a>
 </li>
 <li>
-  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AK-Sp23">Sakai</a>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AL-Sp24">Sakai</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -422,8 +422,8 @@ mm &lt;- rnorm(250, rep(c(-1, 1), each = 50) * sqrt(0.9), sqrt(0.1))</code></pre
 <pre class="r"><code>glimpse(four)</code></pre>
 <pre><code>Rows: 1,000
 Columns: 2
-$ dist &lt;fct&gt; n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n,…
-$ vals &lt;dbl&gt; -0.99658235, 0.72182415, -0.61720882, 2.02939157, 1.06541605, 0.9…</code></pre>
+$ dist &lt;fct&gt; n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, …
+$ vals &lt;dbl&gt; -0.996582353, 0.721824146, -0.617208815, 2.029391575, 1.065416053, 0.987219739, 0.027453925, 0.672872319, 0.572066502, 0.90367…</code></pre>
 <p>Let’s see what our descriptive statistics look like:</p>
 <pre class="r"><code>skim(four)</code></pre>
 <table>
@@ -1152,7 +1152,7 @@ mean(x) # use fun.y</code></pre>
 <pre><code>[1] 2</code></pre>
 <pre class="r"><code>mean_cl_normal(x) # use fun.data</code></pre>
 <pre><code>Error in `mean_cl_normal()`:
-! The package `Hmisc` is required.</code></pre>
+! The package &quot;Hmisc&quot; is required.</code></pre>
 <p>Confidence limits may give us a better idea than standard error
 limits of whether two means would be deemed statistically different when
 modeling, so we frequently use <code>mean_cl_normal</code> or

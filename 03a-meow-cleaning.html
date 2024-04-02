@@ -14,7 +14,7 @@
 
 <title>Lab 03a: Animal Word Cleaning</title>
 
-<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -249,7 +249,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2023</a>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2024</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -260,7 +260,7 @@ $(document).ready(function () {
   <a href="data-vis-resources.html">Resources</a>
 </li>
 <li>
-  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AK-Sp23">Sakai</a>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AL-Sp24">Sakai</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -332,14 +332,14 @@ sounds_summary &lt;- sounds_data %&gt;%
             kids_respond = n_distinct(data_id),
             prop_produce = kids_produce / kids_respond,
             prop_understand = kids_understand / kids_respond)</code></pre>
-<pre><code>Error in group_by(., age, sound): object &#39;sounds_data&#39; not found</code></pre>
+<pre><code>Error in eval(expr, envir, enclos): object &#39;sounds_data&#39; not found</code></pre>
 <p>Now let’s export both data frames for the lab.</p>
 <pre class="r"><code>write_csv(sounds_data, here::here(&quot;data&quot;,
                                        &quot;animal_sounds_data.csv&quot;))</code></pre>
-<pre><code>Error in is.data.frame(x): object &#39;sounds_data&#39; not found</code></pre>
+<pre><code>Error in eval(expr, envir, enclos): object &#39;sounds_data&#39; not found</code></pre>
 <pre class="r"><code>write_csv(sounds_summary, here::here(&quot;data&quot;,
                                         &quot;animal_sounds_summary.csv&quot;))</code></pre>
-<pre><code>Error in is.data.frame(x): object &#39;sounds_summary&#39; not found</code></pre>
+<pre><code>Error in eval(expr, envir, enclos): object &#39;sounds_summary&#39; not found</code></pre>
 </div>
 
 <div id="rmd-source-code">LS0tCnRpdGxlOiAiTGFiIDAzYTogQW5pbWFsIFdvcmQgQ2xlYW5pbmciCnN1YnRpdGxlOiAiQk1JIDUvNjI1IgphdXRob3I6ICJBbGlzb24gSGlsbCIKb3V0cHV0OgogIGh0bWxfZG9jdW1lbnQ6CiAgICB0aGVtZTogZmxhdGx5CiAgICBjb2RlX2Rvd25sb2FkOiB0cnVlCi0tLQoKYGBge3Igc2V0dXAsIGluY2x1ZGUgPSBGQUxTRSwgY2FjaGUgPSBGQUxTRX0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KGVycm9yID0gVFJVRSwgY29tbWVudCA9IE5BLCB3YXJuaW5nID0gRkFMU0UsIGVycm9ycyA9IEZBTFNFLCBtZXNzYWdlID0gRkFMU0UsIHRpZHkgPSBGQUxTRSwgY2FjaGUgPSBGQUxTRSkKYGBgCgojIERhdGEKaHR0cDovL2xhbmdjb2cuZ2l0aHViLmlvL3dvcmRiYW5rci8KCiMgUGFja2FnZXMKCmBgYHtyfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeSh3b3JkYmFua3IpCmxpYnJhcnkoaGVyZSkKYGBgCgpgYGB7cn0KbXlfc291bmRzIDwtIGMoIm1lb3ciLCAid29vZiB3b29mIiwgImNvY2thZG9vZGxlZG9vIikKCiMgZmlyc3QgZ2V0IHRoZSBpdGVtcyBpbiB0aGUgYW5pbWFsIGNhdGVnb3J5CnNvdW5kcyA8LSBnZXRfaXRlbV9kYXRhKGxhbmd1YWdlID0gIkVuZ2xpc2ggKEFtZXJpY2FuKSIsIAogICAgICAgICAgICAgICAgICAgICAgICAgZm9ybSA9ICJXRyIpICU+JQogIGZpbHRlcihkZWZpbml0aW9uICVpbiUgbXlfc291bmRzKSAKCiMgdGhlbiBnZXQgaW5zdHJ1bWVudCBkYXRhIGZvciB0aG9zZSBpdGVtcwpzb3VuZHNfZGF0YSA8LSBnZXRfaW5zdHJ1bWVudF9kYXRhKAogIGxhbmd1YWdlID0gIkVuZ2xpc2ggKEFtZXJpY2FuKSIsCiAgZm9ybSA9ICJXRyIsCiAgaXRlbXMgPSBzb3VuZHMkaXRlbV9pZCwKICBhZG1pbmlzdHJhdGlvbnMgPSBUUlVFLAogIGl0ZW1pbmZvID0gVFJVRQogICkgJT4lIAogIG11dGF0ZShwcm9kdWNlcyA9IHZhbHVlID09ICJwcm9kdWNlcyIsCiAgICAgICAgIHVuZGVyc3RhbmRzID0gY2FzZV93aGVuKAogICAgICAgICAgIHByb2R1Y2VzID09IFRSVUUgfCB2YWx1ZSA9PSAidW5kZXJzdGFuZHMiIH4gVFJVRSwKICAgICAgICAgICBUUlVFIH4gRkFMU0UKICAgICAgICAgKSkgJT4lIAogIGRyb3BfbmEocHJvZHVjZXMpICU+JSAKICByZW5hbWUoc291bmQgPSB1bmlfbGVtbWEpCgojIHdoYXQgcHJvcG9ydGlvbiBvZiBraWRzIGF0IGVhY2ggYWdlIHVuZGVyc3RhbmQvcHJvZHVjZSBlYWNoIHdvcmQ/CnNvdW5kc19zdW1tYXJ5IDwtIHNvdW5kc19kYXRhICU+JSAKICBncm91cF9ieShhZ2UsIHNvdW5kKSAlPiUKICBzdW1tYXJpc2Uoa2lkc19wcm9kdWNlID0gc3VtKHByb2R1Y2VzLCBuYS5ybSA9IFRSVUUpLAogICAgICAgICAgICBraWRzX3VuZGVyc3RhbmQgPSBzdW0odW5kZXJzdGFuZHMsIG5hLnJtID0gVFJVRSksCiAgICAgICAgICAgIGtpZHNfcmVzcG9uZCA9IG5fZGlzdGluY3QoZGF0YV9pZCksCiAgICAgICAgICAgIHByb3BfcHJvZHVjZSA9IGtpZHNfcHJvZHVjZSAvIGtpZHNfcmVzcG9uZCwKICAgICAgICAgICAgcHJvcF91bmRlcnN0YW5kID0ga2lkc191bmRlcnN0YW5kIC8ga2lkc19yZXNwb25kKQpgYGAKCgpOb3cgbGV0J3MgZXhwb3J0IGJvdGggZGF0YSBmcmFtZXMgZm9yIHRoZSBsYWIuCgpgYGB7cn0Kd3JpdGVfY3N2KHNvdW5kc19kYXRhLCBoZXJlOjpoZXJlKCJkYXRhIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImFuaW1hbF9zb3VuZHNfZGF0YS5jc3YiKSkKd3JpdGVfY3N2KHNvdW5kc19zdW1tYXJ5LCBoZXJlOjpoZXJlKCJkYXRhIiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJhbmltYWxfc291bmRzX3N1bW1hcnkuY3N2IikpCmBgYAoK</div>

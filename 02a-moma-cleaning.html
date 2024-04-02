@@ -14,7 +14,7 @@
 
 <title>Lab 02a: MOMA cleaning</title>
 
-<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -239,7 +239,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2023</a>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2024</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -250,7 +250,7 @@ $(document).ready(function () {
   <a href="data-vis-resources.html">Resources</a>
 </li>
 <li>
-  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AK-Sp23">Sakai</a>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AL-Sp24">Sakai</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -291,16 +291,16 @@ moma &lt;- read_csv(here::here(&quot;data&quot;, &quot;artworks.csv&quot;),
   clean_names()
 problems(moma)</code></pre>
 <pre><code># A tibble: 8 × 5
-     row   col expected        actual  file                                     
-   &lt;int&gt; &lt;int&gt; &lt;chr&gt;           &lt;chr&gt;   &lt;chr&gt;                                    
-1 103825    16 date in ISO8601 1998-04 /Users/bedricks/Dropbox/Work/Teaching/Sp…
-2 128674    16 date in ISO8601 1977-08 /Users/bedricks/Dropbox/Work/Teaching/Sp…
-3 131407    16 date in ISO8601 1998-04 /Users/bedricks/Dropbox/Work/Teaching/Sp…
-4 131786    16 date in ISO8601 1975-01 /Users/bedricks/Dropbox/Work/Teaching/Sp…
-5 132166    16 date in ISO8601 1998-04 /Users/bedricks/Dropbox/Work/Teaching/Sp…
-6 132167    16 date in ISO8601 1998-04 /Users/bedricks/Dropbox/Work/Teaching/Sp…
-7 132168    16 date in ISO8601 1995    /Users/bedricks/Dropbox/Work/Teaching/Sp…
-8 132170    16 date in ISO8601 1998-04 /Users/bedricks/Dropbox/Work/Teaching/Sp…</code></pre>
+     row   col expected        actual  file                                                                                               
+   &lt;int&gt; &lt;int&gt; &lt;chr&gt;           &lt;chr&gt;   &lt;chr&gt;                                                                                              
+1 103825    16 date in ISO8601 1998-04 /Users/bedricks/Dropbox/Work/Teaching/Spring 2024/Dataviz/labs/data-vis-labs-2024/data/artworks.csv
+2 128674    16 date in ISO8601 1977-08 /Users/bedricks/Dropbox/Work/Teaching/Spring 2024/Dataviz/labs/data-vis-labs-2024/data/artworks.csv
+3 131407    16 date in ISO8601 1998-04 /Users/bedricks/Dropbox/Work/Teaching/Spring 2024/Dataviz/labs/data-vis-labs-2024/data/artworks.csv
+4 131786    16 date in ISO8601 1975-01 /Users/bedricks/Dropbox/Work/Teaching/Spring 2024/Dataviz/labs/data-vis-labs-2024/data/artworks.csv
+5 132166    16 date in ISO8601 1998-04 /Users/bedricks/Dropbox/Work/Teaching/Spring 2024/Dataviz/labs/data-vis-labs-2024/data/artworks.csv
+6 132167    16 date in ISO8601 1998-04 /Users/bedricks/Dropbox/Work/Teaching/Spring 2024/Dataviz/labs/data-vis-labs-2024/data/artworks.csv
+7 132168    16 date in ISO8601 1995    /Users/bedricks/Dropbox/Work/Teaching/Spring 2024/Dataviz/labs/data-vis-labs-2024/data/artworks.csv
+8 132170    16 date in ISO8601 1998-04 /Users/bedricks/Dropbox/Work/Teaching/Spring 2024/Dataviz/labs/data-vis-labs-2024/data/artworks.csv</code></pre>
 <p>Basic cleaning with <code>stringr</code> of <code>gender</code>
 variable, which refers to the gender of the artist (a <code>()</code> is
 used a placeholder for “various artists”)</p>
