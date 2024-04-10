@@ -296,8 +296,8 @@ knitr::kable(comp_table, format = "html")
 
 *(shortcut to using `|` repeatedly with `==`)
 
-
-## Another level: `group_by`
+---
+## New this week: `group_by`
 
 Many `dplyr` verbs can be _grouped_
 

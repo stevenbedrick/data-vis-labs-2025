@@ -12,8 +12,8 @@ This is the site for sharing our Data Visualization Labs for BMI 5/625 at Oregon
       - [ggplot crash course](slides/01b-slides.html)
       - Addendum: [01-addendum.html](01-addendum.html)
 
-<!-- - [Lab 02: MoMA Museum Tour](02-moma.html) -->
-<!--     - [Slides](slides/02-slides.html) ([pdf](slides/02-slides.pdf)) -->
+- [Lab 02: MoMA Museum Tour](02-moma.html)
+    - [Slides](slides/02-slides.html) ([pdf](slides/02-slides.pdf))
 <!--     - Dataset: [https://stevenbedrick.github.io/data-vis-labs-2022/data/artworks.csv](data/artworks-cleaned.csv) -->
 <!--     - Dataset Cleaning *(optional)*: [02a-moma-cleaning.html](02a-moma-cleaning.html) -->
 <!--     - Addendum: [02-addendum.html](02-addendum.html) -->
