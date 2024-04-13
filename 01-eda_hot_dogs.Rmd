@@ -365,8 +365,8 @@ We could also save all these as a custom theme. We are not fans of the default f
 hot_diggity <- theme(plot.title = element_text(hjust = 0.5),
                      axis.text = element_text(size = 12),
                      panel.background = element_blank(),
-                     axis.line.x = element_line(color = "gray80", size = 0.5),
-                     axis.ticks = element_line(color = "gray80", size = 0.5),
+                     axis.line.x = element_line(color = "gray80", linewidth = 0.5),
+                     axis.ticks = element_line(color = "gray80", linewidth = 0.5),
                      text = element_text(family = "Lato") # need extrafont for this
                      )
 ```
