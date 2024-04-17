@@ -1,0 +1,28 @@
+---
+title: "scratch"
+author: "Steven Bedrick"
+date: "2023-05-17"
+output: html_document
+---
+
+```{r}
+library(shiny)
+library(flair)
+library(tidyverse)
+```
+
+
+```{r how_to_pipe, include = FALSE}
+
+iris %>%
+  group_by(Species) %>%
+  summarize(mean(Sepal.Length))
+
+```
+
+```{r, echo = FALSE}
+
+decorate("how_to_pipe") %>% 
+  flair("%>%")
+  
+```

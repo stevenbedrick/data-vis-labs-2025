@@ -1,7 +1,7 @@
 ---
 title: "Lab 03: Colors with Animal Sounds"
 subtitle: "BMI 5/625"
-author: "Alison Hill w/ minor tweaks by Steven Bedrick"
+author: "Alison Hill w/ tweaks by Steven Bedrick"
 output:
   html_document:
     theme: flatly
@@ -16,16 +16,17 @@ output:
 knitr::opts_chunk$set(error = TRUE, comment = NA, warning = FALSE, errors = FALSE, message = FALSE, tidy = FALSE, cache = FALSE)
 library(RColorBrewer)
 library(wesanderson)
+library(ghibli)
 library(ggthemes)
 library(beyonce)
-library(viridis)
+# library(viridis)
 ```
 
 # Overview
 
 There are 10 challenges total- none are in the "continuous colors" section, but you can use that section to complete the tenth challenge on your own. Upload your knitted html document by next Wednesday to Sakai!
 
-Note that this lab depends on _many_ packages; on the RStudio Cloud project for the lab deliverable, I have pre-installed them all (I think). We've left the installation instructions here in the lab document for demonstration purposes.
+Note that this lab depends on _many_ packages; on the Posit Cloud project for the lab deliverable, I have pre-installed them all (I think). We've left the installation instructions here in the lab document for demonstration purposes.
 
 # Slides for today
 
@@ -81,6 +82,7 @@ While all symbols have a foreground colour, symbols 21-25 also take a background
 s + geom_point(aes(shape = z), size = 4, colour = "navy", fill = "orchid") 
 ```
 
+This is why it is so common to have issues with `color` and `fill` and `geom_point()`, by the way!
 
 # Data
 
@@ -197,7 +199,7 @@ ggplot(sounds, aes(x = age, y = prop_produce)) +
   facet_wrap(~sound)
 ```
 
-That is a little better! Facets allow us to parse the relationship between two quantitative variables (here, age and proportion of kids producing) by a qualitative variable (here, type of sound). Another way we could do this, instead of facetting, is to use color. This would make it easier to compare proportions at each age.
+That is a little better! Facets allow us to parse the relationship between two quantitative variables (here, age and proportion of kids producing) by a qualitative variable (here, type of sound). Another way we could do this, instead of faceting, is to use color. This would make it easier to compare proportions at each age.
 
 
 
@@ -531,6 +533,56 @@ sound_traj +
 ```
 
 
+### Viridis palettes
+
+`ggplot` comes built-in with the "Viridis" color palette, the point of which is to be a set of colors that "are pretty, better represent your data, easier to read by those with colorblindness, and print well in grey scale."
+
+Read more here in the [viridis vignette](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html). Note that this vignette is for an R package that is generally no longer needed with recent versions of ggplot- the Viridis color palette didn't used to be part of `ggplot` by default, but it does now! 🎉 There are Viridis four colormap options available:
+
+- "magma" (or "A"),
+- "inferno" (or "B"),
+- "plasma" (or "C"),
+- "viridis" (or "D", the default option).
+
+```{r}
+sound_traj +
+  scale_color_viridis_d() +
+  theme_minimal()
+
+sound_traj +
+  scale_color_viridis_d(option = "plasma") +
+  theme_minimal()
+```
+
+<div class="panel panel-success">
+  <div class="panel-heading">Challenge #8:</div>
+  <div class="panel-body">
+Use the Viridis palettes to color the points by and the lines by `sound`; make the outline of the points "midnightblue". Pick any colormap option, and play with `theme_bw` or `theme_minimal` to see what you like.
+
+```{r}
+ggplot(sounds, aes(x = age, 
+                   y = prop_produce, 
+                   fill = fct_reorder2(sound, age, prop_produce))) + 
+  geom_smooth(aes(color = fct_reorder2(sound, age, prop_produce)),
+              se = FALSE, lwd = .5, show.legend = FALSE) +
+  geom_point(size = 2, shape = 21, colour = "midnightblue") +
+  labs(x = "Age (months)", 
+       y = "Proportion of Children Producing", 
+       fill = "sound") +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  theme_minimal()
+```
+  </div>
+</div>
+
+A note: the default Viridis discrete palette ends up in a pretty gnarly yellow color that I personally feel like is not ideal for all situations.
+In practice, I have been known to artificially clamp the range of the Viridis discrete palette to avoid that last color.
+
+## Color Palettes from Packages
+
+As with everything else in R, there are _numerous_ homebrew packages with different color palettes. Here, we will meet a few of my favs.
+
 ### Wes Anderson palettes 
 
 My favorite! To use Wes Anderson palettes, you'll need to install the `wesanderson` package from CRAN. This chunk of code tells you how:
@@ -578,6 +630,44 @@ sound_traj +
 </div>
 
 
+#### In The Wild
+
+I recently used one of the Wes Anderson palettes ("AsteroidCity1") in one of my own figures! 
+
+![Asteroid City In The Wild](figure/2_krippendorf_by_dimension.png)
+
+### Also great: Studio Ghibli!
+
+Another fun choice: The [Studio Ghibli](https://ewenme.github.io/ghibli/) color palettes!
+
+```{r}
+sound_traj +
+ scale_colour_ghibli_d("YesterdayMedium", direction = -1)
+```
+
+Why do we need that `direction = -1` business? To answer, let's try running this with the default color ordering:
+
+```{r}
+sound_traj +
+ scale_colour_ghibli_d("YesterdayMedium", direction = 1)
+```
+
+Those all look indistinguishable; why is this happening? Let's look at the colors in the palette:
+
+```{r}
+ghibli_palette("YesterdayMedium")
+```
+
+We see that the first few colors are very dark; on a grey background, with small lines, those colors look very similar to one another. So similar that, at first, it looks like they are all the same! To prove that we are actually pulling in those colors, let's artificially (and temporarily!) increase our point size:
+
+```{r}
+  sound_traj +
+  geom_point(size = 20) +
+  scale_colour_ghibli_d("YesterdayMedium", direction = 1)
+```
+
+We can see that indeed, the colors from the palette are being used, but that they are too similar to be a good choice for this plot. Hence, swapping the normal order of the colors using the `direction` argument.
+
 ### `ggthemes` palettes
 
 To use these palettes, you'll need to install the `ggthemes` package from CRAN. This chunk of code tells you how:
@@ -613,8 +703,8 @@ sound_traj + scale_color_nejm()
 To use [Beyonce palettes](https://github.com/dill/beyonce), you'll need to install the `beyonce` package from GitHub using `devtools::install_github()`. This chunk of code tells you how:
 
 ```{r eval = FALSE}
-install.packages("devtools")
-devtools::install_github("dill/beyonce")
+# install.packages("devtools")
+# devtools::install_github("dill/beyonce")
 library(beyonce)
 ```
 
@@ -636,60 +726,8 @@ sound_traj +
   scale_color_manual(values = beyonce_palette(18)[c(1, 4, 5)])
 ```
 
-### Viridis palettes
 
-> "Use the color scales in this package to make plots that are pretty, better represent your data, easier to read by those with colorblindness, and print well in grey scale."
-
-To use, you'll need to install the `viridis` package from CRAN. This chunk of code tells you how:
-
-```{r eval = FALSE}
-install.packages("viridis")
-library(viridis)
-```
-
-Read more here in the [viridis vignette](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html). The default argument for `discrete` is FALSE, so to use the discrete palettes you need to set `discrete = TRUE`. There are four colormap options available:
-
-- "magma" (or "A"),
-- "inferno" (or "B"),
-- "plasma" (or "C"),
-- "viridis" (or "D", the default option).
-
-```{r}
-sound_traj +
-  scale_color_viridis(discrete = TRUE) +
-  theme_minimal()
-
-sound_traj +
-  scale_color_viridis(discrete = TRUE, option = "plasma") +
-  theme_minimal()
-```
-
-<div class="panel panel-success">
-  <div class="panel-heading">Challenge #9:</div>
-  <div class="panel-body">
-Use the `viridis` package to color the points by and the lines by `sound`; make the outline of the points "midnightblue". Pick any colormap option, and play with `theme_bw` or `theme_minimal` to see what you like.
-
-```{r}
-ggplot(sounds, aes(x = age, 
-                   y = prop_produce, 
-                   fill = fct_reorder2(sound, age, prop_produce))) + 
-  geom_smooth(aes(color = fct_reorder2(sound, age, prop_produce)),
-              se = FALSE, lwd = .5, show.legend = FALSE) +
-  geom_point(size = 2, shape = 21, colour = "midnightblue") +
-  labs(x = "Age (months)", 
-       y = "Proportion of Children Producing", 
-       fill = "sound") +
-  scale_fill_viridis(discrete = TRUE) +
-  scale_color_viridis(discrete = TRUE) +
-  theme_minimal()
-```
-  </div>
-</div>
-
-
-
-
-## Greyscale for discrete
+## Going Greyscale for Discrete
 
 Use `scale_color_grey` or `scale_fill_grey`, or sometimes both depending on your geoms and the aesthetics they understand.
 
@@ -778,7 +816,6 @@ my_sound_traj <- sound_traj +
 View that figure after color-vision-deficiency simulation:
 
 ```{r}
-# remotes::install_github("clauswilke/colorblindr")
 library(colorblindr)
 cvd_grid(my_sound_traj)
 ```
@@ -806,7 +843,17 @@ sound_traj +
   scale_colour_manual(values = cbbPalette[c(3, 7, 8)])
 ```
 
-## Repel labels
+## Labels
+
+When working with colors, the _default_ pattern, enforced by `ggplot`, is to use a figure legend to indicate which color goes with which level of a factor. 
+However, this is not always the best way to go! 
+Another option is to directly label your data within the plot itself.
+When should you consider this option?
+
+1. When you have a very small number of levels
+2. When the design of the rest of the plot is amenable: there aren't too many other annotations or visual elements taking up space.
+
+There are several ways to do this, but a good place to start is `ggrepel`:
 
 ```{r}
 library(ggrepel)
@@ -951,12 +998,12 @@ sound_by_age +
 
 
 
-# Final challenge (#10)
+# Final challenge (#9)
 
 <div class="panel panel-success">
-  <div class="panel-heading">Challenge #10:</div>
+  <div class="panel-heading">Challenge #9:</div>
   <div class="panel-body">
-Using new data, make three new plots. Use any `geom` that makes sense. The plots should:
+Using **new data** of your choice, make three new plots. Use any `geom` that makes sense. The plots should:
 
 - Have x- and y-axes that are each quantitative variables.
 - Apply a non-default color palette, either coloring by a qualitative variable (discrete colors) or a quantitative variable (continuous colors). This list of [R color palettes](https://github.com/EmilHvitfeldt/r-color-palettes) has even more ideas than we could cover in class.
