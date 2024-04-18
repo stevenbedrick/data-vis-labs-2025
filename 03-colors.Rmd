@@ -969,33 +969,32 @@ sound_by_age +
 
 ### Viridis
 
-Read more here in the [viridis vignette](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
-
-```{r eval = FALSE}
-library(viridis)
-```
-
-The default is the `viridis` palette within the `viridis` package!
-
 Note! For discrete == FALSE (the default) all other arguments are as to `scale_fill_gradientn` or `scale_color_gradientn`. (Also note that `_gradient_n_` is not a typo- the _n_ versions of those functions allow multi-color gradients).
 
 ```{r}
 sound_by_age +
-  scale_color_viridis()
+  scale_color_viridis_c()
 ```
 
 ```{r}
 sound_by_age +
-  scale_color_viridis(option = "magma")
+  scale_color_viridis_c(option = "magma")
 ```
 
-Read the help function for `?scale_color_viridis`. We'll use the "inferno" palette _in reverse_.
+Read the help function for `?scale_color_viridis_c`. As before, we can use the `direction` parameter to reverse the order of the colors, or, atlernatively, we can use the `begin` and `end` parameters to accomplish the same thing. Using the "inferno" palette _in reverse_:
 
 ```{r}
 sound_by_age +
-  scale_color_viridis(option = "inferno", begin = 1, end = 0)
+  scale_color_viridis_c(option = "inferno", begin = 1, end = 0)
 ```
 
+This `begin`/`end` trick is also how we can adjust the color scale to not get quite so... yellow at the very end>
+
+```{r}
+sound_by_age +
+  scale_color_viridis_c(option = "inferno", begin = 0, end = 0.9) # if we don't want it to go all the way to 1.0...
+
+```
 
 
 # Final challenge (#9)
