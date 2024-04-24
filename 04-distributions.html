@@ -422,8 +422,8 @@ mm &lt;- rnorm(250, rep(c(-1, 1), each = 50) * sqrt(0.9), sqrt(0.1))</code></pre
 <pre class="r"><code>glimpse(four)</code></pre>
 <pre><code>Rows: 1,000
 Columns: 2
-$ dist &lt;fct&gt; n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, …
-$ vals &lt;dbl&gt; -0.996582353, 0.721824146, -0.617208815, 2.029391575, 1.065416053, 0.987219739, 0.027453925, 0.672872319, 0.572066502, 0.90367…</code></pre>
+$ dist &lt;fct&gt; n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n,…
+$ vals &lt;dbl&gt; -0.99658235, 0.72182415, -0.61720882, 2.02939157, 1.06541605, 0.9…</code></pre>
 <p>Let’s see what our descriptive statistics look like:</p>
 <pre class="r"><code>skim(four)</code></pre>
 <table>
@@ -1151,8 +1151,8 @@ returns three values, specify the function with the argument
 mean(x) # use fun.y</code></pre>
 <pre><code>[1] 2</code></pre>
 <pre class="r"><code>mean_cl_normal(x) # use fun.data</code></pre>
-<pre><code>Error in `mean_cl_normal()`:
-! The package &quot;Hmisc&quot; is required.</code></pre>
+<pre><code>  y       ymin     ymax
+1 2 -0.4841377 4.484138</code></pre>
 <p>Confidence limits may give us a better idea than standard error
 limits of whether two means would be deemed statistically different when
 modeling, so we frequently use <code>mean_cl_normal</code> or

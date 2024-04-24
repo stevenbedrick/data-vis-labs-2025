@@ -275,16 +275,16 @@ $(document).ready(function () {
 
 <div id="overview" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Overview</h1>
-<p>Both challenges are due by noon via Sakai on Wednesday May 2. For the
+<p>Both challenges are due by noon via Sakai on Wednesday May 1. For the
 first tidy challenge, you’ll want to refer back to our <a
-href="slides/04-slides.html">slides</a>. For the second challenge,
-you’ll want to refer to the <a href="04-distributions.html">reference
-lab</a>.</p>
-<ol style="list-style-type: decimal">
-<li><p>Tidy challenge: Tidy the “Lord of the Rings” data <em>(Advice:
-read in each csv file using <code>read_csv()</code>, then use
-<code>dplyr::bind_rows</code> to stack them together
-pre-tidying.)</em></p>
+href="slides/04-slides.html">slides</a>. For the second challenge, you
+may want to refer to the <a href="04-distributions.html">reference
+lab</a> for ideas.</p>
+<div id="part-1-tidying-challenge" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Part 1: Tidying
+challenge</h2>
+<p>Tidy this dataset about the amount of dialog given to male and female
+characters of difference species in the “Lord of the Rings” movies:</p>
 <ul>
 <li><a href="http://bit.ly/cs631-lotr-fship"
 class="uri">http://bit.ly/cs631-lotr-fship</a></li>
@@ -292,16 +292,24 @@ class="uri">http://bit.ly/cs631-lotr-fship</a></li>
 class="uri">http://bit.ly/cs631-lotr-ttow</a></li>
 <li><a href="http://bit.ly/cs631-lotr-rking"
 class="uri">http://bit.ly/cs631-lotr-rking</a></li>
+</ul>
+<p>Notes:</p>
+<ol style="list-style-type: decimal">
 <li>The columns <code>male</code> and <code>female</code> are <em>number
 of words spoken</em></li>
-</ul></li>
-<li><p>Gapminder challenge: Read on…</p></li>
+<li>Remember, tidy data has one row per observation</li>
+<li>Advice: read in each csv file using <code>read_csv()</code>, then
+use <code>dplyr::bind_rows</code> to stack them together
+pre-tidying.</li>
+<li><code>read_csv()</code> can read data directly from URLs</li>
 </ol>
-<p>Install and load the <code>gapminder</code> data package. This is the
-same data that was used in your Datacamp “Introduction to the Tidyverse”
-course!</p>
-<pre class="r"><code>install.packages(&quot;gapminder&quot;)
-library(gapminder)
+</div>
+<div id="gapminder-challenge" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Gapminder
+challenge</h2>
+<p>Load the <code>gapminder</code> data package, and explore its
+constituent datasets.</p>
+<pre class="r"><code>library(gapminder)
 ?gapminder</code></pre>
 <p>Pick at least <strong>two</strong> of the tasks below from the task
 menu and approach each with a table and figure.</p>
@@ -318,8 +326,8 @@ perfectly in the report. Simply printing <code>dplyr</code> tabular
 output is fine. For all things, graphical and tabular, if you’re
 dissatisfied with a result, discuss the problem, what you tried to do to
 fix it, and move on.</p>
-<div id="task-menu" class="section level3" number="1.0.1">
-<h3><span class="header-section-number">1.0.1</span> Task menu</h3>
+<div id="task-menu" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Task menu</h3>
 <ul>
 <li><p>Get the maximum and minimum of GDP per capita for all
 continents.</p></li>
@@ -336,8 +344,8 @@ each year.</p></li>
 <li><p>Make up your own!</p></li>
 </ul>
 </div>
-<div id="companion-graphs" class="section level3" number="1.0.2">
-<h3><span class="header-section-number">1.0.2</span> Companion
+<div id="companion-graphs" class="section level3" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> Companion
 graphs</h3>
 <p>For each table, make sure to include a relevant figure. One tip for
 starting is to draw out on paper what you want your x- and y-axis to be
@@ -351,8 +359,9 @@ visualization adds clarity, detracts from, or is completely redundant
 (and therefore probably unnecessary) with respect to the tabular
 display.</p>
 </div>
-<div id="report-your-process" class="section level2" number="1.1">
-<h2><span class="header-section-number">1.1</span> Report your
+</div>
+<div id="report-your-process" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Report your
 process</h2>
 <p>You’re encouraged to reflect on what was hard/easy, problems you
 solved, helpful tutorials you read, etc.</p>

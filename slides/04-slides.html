@@ -13,9 +13,15 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
+.title[
 # Lab 04: BMI 5/625
+]
+.subtitle[
 ## Working with Tidy Data
+]
+.author[
 ### Alison Hill (with modifications by Steven Bedrick)
+]
 
 ---
 
@@ -207,7 +213,7 @@ cakes_tidy
  8 2      signature   pie_tart          7
  9 3      showstopper cake             12
 10 3      showstopper pie_tart         17
-# … with 22 more rows
+# ℹ 22 more rows
 ```
 
 
@@ -240,7 +246,7 @@ cakes_tidy
  8 2      signature   pie_tart          7
  9 3      showstopper cake             12
 10 3      showstopper pie_tart         17
-# … with 22 more rows
+# ℹ 22 more rows
 ```
 
 ---
@@ -355,6 +361,48 @@ Table: Data summary
 class: middle, inverse, center
 
 ## Benefits of Tidy Data
+
+
+---
+
+
+```r
+cakes_tidy %&gt;% 
+  count(challenge, bake_type, sort = TRUE)
+```
+
+```
+# A tibble: 4 × 3
+  challenge   bake_type     n
+  &lt;chr&gt;       &lt;fct&gt;     &lt;int&gt;
+1 showstopper cake          8
+2 showstopper pie_tart      8
+3 signature   cake          8
+4 signature   pie_tart      8
+```
+
+--
+
+What's happening here?
+
+--
+
+
+```r
+cakes_tidy %&gt;% head
+```
+
+```
+# A tibble: 6 × 4
+  series challenge   bake_type num_bakes
+  &lt;fct&gt;  &lt;chr&gt;       &lt;fct&gt;         &lt;dbl&gt;
+1 1      showstopper cake              5
+2 1      showstopper pie_tart          5
+3 1      signature   cake             12
+4 1      signature   pie_tart          4
+5 2      showstopper cake              8
+6 2      showstopper pie_tart         17
+```
 
 
 ---
@@ -479,7 +527,7 @@ ggplot(cakes_by_series, aes(x = series, y = n,
   expand_limits(y = 0)
 ```
 
-&lt;img src="04-slides_files/figure-html/unnamed-chunk-21-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04-slides_files/figure-html/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: middle, inverse, center
@@ -532,7 +580,7 @@ cakes_raw %&gt;% select(cake)
  8 cake 
  9 cake 
 10 &lt;NA&gt; 
-# … with 1,762 more rows
+# ℹ 1,762 more rows
 ```
 
 
@@ -600,7 +648,7 @@ cakes_raw %&gt;% select(starts_with("c"))
  8 signature cake 
  9 signature cake 
 10 signature &lt;NA&gt; 
-# … with 1,762 more rows
+# ℹ 1,762 more rows
 ```
 
 ---
@@ -940,6 +988,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable

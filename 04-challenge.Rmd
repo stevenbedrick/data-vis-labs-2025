@@ -10,23 +10,30 @@ output:
 
 # Overview
 
-Both challenges are due by noon via Sakai on Wednesday May 2. For the first tidy challenge, you'll want to refer back to our [slides](slides/04-slides.html). For the second challenge, you'll want to refer to the [reference lab](04-distributions.html).
+Both challenges are due by noon via Sakai on Wednesday May 1. For the first tidy challenge, you'll want to refer back to our [slides](slides/04-slides.html). For the second challenge, you may want to refer to the [reference lab](04-distributions.html) for ideas.
 
-1. Tidy challenge: Tidy the "Lord of the Rings" data *(Advice: read in each csv file using `read_csv()`, then use `dplyr::bind_rows` to stack them together pre-tidying.)*
+## Part 1: Tidying challenge
 
-    - http://bit.ly/cs631-lotr-fship
-    - http://bit.ly/cs631-lotr-ttow
-    - http://bit.ly/cs631-lotr-rking
-    - The columns `male` and `female` are *number of words spoken*
+Tidy this dataset about the amount of dialog given to male and female characters of difference species in the "Lord of the Rings" movies:
+
+- http://bit.ly/cs631-lotr-fship
+- http://bit.ly/cs631-lotr-ttow
+- http://bit.ly/cs631-lotr-rking
 
 
+Notes:
 
-1. Gapminder challenge: Read on...
+1. The columns `male` and `female` are *number of words spoken*
+2. Remember, tidy data has one row per observation
+3. Advice: read in each csv file using `read_csv()`, then use `dplyr::bind_rows` to stack them together pre-tidying.
+4. `read_csv()` can read data directly from URLs
 
-Install and load the `gapminder` data package. This is the same data that was used in your Datacamp "Introduction to the Tidyverse" course!
+
+## Gapminder challenge
+
+Load the `gapminder` data package, and explore its constituent datasets.
 
 ```{r eval = FALSE}
-install.packages("gapminder")
 library(gapminder)
 ?gapminder
 ```

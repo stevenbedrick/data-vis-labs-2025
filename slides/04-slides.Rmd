@@ -10,7 +10,7 @@ output:
       highlightStyle: atelier-lakeside-light
       highlightLines: true
       countIncrementalSlides: false
-knit: pagedown::chrome_print
+# knit: pagedown::chrome_print
 ---
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
@@ -229,6 +229,24 @@ skim(cakes_tidy) %>%
 class: middle, inverse, center
 
 ## Benefits of Tidy Data
+
+
+---
+
+```{r}
+cakes_tidy %>% 
+  count(challenge, bake_type, sort = TRUE)
+```
+
+--
+
+What's happening here?
+
+--
+
+```{r}
+cakes_tidy %>% head
+```
 
 
 ---
