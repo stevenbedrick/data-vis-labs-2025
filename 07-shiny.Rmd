@@ -30,6 +30,8 @@ library(gt)
 
 `Shiny` is a powerful R library for making interactive web sites containing visualizations and tables. In this lab, you will learn the basics of designing and building a simple interactive dashboard for exploring a data set. Since the final product of a Shiny application is a web site, much of what you learned in the last lab will be useful this week!
 
+_Note_: Embedding Shiny apps within an RMarkdown document is something that has evolved greatly in recent years, and the method used in this document appears to no longer be super-functional; as such, the screenshots look a bit "off". You'll want to follow along yourself in Posit Cloud to see how they are "supposed" to look. Apologies!
+
 ## Getting Started
 
 To begin, install and load the `shiny` library. We'll also load the `tidyverse`:
@@ -41,7 +43,7 @@ library(tidyverse)
 
 In the last lab, we learned about _static_ web site. Under this model, the web site consists of a collection of HTML files (along with images, etc.); the user, via their web browser, _requests_ those files from a _server_. The server's role is to find the requested file, and then send it back to the browser (the _response_).
 
-A Shiny application is an example of a _dynamic_ website. The first part of the process is the same: the user interacts with the web site via their browser, and the results of their interactions (links or buttons clicked, form fields filled out, etc.) are sent to the server in the form of a HTTP request. The server's role is quite different under a dynamic scenario. Instead of simply finding a static page on the disk and returning it, the server instead executes a program (specified in the request), and sends the results (output) of that program back to the browser as the body of the HTTP response.
+A Shiny application is an example of a _dynamic_ website. The first part of the process is the same: the user interacts with the web site via their browser, and the results of their interactions (links or buttons clicked, form fields filled out, etc.) are sent to the server in the form of a HTTP request. The server's role is quite different under a dynamic scenario. Instead of simply finding a static page on the disk and returning it, the server instead executes a program (whose location and other inputs are specified in the request), and sends the results (output) of that program back to the browser as the body of the HTTP response.
 
 The results often take the form of _rendered_ HTML. That is to say, HTML that is dynamically generated in response to the user's actions and input, rather than loaded directly from a file on disk. In a Shiny application, this takes the form of an R program.
 
