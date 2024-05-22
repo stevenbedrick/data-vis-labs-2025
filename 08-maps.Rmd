@@ -508,25 +508,25 @@ Note that, besides the trees themselves, this map is kind of boring. We can star
 
 ## `ggmap`
 
-``ggmap` is a package that tries to make it convenient to quickly access raster map tiles through either Google Maps or OpenStreetMap to use as a "basemap". Using Google Maps requires setting up an account with a credit card (though for reasonable numbers of requests, it is free); OSM via Stamen is free, so we'll use that today.
+``ggmap` is a package that tries to make it convenient to quickly access raster map tiles through either Google Maps or OpenStreetMap to use as a "basemap". 
+Note that hosting map tiles is expensive and a bit complicated, so it is mostly done by companies; both Google and [Stadia Maps](https://www.stadiamaps.com/) are good bets.
+They both have very generous free tiers of service that will be more than adequate for any normal use you are likely to encounter.
 
-`ggmap` We'll need the bounding box of the trees we want to plot; we can get that using `st_bbox()`:
+I recommend starting with Stadia. You will need to make an account with them, and then tell R to use your account's API key, like so:
 
-```{r}
-st_bbox(trees_in_park)
+```{r,echo=TRUE,exec=FALSE}
+register_stadiamaps("YOUR_KEY_GOES_HERE", write=FALSE)
 ```
-
-Next, we generate a basemap using `get_stamenmap()` (there are related functions for different tile sets).
 
 ```{r,echo=FALSE}
 register_stadiamaps("e8736240-6bd5-4531-9a62-2418120de3d9", write=FALSE)
 ```
 
-
+Once we've done that, we may begin using `ggmap`. We generate a basemap using `get_stadiamap()` (there are related functions for different tile sets).
 
 ```{r}
 park_base_map <- get_stadiamap(
-  c(left=-122.725, bottom=45.4675, right=-122.7125, top=45.478), # note: in practice, we wouldn't enter these by hand!
+  c(left=-122.725, bottom=45.4675, right=-122.7125, top=45.478), # note: in practice, we wouldn't enter these by hand, we would use st_bbox() or something similar!
   zoom=16,
   maptype="stamen_terrain") # try experimenting with "toner", etc.  
 ggmap(park_base_map)
@@ -585,8 +585,8 @@ What about interactivity? Here are two tools for making interactive maps, one a 
 
 ### Basics: `mapview`
 
-`[mapview](https://github.com/r-spatial/mapview)` is a fantastically useful library, and is an essential tool for your GIS workflow. 
-It is probably the fastest way to go from "I have geospatial data" to "a map I can look at", with the caveat that it is meant for quick-and-dirty data exploration, not presentation-quality graphics.
+[`mapview`](https://github.com/r-spatial/mapview) is a fantastically useful library, and is an essential tool for your GIS workflow. 
+It is probably the fastest way to go from "I have geospatial data" to "a map that I can look at", with the caveat that it is meant for quick-and-dirty data exploration, _not_ presentation-quality graphics.
 
 In its simplest form, you simply pipe an `sf` object to `mapview()`:
 
@@ -603,7 +603,7 @@ mapview(list(pdx_boundaries, trees_in_park))
 ```
 
 
-`mapview` has _many_ controls, for changing the basemap, to setting colors, etc. Note, also, that it is perfectly happy to deal with projection issues for us! We do not need to manually project or otherwise transform our data- it figures it out on its own.
+`mapview` has _many_ options, for changing the basemap, to setting colors, etc. Note, also, that it is perfectly happy to deal with projection issues for us! We do not need to manually project or otherwise transform our data- it figures it out on its own.
 
 Again, it is _not_ for presentation-quality graphics, but more for data exploration. It integrates well with Shiny (via `mapviewOutput`/`renderMapview`), as well! 
 
