@@ -53,7 +53,7 @@ Crucially, raster images often contain multiple _channels_ (sometimes called _ba
 
 Like vector data, raster data files generally contain metadata situating the pixels in a specific geographic coordinate reference system. In other words, the raster file "knows" where its edges are in space, and also knows how much distance each pixel is meant to cover. One common raster file format is GeoTIFF, though there are certainly others.
 
-![](https://i.stack.imgur.com/Y84dG.png)
+![Source: Unknown; it's the image that the entire Internet uses to illustrate raster vs. vector data, and if somebody who sees this happens to know where this originated, please do let me know.](images/raster_vector_geo_data.png)
 
 ## Spatial data in a non-spatial format
 
