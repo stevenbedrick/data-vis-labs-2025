@@ -14,7 +14,7 @@
 
 <title>Lab 05: Addendum</title>
 
-<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -315,7 +315,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2024</a>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2025</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -326,7 +326,7 @@ div.tocify {
   <a href="data-vis-resources.html">Resources</a>
 </li>
 <li>
-  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AL-Sp24">Sakai</a>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AD-Sp25">Sakai</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -469,18 +469,18 @@ letter_by_year &lt;- letter_by_year %&gt;%
   mutate(top_latest = case_when(
       year == max(year) ~ top_yearly
     ))</code></pre>
-<pre><code>Error in eval(expr, envir, enclos): object &#39;letter_by_year&#39; not found</code></pre>
+<pre><code>Error: object &#39;letter_by_year&#39; not found</code></pre>
 <pre class="r"><code># make a data frame with just latest top letters
 top_current &lt;- letter_by_year %&gt;% 
   filter(!is.na(top_latest)) %&gt;% 
   rename(color_by = top_latest) %&gt;% 
   select(sex, first_letter, color_by)</code></pre>
-<pre><code>Error in eval(expr, envir, enclos): object &#39;letter_by_year&#39; not found</code></pre>
+<pre><code>Error: object &#39;letter_by_year&#39; not found</code></pre>
 <pre class="r"><code># now merge in
 letter_by_year &lt;- letter_by_year %&gt;% 
   left_join(top_current) %&gt;% 
   mutate(color_by = replace_na(color_by, &quot;else&quot;))</code></pre>
-<pre><code>Error in eval(expr, envir, enclos): object &#39;letter_by_year&#39; not found</code></pre>
+<pre><code>Error: object &#39;letter_by_year&#39; not found</code></pre>
 <pre class="r"><code># set up my colors for males and females
 my_colors &lt;- c(&quot;#FF1493&quot;, &quot;gray80&quot;, &quot;#3399ff&quot;)</code></pre>
 <p>Plot it!</p>
@@ -488,7 +488,7 @@ my_colors &lt;- c(&quot;#FF1493&quot;, &quot;gray80&quot;, &quot;#3399ff&quot;)<
   geom_line() +
   scale_color_manual(values = my_colors) +
   facet_wrap(~sex)</code></pre>
-<pre><code>Error in eval(expr, envir, enclos): object &#39;letter_by_year&#39; not found</code></pre>
+<pre><code>Error: object &#39;letter_by_year&#39; not found</code></pre>
 <pre class="r"><code>ColorM2 &lt;- c(A=&quot;Gray80&quot;,B=&quot;gray80&quot;,C=&quot;gray80&quot;,D=&quot;gray80&quot;,E=&quot;gray80&quot;,F=&quot;gray80&quot;,G=&quot;gray80&quot;,H=&quot;gray80&quot;,I=&quot;gray80&quot;,J=&quot;Black&quot;,K=&quot;gray80&quot;,L=&quot;gray80&quot;,M=&quot;gray80&quot;,N=&quot;gray80&quot;,O=&quot;gray80&quot;,P=&quot;gray80&quot;,Q=&quot;gray80&quot;,R=&quot;gray80&quot;,S=&quot;gray80&quot;,T=&quot;gray80&quot;,U=&quot;gray80&quot;,V=&quot;gray80&quot;,W=&quot;gray80&quot;,X=&quot;gray80&quot;,Y=&quot;gray80&quot;,Z=&quot;gray80&quot;)
 
 ColorF2 &lt;- c(A=&quot;Black&quot;,B=&quot;gray80&quot;,C=&quot;gray80&quot;,D=&quot;gray80&quot;,E=&quot;gray80&quot;,F=&quot;gray80&quot;,G=&quot;gray80&quot;,H=&quot;gray80&quot;,I=&quot;gray80&quot;,J=&quot;gray80&quot;,K=&quot;gray80&quot;,L=&quot;gray80&quot;,M=&quot;gray80&quot;,N=&quot;gray80&quot;,O=&quot;gray80&quot;,P=&quot;gray80&quot;,Q=&quot;gray80&quot;,R=&quot;gray80&quot;,S=&quot;gray80&quot;,T=&quot;gray80&quot;,U=&quot;gray80&quot;,V=&quot;gray80&quot;,W=&quot;gray80&quot;,X=&quot;gray80&quot;,Y=&quot;gray80&quot;,Z=&quot;gray80&quot;)</code></pre>

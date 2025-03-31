@@ -7,7 +7,7 @@ output: html_document
 
 ```{r}
 library(shiny)
-library(flair)
+# library(flair)
 library(tidyverse)
 ```
 
@@ -18,11 +18,4 @@ iris %>%
   group_by(Species) %>%
   summarize(mean(Sepal.Length))
 
-```
-
-```{r, echo = FALSE}
-
-decorate("how_to_pipe") %>% 
-  flair("%>%")
-  
 ```

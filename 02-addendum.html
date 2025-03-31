@@ -14,7 +14,7 @@
 
 <title>Lab 02: Addendum</title>
 
-<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -315,7 +315,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2024</a>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2025</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -326,7 +326,7 @@ div.tocify {
   <a href="data-vis-resources.html">Resources</a>
 </li>
 <li>
-  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AL-Sp24">Sakai</a>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AD-Sp25">Sakai</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -362,7 +362,8 @@ moma_singles_summary &lt;- moma %&gt;%
   complete(year_acquired, artist_gender, 
            fill = list(n_acquired = 0))</code></pre>
 <pre><code>Error in `reframe()`:
-ℹ In argument: `complete(data = pick(everything()), ..., fill = fill, explicit = explicit)`.
+ℹ In argument: `complete(data = pick(everything()), ..., fill =
+  fill, explicit = explicit)`.
 ℹ In group 1: `year_acquired = 1930`.
 Caused by error:
 ! object &#39;year_acquired&#39; not found</code></pre>
@@ -370,14 +371,14 @@ Caused by error:
                                  y = n_acquired,
                                  color = artist_gender)) +
   geom_point()</code></pre>
-<pre><code>Error in eval(expr, envir, enclos): object &#39;moma_singles_summary&#39; not found</code></pre>
+<pre><code>Error: object &#39;moma_singles_summary&#39; not found</code></pre>
 <pre class="r"><code>ggplot(moma_singles_summary, aes(x = year_acquired, 
                                  y = median_lag,
                                  color = artist_gender,
                                  group = artist_gender)) +
   geom_point() +
   geom_line()</code></pre>
-<pre><code>Error in eval(expr, envir, enclos): object &#39;moma_singles_summary&#39; not found</code></pre>
+<pre><code>Error: object &#39;moma_singles_summary&#39; not found</code></pre>
 <p>Tag top artists</p>
 <pre class="r"><code>top_artists &lt;- moma %&gt;% 
   count(artist_gender, artist, sort = TRUE) %&gt;% 

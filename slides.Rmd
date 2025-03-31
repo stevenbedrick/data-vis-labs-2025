@@ -36,27 +36,27 @@ knitr::include_url("slides/01-slides.html")
 knitr::include_url("slides/01b-slides.html")
 ```
 
-### 02: Working in the Tidyverse
+<!-- ### 02: Working in the Tidyverse -->
 
-```{r}
-knitr::include_url("slides/02-slides.html")
-```
+<!-- ```{r} -->
+<!-- knitr::include_url("slides/02-slides.html") -->
+<!-- ``` -->
 
-- R for Data Science, Data Visualization Chapter: http://r4ds.had.co.nz/data-visualisation.html
+<!-- - R for Data Science, Data Visualization Chapter: http://r4ds.had.co.nz/data-visualisation.html -->
 
-- Modern Dive, Data Visualization Chapter: http://moderndive.com/3-viz.html
+<!-- - Modern Dive, Data Visualization Chapter: http://moderndive.com/3-viz.html -->
 
-- RStudio `ggplot2` Cheatsheet: https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf
+<!-- - RStudio `ggplot2` Cheatsheet: https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf -->
 
-### 03: Working with Data
+<!-- ### 03: Working with Data -->
 
-```{r}
-knitr::include_url("slides/03-slides.html")
-```
+<!-- ```{r} -->
+<!-- knitr::include_url("slides/03-slides.html") -->
+<!-- ``` -->
 
-### 04: Working with Tidy Data
+<!-- ### 04: Working with Tidy Data -->
 
-```{r}
-knitr::include_url("slides/04-slides.html")
-```
+<!-- ```{r} -->
+<!-- knitr::include_url("slides/04-slides.html") -->
+<!-- ``` -->
 
