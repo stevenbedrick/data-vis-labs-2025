@@ -126,7 +126,7 @@ We will now progressively improve this visualization, one step at a time.
 ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col() +
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2022", subtitle = "(Male contestants only)")
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2024", subtitle = "(Male contestants only)")
 ```
 
 # Play With Colors
@@ -151,21 +151,21 @@ _HINT:_ `color` and `fill` are two of `ggplot`'s aesthetic mapping variables (i.
 ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col(colour = "white") + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2022", subtitle = "(Male contestants only)")
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2024", subtitle = "(Male contestants only)")
 ```
 
 ```{r}
 ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col(colour = "white", fill = "navyblue") + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2022", subtitle = "(Male contestants only)")
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2024", subtitle = "(Male contestants only)")
 ```
 
 ```{r}
 ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col(aes(fill = post_ifoce), colour = "white") + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2022", subtitle = "(Male contestants only)")
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2024", subtitle = "(Male contestants only)")
 ```
 
 
@@ -187,7 +187,7 @@ HINT: in `ggplot`, legends are controlled by the relevant scale (color, fill, et
 ggplot(hot_dogs, aes(x = year, y = num_eaten)) + 
   geom_col(aes(fill = post_ifoce), colour = "white") + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2022", subtitle = "(Male contestants only)") +
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2024", subtitle = "(Male contestants only)") +
   scale_fill_discrete(name = "",
                       labels=c("Pre-IFOCE", "Post-IFOCE"))
 ```
@@ -215,8 +215,11 @@ hdm_affil <- read_csv(here::here("data", "hot_dog_contest_with_affiliation.csv")
       gender = col_factor(levels = NULL)
       )) %>% 
   mutate(post_ifoce = year >= 1997) %>% 
-  filter(year >= 1981 & gender == "male") 
+  filter(year >= 1981 & gender == "male")  %>% problems
 ```
+
+
+
 
 
 ```{r}
@@ -254,7 +257,7 @@ Now let's plot this new data, and fill the columns according to our new `affilia
 ggplot(hdm_affil, aes(x = year, y = num_eaten)) + 
   geom_col(aes(fill = affiliated)) + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2022", subtitle = "(Male contestants only)")
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2024", subtitle = "(Male contestants only)")
 ```
 
 <div class="panel panel-success">
@@ -272,7 +275,7 @@ Do the following updates to the last plot we just made:
 affil_plot <- ggplot(hdm_affil, aes(x = year, y = num_eaten)) + 
   geom_col(aes(fill = affiliated)) + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2022", subtitle = "(Male contestants only)") +
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2024", subtitle = "(Male contestants only)") +
   scale_fill_manual(values = c('#E9602B','#2277A0','#CCB683'),
                     name = "IFOCE-affiliation")
 affil_plot
@@ -307,7 +310,7 @@ Let's loosen things up a bit by updating the plot coordinates.
   <div class="panel-body">
 Use `coord_cartesian` to:
 
-* Set the x-axis range to 1980-2023
+* Set the x-axis range to 1980-2024
 * Set the y-axis range to 0-80
   </div>
 </div>
@@ -325,7 +328,7 @@ Don't directly change `limits` unless you really know what you are doing! Most o
 
 ```{r}
 affil_plot <- affil_plot + 
-  coord_cartesian(xlim = c(1980, 2023), ylim = c(0, 80)) 
+  coord_cartesian(xlim = c(1980, 2025), ylim = c(0, 80)) 
 affil_plot
 ```
 
@@ -341,7 +344,7 @@ affil_plot +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme(axis.text = element_text(size = 12)) +
   theme(panel.background = element_blank()) +
-  theme(axis.line.x = element_line(color = "gray80", size = 0.5)) +
+  theme(axis.line.x = element_line(color = "gray80", linewidth = 0.5)) +
   theme(axis.ticks = element_line(color = "gray80", size = 0.5))
 ```
 
@@ -392,7 +395,7 @@ The final thing we have to mess with is the x-axis ticks and labels. We'll do th
 
 ```{r}
 # manually compute a list of years that we want labeled...
-years_to_label <- seq(from = 1981, to = 2022, by = 4) 
+years_to_label <- seq(from = 1981, to = 2024, by = 4) 
 years_to_label
 
 # add a column to the dataframe containing what we want each year's label to be
@@ -422,7 +425,7 @@ All together in one chunk, here is our final (for now) plot! I'm also adding som
 nathan_plot <- ggplot(hdm_affil, aes(x = year, y = num_eaten)) + 
   geom_col(aes(fill = affiliated)) + 
   labs(x = "Year", y = "Hot Dogs and Buns Consumed") +
-  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2022", subtitle = "(Male contestants only)") +
+  ggtitle("Nathan's Hot Dog Eating Contest Results, 1981-2024", subtitle = "(Male contestants only)") +
   scale_fill_manual(values = c('#E9602B','#2277A0','#CCB683'),
                     name = "IFOCE-affiliation") + 
   hot_diggity +
@@ -431,7 +434,7 @@ nathan_plot <- ggplot(hdm_affil, aes(x = year, y = num_eaten)) +
   scale_x_continuous(expand = c(0, 0), 
                      breaks = hd_years$year,
                      labels = hd_years$year_lab) + 
-  coord_cartesian(xlim = c(1980, 2023), ylim = c(0, 80)) 
+  coord_cartesian(xlim = c(1980, 2025), ylim = c(0, 80)) 
 nathan_plot
 ```
 
@@ -444,7 +447,7 @@ The fill legend is doing its job, here, but we might instead want to use direct 
 ```{r}
 nathan_ann <- nathan_plot +
   guides(fill="none") + # turn off the legend/guide for the "fill" aesthetic
-  coord_cartesian(xlim = c(1980, 2023), ylim = c(0, 90)) +
+  coord_cartesian(xlim = c(1980, 2025), ylim = c(0, 90)) +
   annotate('segment', x=1980.75, xend=2000.25, y= 30, yend=30, linewidth=0.5, color="#CCB683")+
   annotate('segment', x=1980.75, xend=1980.75, y= 30, yend=28, linewidth=0.5, color="#CCB683") +
   annotate('segment', x=2000.25, xend=2000.25, y= 30, yend=28, linewidth=0.5, color="#CCB683") +
@@ -460,9 +463,9 @@ nathan_ann <- nathan_plot +
   annotate('text', x=2003.5, y=65, label="MLE/IFOCE\nFormer Member", color="#2277A0", family="Lato", hjust=0.5, size = 3) +
 
 
-  annotate('segment', x=2006.75, xend=2022.25, y= 79, yend=79, linewidth=0.5, color="#E9602B") +
+  annotate('segment', x=2006.75, xend=2024.25, y= 79, yend=79, linewidth=0.5, color="#E9602B") +
   annotate('segment', x=2006.75, xend=2006.75, y= 79, yend=77, linewidth=0.5, color="#E9602B") +
-  annotate('segment', x=2022.25, xend=2022.25, y= 79, yend=77, linewidth=0.5, color="#E9602B") +
+  annotate('segment', x=2024.25, xend=2024.25, y= 79, yend=77, linewidth=0.5, color="#E9602B") +
   annotate('segment', x=2015, xend=2015, y= 82, yend=79, linewidth=0.5, color="#E9602B") +
   annotate('text', x=2015, y=86, label="MLE/IFOCE Current Member", color="#E9602B", family="Lato", hjust=0.5, size = 3)
 nathan_ann

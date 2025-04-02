@@ -7,11 +7,6 @@ purrr
 dplyr
 stringr
 forcats
+lubridate
 extrafont
 ggthemes
-lubridate
-babynames
-here
-janitor
-RColorBrewer
-wesanderson
