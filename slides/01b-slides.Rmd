@@ -86,7 +86,11 @@ glimpse(penguins)
 
 --
 
-  * Each type of graph (scatterplot, etc.) has a corresponding geom
+  * Each type of graph element that represents data has a corresponding geom
+  
+--
+
+  * (points on scatterplot, bars on a bar chart, etc.) 
 
 --
 
@@ -229,14 +233,29 @@ basic.plot <- penguins %>%
 
 ## Workflow tip: Save a plot for later
 
+```{r, out.height="400px", out.width="400px"}
+basic.plot
+```
 
-```{r, out.height="300px", out.width="300px"}
+
+---
+
+## Workflow tip: Save a plot for later
+
+
+```{r, out.height="400px", out.width="400px"}
 basic.plot + labs(
     x="Bill Length (mm)", y="Bill Depth (mm)"
   )
 ```
 
+---
+
+## Workflow tip: Save a plot for later
+
+* This is useful when building a complex plot...
+
 --
 
-* This is useful when building a complex plot!
+* ... Or customizing formatting without messing with data!
 

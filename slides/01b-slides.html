@@ -43,7 +43,7 @@ class: center, middle, inverse, title-slide
 --
 
 
-```r
+``` r
 glimpse(penguins)
 ```
 
@@ -85,7 +85,7 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 ## So: Penguins!
 
 
-```r
+``` r
 glimpse(penguins)
 ```
 
@@ -116,7 +116,11 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 
 --
 
-  * Each type of graph (scatterplot, etc.) has a corresponding geom
+  * Each type of graph element that represents data has a corresponding geom
+  
+--
+
+  * (points on scatterplot, bars on a bar chart, etc.) 
 
 --
 
@@ -163,7 +167,7 @@ class: center, middle
 ## Our first plot
 
 
-```r
+``` r
 penguins %&gt;% 
   ggplot(mapping=aes(
     x=bill_length_mm, y=bill_depth_mm
@@ -179,7 +183,7 @@ penguins %&gt;%
 
 
 
-```r
+``` r
 penguins %&gt;% ggplot(mapping=aes(
     x=bill_length_mm, y=bill_depth_mm, color=species
   )) + geom_point()
@@ -193,7 +197,7 @@ penguins %&gt;% ggplot(mapping=aes(
 ## Want a different plot? Try a different geom
 
 
-```r
+``` r
 penguins %&gt;% ggplot(mapping=aes(
   x=bill_length_mm, fill=species
 )) + geom_histogram()
@@ -206,7 +210,7 @@ penguins %&gt;% ggplot(mapping=aes(
 ## We can specify aesthetic values by hand:
 
 
-```r
+``` r
 penguins %&gt;% ggplot(
   mapping=aes(x=bill_length_mm, fill=species)
   ) + geom_histogram(alpha=0.6)
@@ -219,7 +223,7 @@ penguins %&gt;% ggplot(
 ## Different geoms have different options:
 
 
-```r
+``` r
 penguins %&gt;% ggplot(
   mapping=aes(x=bill_length_mm, fill=species)
   ) + geom_histogram(alpha=0.6)
@@ -232,7 +236,7 @@ penguins %&gt;% ggplot(
 ## Different geoms have different options:
 
 
-```r
+``` r
 penguins %&gt;% ggplot(
   mapping=aes(x=bill_length_mm, fill=species)
   ) + geom_histogram(alpha=0.6, position="identity")
@@ -245,7 +249,7 @@ penguins %&gt;% ggplot(
 ## Customizing other aspects of the plot
 
 
-```r
+``` r
 penguins %&gt;% ggplot(
   mapping=aes(x=bill_length_mm, fill=species)
   ) + geom_histogram(alpha=0.6, position="identity") +
@@ -260,7 +264,7 @@ penguins %&gt;% ggplot(
 ## Workflow tip: Save a plot for later
 
 
-```r
+``` r
 basic.plot &lt;- penguins %&gt;% 
   ggplot(aes(x=bill_length_mm, y=bill_depth_mm)) + geom_point()
 ```
@@ -270,26 +274,44 @@ basic.plot &lt;- penguins %&gt;%
 ## Workflow tip: Save a plot for later
 
 
+``` r
+basic.plot
+```
 
-```r
+&lt;img src="01b-slides_files/figure-html/unnamed-chunk-13-1.png" width="400px" height="400px" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## Workflow tip: Save a plot for later
+
+
+
+``` r
 basic.plot + labs(
     x="Bill Length (mm)", y="Bill Depth (mm)"
   )
 ```
 
-&lt;img src="01b-slides_files/figure-html/unnamed-chunk-13-1.png" width="300px" height="300px" style="display: block; margin: auto;" /&gt;
+&lt;img src="01b-slides_files/figure-html/unnamed-chunk-14-1.png" width="400px" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Workflow tip: Save a plot for later
+
+* This is useful when building a complex plot...
 
 --
 
-* This is useful when building a complex plot!
+* ... Or customizing formatting without messing with data!
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"highlightStyle": "atelier-lakeside-light",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "highlightStyle": "atelier-lakeside-light",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
