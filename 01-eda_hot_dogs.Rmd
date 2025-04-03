@@ -215,7 +215,7 @@ hdm_affil <- read_csv(here::here("data", "hot_dog_contest_with_affiliation.csv")
       gender = col_factor(levels = NULL)
       )) %>% 
   mutate(post_ifoce = year >= 1997) %>% 
-  filter(year >= 1981 & gender == "male")  %>% problems
+  filter(year >= 1981 & gender == "male") 
 ```
 
 
@@ -287,7 +287,7 @@ Now that the bones of the plot are in place, it's time to tweak the details.
 
 The spacing's a little funky down near the origin of the plot. The [documentation](http://ggplot2.tidyverse.org/reference/scale_continuous.html) tells us that the defaults are `c(0.05, 0)` for continuous variables. The first number is multiplicative and the second is additive. 
 
-The default was that 2.05 ((2022-1981)*.05+0) was added to the right and left sides of the x-axis as padding, so the effective default limits were `c(1979, 2024)`.
+The default was that 2.15 ((2024-1981)*.05+0) was added to the right and left sides of the x-axis as padding, so the effective default limits were `c(1979, 2026)`.
 
 Let's tighten that up with the `expand` property for the `scale_y_continuous` (we'll also change the breaks for y-axis tick marks here) and `scale_x_continuous` settings:
 
@@ -345,7 +345,7 @@ affil_plot +
   theme(axis.text = element_text(size = 12)) +
   theme(panel.background = element_blank()) +
   theme(axis.line.x = element_line(color = "gray80", linewidth = 0.5)) +
-  theme(axis.ticks = element_line(color = "gray80", size = 0.5))
+  theme(axis.ticks = element_line(color = "gray80", linewidth = 0.5))
 ```
 
 <div class="panel panel-info">
