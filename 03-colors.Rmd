@@ -38,13 +38,13 @@ knitr::include_url("slides/03-slides.html")
 
 Other packages will be needed to be installed as you go- reveal the first code chunks when in doubt!
 
-```{r}
+```{r,class.source = "fold-show"}
 library(tidyverse)
 ```
 
 # Read in the data
 
-```{r}
+```{r,class.source = "fold-show"}
 sounds <- read_csv(here::here("data", "animal_sounds_summary.csv"))
 ```
 
@@ -70,7 +70,7 @@ s + geom_point(aes(shape = z), size = 4)
 
 All symbols have a foreground colour, so if we add `color = "navy"`, they all are affected.
 
-```{r}
+```{r,class.source = "fold-show"}
 s + geom_point(aes(shape = z), size = 4, colour = "navy") 
 ```
 
@@ -78,7 +78,7 @@ s + geom_point(aes(shape = z), size = 4, colour = "navy")
 
 While all symbols have a foreground colour, symbols 21-25 also take a background colour (fill). So if we add `fill = "orchid"`, only the last row of symbols are affected.
 
-```{r}
+```{r, class.source = "fold-show"}
 s + geom_point(aes(shape = z), size = 4, colour = "navy", fill = "orchid") 
 ```
 
@@ -90,7 +90,7 @@ For the rest of today, we'll play with the `sounds` dataset. This data was deriv
 
 Here is a glimpse of the data:
 
-```{r}
+```{r, class.source = "fold-show"}
 glimpse(sounds)
 ```
 
@@ -129,7 +129,7 @@ In order to use color with your data, most importantly, you need to know if youâ
 Discrete color palettes work best when you want to color by a qualitative variable. Qualitative variables tend to be either categorical or ordinal. Different variables can be qualitative or quantitative depending on context. 
 
 In this dataset, `sound` is a categorical variable with 3 possible values:
-```{r}
+```{r, class.source = "fold-show"}
 sounds %>% 
   distinct(sound) %>% 
   knitr::kable()
@@ -141,7 +141,7 @@ We could map arbitrary numbers onto each of these sounds, like 1, 2, and 3- but 
 
 Continuous color palettes work best when you want to color by a quantitative variable. Quantitative variables tend to be either ordinal or continuous. In this dataset, `age` (in months) can only take on a limited set of values:
 
-```{r}
+```{r, class.source = "fold-show"}
 sounds %>% 
   distinct(age) %>% 
   pull
@@ -166,7 +166,7 @@ However, in the following plots, we'll treat age as a continuous variable plotte
 
 Let's start just by getting a feel for how many kids produce each kind of sound, across the full age range. We could make a table:
 
-```{r}
+```{r, class.source = "fold-show"}
 sounds %>% 
   group_by(sound) %>% 
   summarize(total_produce = sum(kids_produce)) %>% 
@@ -175,7 +175,7 @@ sounds %>%
 
 Or we could make a simple bar plot:
 
-```{r}
+```{r, class.source = "fold-show"}
 ggplot(sounds, aes(x = sound, y = kids_produce)) + 
   geom_col() +
   labs(x = "Sound", y = "Total Children Producing")
@@ -183,7 +183,7 @@ ggplot(sounds, aes(x = sound, y = kids_produce)) +
 
 For this kind of plot, we don't really need color. What if we want to see how the number of kids who produce each sound varies by age? We'll change the x-axis to age and instead `facet_wrap` by `sound`, and make the y-axis a proportion instead of counts.
 
-```{r}
+```{r, class.source = "fold-show"}
 ggplot(sounds, aes(x = age, y = prop_produce)) + 
   geom_col() +
   labs(x = "Age (mos)", y = "Proportion of Children Producing") +
@@ -192,7 +192,7 @@ ggplot(sounds, aes(x = age, y = prop_produce)) +
 
 The bar geom makes this a little hard to read and compare across facets though. Let's try points instead.
 
-```{r}
+```{r, class.source = "fold-show"}
 ggplot(sounds, aes(x = age, y = prop_produce)) + 
   geom_point() +
   labs(x = "Age (mos)", y = "Proportion of Children Producing") +
@@ -298,7 +298,7 @@ At this point, our plot is looking pretty good. But you may have noticed that th
 
 What determines the order of levels in the legend? The order of levels in the underlying factor:
 
-```{r}
+```{r, class.source = "fold-show"}
 levels(as.factor(sounds$sound))
 ```
 
@@ -308,14 +308,14 @@ We _could_ manually re-order the levels of the factor, but different plots might
 
 The [`forcats` package](http://forcats.tidyverse.org), is `for` `cat`egorical variables and has lots of useful functions, including some for re-ordering levels. There are lots of functions in `forcats`, and you can install & load it separately, although `forcats` is loaded with the `tidyverse`.
 
-```{r eval = FALSE}
+```{r eval = FALSE, class.source = "fold-show"}
 install.packages("forcats")
 library(forcats)
 ```
 
 We'll use the `fct_reorder2` function, which by default will re-order the levels of a factor based on the order of occurrence of one variable (`y` in the docs) when the dataframe is _sorted_ by another variable (`x` in the docs):
 
-```{r}
+```{r, class.source = "fold-show"}
 # "Sort the dataframe by age, find the last occurrence of each level of sounds$sound in order of prop_produce
 fct_reorder2(
   as.factor(sounds$sound), 
@@ -324,11 +324,11 @@ fct_reorder2(
 ) %>% levels
 ```
 
+Note that the levels are now sorted. This (somewhat convoluted) procedure is very useful for when you have a line chart of two quantitative variables, colored by a factor variable, and is designed to be use as part of your ggplot workflow. Let
 
+'s see the difference this seemingly-small detail can make for a plot: 
 
-This (somehwat convoluted) procedure is very useful for when you have a line chart of two quantitative variables, colored by a factor variable. Let's see the difference:
-
-```{r}
+```{r, class.source = "fold-show"}
 sounds <- sounds %>% 
   mutate(sound = as.factor(sound))
 
@@ -349,7 +349,7 @@ MUCH BETTER! Save your plot object as `sound_traj`. Now we can start playing wit
 
 The default qualitative palette works fine here. The addition of [`scale_color_hue`](http://ggplot2.tidyverse.org/reference/scale_hue.html) changes nothing.
 
-```{r}
+```{r, class.source = "fold-show"}
 sound_traj +
   scale_color_hue()
 ```
@@ -360,19 +360,31 @@ We can also change these settings within the default color palette, where the ar
 - `l` = luminance (lightness)
 - `c` = chroma (intensity of color)
 
-```{r}
+Changing _hue_, and leaving luminance and chroma at their default settings:
+
+```{r, class.source = "fold-show"}
 # Change hue (l and c are defaults)
 sound_traj +
   scale_color_hue(h = c(0, 90), l = 65, c = 100)
+```
 
+Turning _down_ the luminance:
+
+```{r, class.source = "fold-show"}
 # Use luminance=45, instead of default 65
 sound_traj +
   scale_color_hue(l = 45)
+```
 
+Turning down the saturation, and _increasing_ the luminance:
+
+```{r, class.source = "fold-show"}
 # Reduce saturation (chroma) from 100 to 50, and increase luminance
 sound_traj +
   scale_color_hue(l = 75, c = 50)
 ```
+
+Play around with these parameters a bit, to get a feel for how they work!
 
 ## Set discrete colors
 
@@ -380,7 +392,7 @@ We can change the actual colors used by adding the layer `scale_color_manual` or
 
 To name more than one color, which you often want to do, use `c()`. In the parentheses, named colors and hex colors are always in quotes.
 
-```{r}
+```{r, class.source = "fold-show"}
 sound_traj +
   scale_color_manual(values = c("cornflowerblue", 
                                 "seagreen", "coral"))
@@ -513,21 +525,21 @@ As we discussed on Monday, [Colorbrewer](https://colorbrewer2.org/) is a useful 
 
 To use Colorbrewer palettes, you'll need to install the `RColorBrewer` package from CRAN. This chunk of code tells you how:
 
-```{r eval = FALSE}
+```{r eval = FALSE, class.source = "fold-show"}
 install.packages("RColorBrewer")
 library(RColorBrewer)
 ```
 
 Colorbrewer has a few named (i.e., pre-set) _qualitative_ palettes: Accent, Dark2, Paired, Pastel1, Pastel2, Set1, Set2, Set3. Here is how to view them:
 
-```{r}
+```{r, class.source = "fold-show"}
 brewer.pal(5, "Dark2") # list 5 hex colors
 display.brewer.pal(5, "Dark2") # view 5 hex colors
 ```
 
 And here is how you use them:
 
-```{r}
+```{r, class.source = "fold-show"}
 sound_traj +
   scale_color_brewer(palette = "Dark2")
 ```
@@ -544,7 +556,7 @@ Read more here in the [viridis vignette](https://cran.r-project.org/web/packages
 - "plasma" (or "C"),
 - "viridis" (or "D", the default option).
 
-```{r}
+```{r, class.source = "fold-show"}
 sound_traj +
   scale_color_viridis_d() +
   theme_minimal()
@@ -587,28 +599,31 @@ As with everything else in R, there are _numerous_ homebrew packages with differ
 
 My favorite! To use Wes Anderson palettes, you'll need to install the `wesanderson` package from CRAN. This chunk of code tells you how:
 
-```{r eval = FALSE}
+```{r eval = FALSE, class.source = "fold-show"}
 install.packages("wesanderson")
 library(wesanderson)
 ```
 
 
 
-```{r}
+```{r, class.source = "fold-show"}
 names(wes_palettes) # all the palette names
 wes_palette("GrandBudapest2") # view named palette
 wes_palette("GrandBudapest2")[1:4] # list first 4 hex colors
 wes_palette("GrandBudapest2")[c(1,4)] # list colors 1 and 4
 ```
 
-To use these palettes, use `scale_color_manual` where `values` is set to `wes_palette("name")`. For example:
+To use these palettes, use `scale_color_manual` where `values` is set to `wes_palette("name")`. For example, to get colors inspired by the visual aesthetic of The Darjeeling Limited:
 
-```{r}
+```{r, class.source = "fold-show"}
 sound_traj +
-  scale_color_manual(values = wes_palette("Darjeeling1"))
+  scale_color_manual(values = wes_palette("Darjeeling1")) + ggtitle("Colors: The Darjeeling Limited ")
+```
 
+Or The Fantastic Mr. Fox:
+```{r, class.source = "fold-show"}
 sound_traj +
-  scale_color_manual(values = wes_palette("FantasticFox1"))
+  scale_color_manual(values = wes_palette("FantasticFox1")) + ggtitle("Colors: Fantastic Mr. Fox")
 ```
 
 
@@ -630,7 +645,7 @@ sound_traj +
 </div>
 
 
-#### In The Wild
+#### Sidebar: `wes_palette` In The Wild
 
 I recently used one of the Wes Anderson palettes ("AsteroidCity1") in one of my own figures! 
 
@@ -640,7 +655,7 @@ I recently used one of the Wes Anderson palettes ("AsteroidCity1") in one of my 
 
 Another fun choice: The [Studio Ghibli](https://ewenme.github.io/ghibli/) color palettes!
 
-```{r}
+```{r,class.source = "fold-show"}
 sound_traj +
  scale_colour_ghibli_d("YesterdayMedium", direction = -1)
 ```
@@ -672,14 +687,14 @@ We can see that indeed, the colors from the palette are being used, but that the
 
 To use these palettes, you'll need to install the `ggthemes` package from CRAN. This chunk of code tells you how:
 
-```{r eval = FALSE}
+```{r eval = FALSE,class.source = "fold-show"}
 install.packages("ggthemes")
 library(ggthemes)
 ```
 
+Once you have loaded this library, there will be several new `scale_` options for you to choose from:
 
-
-```{r}
+```{r, class.source = "fold-show"}
 sound_traj +
   scale_color_fivethirtyeight()
 
@@ -691,7 +706,7 @@ sound_traj +
 
 [`ggsci`](https://nanx.me/ggsci/) provides color palettes designed to match with the aesthetics of a wide variety of scientific publishers:
 
-```{r}
+```{r,class.source = "fold-show"}
 library(ggsci)
 
 sound_traj + scale_color_nejm()
@@ -702,26 +717,31 @@ sound_traj + scale_color_nejm()
 
 To use [Beyonce palettes](https://github.com/dill/beyonce), you'll need to install the `beyonce` package from GitHub using `devtools::install_github()`. This chunk of code tells you how:
 
-```{r eval = FALSE}
-# install.packages("devtools")
-# devtools::install_github("dill/beyonce")
+```{r eval = FALSE,class.source = "fold-show"}
+install.packages("devtools")
+devtools::install_github("dill/beyonce")
+```
+Once you have installed the package, you can load it as normal:
+```{r, eval=FALSE, class.source = "fold-show"}
 library(beyonce)
 ```
 
-Note that a number of students had installation problems with this package! Move on if you do.
+(Note that last year, a few students had mysterious installation problems with this package! Move on if you do.)
 
 ```{r}
 beyonce_palette(18)
 ```
 
-```{r}
+Since we have three levels, we can choose whichever three colors from this palette we want:
+
+```{r,class.source = "fold-show"}
 sound_traj +
   scale_color_manual(values = beyonce_palette(18)[3:5])
 ```
 
 Here we'll only use the first, fourth, and fifth colors in the palette.
 
-```{r}
+```{r,class.source = "fold-show"}
 sound_traj +
   scale_color_manual(values = beyonce_palette(18)[c(1, 4, 5)])
 ```
@@ -731,15 +751,15 @@ sound_traj +
 
 Use `scale_color_grey` or `scale_fill_grey`, or sometimes both depending on your geoms and the aesthetics they understand.
 
-```{r}
+```{r,class.source = "fold-show"}
 sound_traj +
   scale_color_grey() +
   theme_minimal()
 ```
 
-Set start and end
+`scale_color_grey` lets us set start and end points for the range of greys to allow, which can be important depending on the background we're using:
 
-```{r}
+```{r,class.source = "fold-show"}
 sound_traj +
   scale_color_grey(start = 0.2, end = .8) 
 ```
@@ -761,7 +781,7 @@ ggplot(sounds, aes(x = age,
   scale_color_grey(start = 0.3, end = 1) 
 ```
 
-Suggest redundancy in greyscale- try changing line type instead of line (or in addition to) line color.
+I always suggest using redundancy in greyscale- try changing line type instead of (or in addition to) line color.
 
 
 Change line type by `sound`, set color to black.
@@ -800,14 +820,14 @@ ggplot(sounds, aes(x = age,
 
 The [`colorblindr` package](https://github.com/clauswilke/colorblindr) can be used to "simulate colorblindness in production-ready R figures." To use this package, you'll need to first install the `cowplot` package from GitHub using `devtools::install_github()`. You'll also need to install the `colorspace` package from CRAN. Finally, you can then use `devtools::install_github()` again to install the `colorblindr` package. This code chunk shows you how to do all 3 installs to use the `colorblindr` package:
 
-```{r eval = FALSE}
+```{r eval = FALSE, class.source = "fold-show"}
 devtools::install_github("wilkelab/cowplot")
 install.packages("colorspace", repos = "http://R-Forge.R-project.org")
 devtools::install_github("clauswilke/colorblindr")
 ```
 
 To use:
-```{r}
+```{r, class.source = "fold-show"}
 # save a ggplot object
 my_sound_traj <- sound_traj +
   scale_color_manual(values = beyonce_palette(18)[c(1, 4, 5)])
@@ -815,14 +835,14 @@ my_sound_traj <- sound_traj +
 
 View that figure after color-vision-deficiency simulation:
 
-```{r}
+```{r, class.source = "fold-show"}
 library(colorblindr)
 cvd_grid(my_sound_traj)
 ```
 
 You can also use the colorblind-friendly palette in this package using `scale_color_OkabeIto` and `scale_fill_OkabeIto`:
 
-```{r}
+```{r, class.source = "fold-show"}
 cb_sound_traj <- sound_traj +
   scale_color_OkabeIto()
 
@@ -835,7 +855,7 @@ You can still use this colorblind-friendly palette without the `colorblindr` pac
 ![](http://jfly.iam.u-tokyo.ac.jp/color/image/pallete.jpg)
 
 The [Cookbook for R](http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#a-colorblind-friendly-palette) provided the matching hex colors too to make life easier:
-```{r}
+```{r, class.source = "fold-show"}
 cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 # To use for line and point colors, add
@@ -853,7 +873,7 @@ When should you consider this option?
 1. When you have a very small number of levels
 2. When the design of the rest of the plot is amenable: there aren't too many other annotations or visual elements taking up space.
 
-There are several ways to do this, but a good place to start is `ggrepel`:
+There are several ways to do this, but a good place to start is `ggrepel`, which provides a `geom_text_repel` for placing labels:
 
 ```{r}
 library(ggrepel)
@@ -886,7 +906,7 @@ ggplot(sounds, aes(x = age,
 
 Letâ€™s map color to a continuous variable. For this, we are returning to `geom_line` instead of `geom_smooth`, because the latter doesn't respond to continuous color palettes.
 
-```{r}
+```{r, class.source = "fold-show"}
 sound_by_age <- ggplot(sounds, aes(x = age, 
                                    y = prop_produce, 
                                    color = age)) +
@@ -903,27 +923,28 @@ sound_by_age
 
 With discrete colors, we used either `scale_color_manual` or `scale_fill_manual` (and sometimes both were needed!). For continuous colors, we use either `scale_color_gradient` or `scale_fill_gradient`.
 
-```{r}
+```{r, class.source = "fold-show"}
 sound_by_age +
   scale_color_gradient()
 ```
 
 You can reverse the gradient scale...
 
-```{r}
+```{r, class.source = "fold-show"}
 sound_by_age +
   scale_color_gradient(trans = "reverse")
 ```
 
+And can also specify the color endpoints for the gradient, either by name or by hex code:
 
-```{r}
+```{r, class.source = "fold-show"}
 sound_by_age +
   scale_color_gradient(low = "white", high = "red")
 ```
 
-We can make this same plot using a custom greyscale gradient.
+We can make this same plot using a custom greyscale gradient (instead of using `scale_color_grey` itself).
 
-```{r}
+```{r, class.source = "fold-show"}
 sound_by_age +
   scale_color_gradient(low = "grey90", high = "black")
 ```
@@ -933,7 +954,7 @@ sound_by_age +
 So `scale_color_gradient` gives you a sequential gradient, but you may want a diverging color scheme instead. For that, you can use `scale_color_gradient2`
 
 
-```{r}
+```{r, class.source = "fold-show"}
 # Diverging color scheme
 med_age <- sounds %>% 
   summarize(mos = median(age)) %>% 
@@ -949,48 +970,48 @@ sound_by_age +
 
 Again, to use you need to install and load the `RColorBrewer` palette. 
 
-```{r eval = FALSE}
+```{r eval = FALSE, class.source = "fold-show"}
 library(RColorBrewer)
 ```
 
-Then use `scale_color_gradientn`.
+Then use `scale_color_gradient`.
 
-```{r}
+```{r, class.source = "fold-show"}
 sound_by_age +
   scale_color_gradientn(colours = brewer.pal(n=5, name="PuBuGn"))
 ```
 
 Reverse the colors...
 
-```{r}
+```{r, class.source = "fold-show"}
 sound_by_age +
   scale_color_gradientn(colours = rev(brewer.pal(n=5, name="PuBuGn")))
 ```
 
 ### Viridis
 
-Note! For discrete == FALSE (the default) all other arguments are as to `scale_fill_gradientn` or `scale_color_gradientn`. (Also note that `_gradient_n_` is not a typo- the _n_ versions of those functions allow multi-color gradients).
+Note! When using the Viridis package and its `discrete == FALSE` mode (the default) all other arguments are just the same as with `scale_fill_gradient` or `scale_color_gradient`. (Also note that `_gradient_n_` is not a typo- the _n_ versions of those functions allow multi-color gradients).
 
-```{r}
+```{r, class.source = "fold-show"}
 sound_by_age +
   scale_color_viridis_c()
 ```
 
-```{r}
+```{r, class.source = "fold-show"}
 sound_by_age +
   scale_color_viridis_c(option = "magma")
 ```
 
 Read the help function for `?scale_color_viridis_c`. As before, we can use the `direction` parameter to reverse the order of the colors, or, atlernatively, we can use the `begin` and `end` parameters to accomplish the same thing. Using the "inferno" palette _in reverse_:
 
-```{r}
+```{r, class.source = "fold-show"}
 sound_by_age +
   scale_color_viridis_c(option = "inferno", begin = 1, end = 0)
 ```
 
 This `begin`/`end` trick is also how we can adjust the color scale to not get quite so... yellow at the very end>
 
-```{r}
+```{r, class.source = "fold-show"}
 sound_by_age +
   scale_color_viridis_c(option = "inferno", begin = 0, end = 0.9) # if we don't want it to go all the way to 1.0...
 
