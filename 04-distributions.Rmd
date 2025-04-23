@@ -36,7 +36,7 @@ install.packages("ggdist")
 
 To load:
 
-```{r}
+```{r, message=FALSE}
 library(tidyverse)
 library(ggbeeswarm)
 library(skimr)
@@ -66,7 +66,7 @@ findParams <- function(mu, sigma, skew, kurt) {
 
 ```{r make_data}
 # Generate sample data -------------------------------------------------------
-set.seed(8675309)
+set.seed(8675309) # so we can have reproducible results
 
 # normal
 n <- rnorm(250) # 250 simulated draws from a normal distribution
@@ -371,7 +371,7 @@ ggplot(four, aes(x = vals, fill = dist)) +
   geom_density(alpha = .5)
 ```
 
-Keiran Healy has a [lovely essay](https://kieranhealy.org/blog/archives/2021/12/19/comparing-distributions/) discussing different design approaches to this sort of plot!
+Keiran Healy has a [lovely and strongly-recommended  essay](https://kieranhealy.org/blog/archives/2021/12/19/comparing-distributions/) discussing different design approaches to this sort of plot!
 
 ### Add a histogram
 
@@ -388,7 +388,7 @@ ggplot(four, aes(x = vals)) +
   facet_wrap(~ dist)
 ```
 
-Question to consider: what does the y-axis represent in a histogram? What does it represent in a density plot?
+Question to consider: what does the y-axis "normally" represent in a histogram? What does it represent in a density plot?
 
 ## Violin plots
 
@@ -556,7 +556,7 @@ Confidence limits may give us a better idea than standard error limits of whethe
 
 ## Connecting means with lines
 
-Using the `ToothGrowth` dataset
+Using the `ToothGrowth` dataset:
 
 ```{r}
 data(ToothGrowth)
@@ -565,7 +565,7 @@ tg <- ToothGrowth
 
 
 ```{r}
-# Standard error of the mean
+# Get simple points at mean plus bars representing standard error of the mean
 ggplot(tg, aes(x = dose, y = len, colour = supp)) + 
   stat_summary(fun.data = "mean_se") +
   ggtitle("Mean +/- SE")
@@ -582,7 +582,7 @@ ggplot(tg, aes(x = dose, y = len, colour = supp)) +
   stat_summary(fun.y = mean, geom = "line") +
   ggtitle("Mean with 95% confidence intervals")
 
-# The errorbars overlapped, so use position_dodge to move them horizontally
+# Note that the errorbars themselves overlapped, so use position_dodge to move them horizontally
 pd <- position_dodge(0.1) # move them .05 to the left and right
 
 ggplot(tg, aes(x = dose, y = len, colour = supp)) + 
@@ -591,7 +591,7 @@ ggplot(tg, aes(x = dose, y = len, colour = supp)) +
   ggtitle("Mean with 95% confidence intervals")
 ```
 
-Not the best example for this geom, but another good one for showing variability...
+Another option for showing variability: a "ribbon" visualization, showing the area covered by the error bars. This is not the best example for this geom, and is included here for didactic purposes...
 
 ```{r}
 # ribbon geom
@@ -603,7 +603,10 @@ ggplot(tg, aes(x = dose, y = len, colour = supp, fill = supp)) +
 
 ## Bars with error bars
 
-This is not an ideal practice, but sometimes you must...
+We can combine stat_summary with other geoms, such as geom_bar(), in order to get error bars on our bar charts.
+
+I'm not in love with this style of design, but sometimes it's the right choice, or a journal or PI requires it...
+
 ```{r}
 # Standard error of the mean; note positioning
 ggplot(tg, aes(x = factor(dose), y = len, fill = supp)) + 

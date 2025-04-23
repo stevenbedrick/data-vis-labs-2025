@@ -10,9 +10,9 @@ output:
 
 # Overview
 
-Both challenges are due by the end of the day via Sakai on Wednesday May 3rd. For the first challenge, focused on data-tidying, you'll want to refer back to our [slides](slides/04-slides.html). For the second challenge, you'll want to refer to the [reference lab](04-distributions.html).
+Both challenges are due by the end of the day via Sakai on Wednesday April 30th. For the first challenge, focused on data-tidying, you'll want to refer back to our [slides](slides/04-slides.html). For the second challenge, you'll want to refer to the [reference lab](04-distributions.html).
 
-# Data-Tidying
+# Challenge 1: Data-Tidying
 
 Tidy the [`data/gapminder_broadband_per_100.xlsx`](data/gapminder_broadband_per_100.xlsx) file *(Tip: use the `readxl` package's `read_excel()` function to import from Excel, and use `janitor::clean_names()` immediately after import to make life easier)*
 
@@ -22,9 +22,9 @@ Tidy the [`data/gapminder_broadband_per_100.xlsx`](data/gapminder_broadband_per_
     - Each row corresponding to a single data point
     - In the case of this dataset, a datapoint is a (country, year, count) triple
 
-# Gapminder Exercise
+# Challenge 2: Gapminder Exercise
 
-Install and load the `gapminder` data package (already _installed_ on  RStudio Cloud). 
+Install and load the `gapminder` data package (already _installed_ on  Posit Cloud). 
 
 ```{r eval = FALSE}
 install.packages("gapminder")
@@ -32,7 +32,7 @@ library(gapminder)
 ?gapminder
 ```
 
-Pick at least __two__ of the tasks below from the task menu and approach each with both a table _and_ a figure. 
+Pick at least __two__ of the tasks below from the task menu and approach each with both a table (containing the appropriately-wrangled data) _and_ a companion figure. 
 
   * `dplyr` should be your main data manipulation tool
   * `ggplot2` should be your main visualization tool
@@ -58,7 +58,6 @@ You do not have to use `tidyr` or otherwise worry about reshaping your tables. M
 For each table, make sure to include a relevant figure. One tip for starting is to draw out on paper what you want your x- and y-axis to be first and what your `geom` is; that is, start by drawing the plot you want `ggplot` to give you. Your figure does not have to depict every single number present in the table. Use your judgement. It just needs to complement the table, add context, and allow for some sanity checking.
 
 Notice which figures are easy/hard to make, and whether the visualization adds clarity, detracts from, or is completely redundant (and therefore probably unnecessary) with respect to the tabular display. 
-
 
 # Report your process
 
