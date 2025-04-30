@@ -57,7 +57,9 @@ The workhorse for making simple tables in R Markdown documents is the `knitr` pa
 
 ## `kable` all tables everywhere
 
-In order to tell RMarkdown to use `kable` to format all tabular output, update the YAML header in your document and override the `df_print` option, when producing HTML output:
+By default, RMarkdown's output of tabular output (dataframes, etc.) is not particularly fancy. 
+However, we can tell RMarkdown to use `kable` to format all tabular output, which makes much nicer-looking documents.
+To make this happen, update the YAML header in your document and override the `df_print` option, when producing HTML output:
 
 ```{r eval = FALSE}
 ---
@@ -162,8 +164,8 @@ head(mazes) %>%
 
 ## `tibble` + `kable` + `kableExtra`
 
-Sometimes, when writing a document or preparing a report, you may have tabular information to present that is not already in a dataframe. 
-For example, consider the helpful table of vectorized math operators from one of the slide decks.
+Sometimes, when writing a document or preparing a report, you may have tabular information to present that is _not_ already in a dataframe. 
+For example, consider that helpful table of vectorized math operators from one of the first labs' slide decks.
 I made this by first manually creating a data frame to hold the contents of the table (using the [`tibble` package's](http://tibble.tidyverse.org) `tribble()` function), and then formatting it as before.
 
 Manually creating a quick-and-dirty dataframe with `tribble()` is simple:
@@ -339,7 +341,7 @@ This method does not depend on using a monospaced font!
 
 # `gt`
 
-`gt` is a [package from RStudio](https://gt.rstudio.com/reference/cols_align.html) designed for publication-ready figures. It is my go-to tool for tables.
+`gt` is a [relatively new package](https://gt.rstudio.com/reference/cols_align.html) designed for publication-ready figures. It has become my go-to tool for tables thanks to its versatility and ease of use.
 
 <img src="https://gt.rstudio.com/reference/figures/gt_parts_of_a_table.svg"/>
 
@@ -414,7 +416,9 @@ By default, its output is probably not what we want (though we can see hints of 
 CreateTableOne(data = mazes)
 ```
 
-We need to tell it a bit about what we are looking for:
+See the problem? Each row in this long dataframe represents a single sample from a single participant; as such, each participant is represented four (-ish) times, and each `study_id` is getting its own entry as though it was a group identifier or something.
+
+To get a more useful output, we need to tell `CreateTableOne` a bit about what we are looking for:
 
 ```{r}
 
@@ -457,7 +461,32 @@ table1(~ ca + viq + content + filler + rep + rev+ fs+ cued + not_cued | activity
 
 This is, of course, just for demonstration purposes! Please do not make a table this large. :-D
 
-Note that `table1`'s output is always HTML, which may or may not be what you want. It has numerous options for customization and formatting, etc.
+Note that `table1`'s output is _always_ HTML, which may or may not be what you want. 
+It has numerous options for customization and formatting, etc.
+
+## `gtsummary`
+
+A more recent contender is `gtsummary`, which integrates well with `gt` (but also plays nicely with other table packages, such as `flextable`).
+
+```{r}
+library(gtsummary)
+mazes %>% 
+  select(ca, viq, dx, activity, content) %>% 
+  tbl_summary(by=dx,)
+```
+
+Things I like about `gtsummary`:
+
+1. Easy and ergnomic syntax
+2. Very customizable
+3. Easy to add statistical tests, summary rows/cols, etc.
+3. Lots of export options
+ 
+Things I don't like about `gtsummary`:
+
+1. Relatively rigid expectations of how a summary table should look
+
+That's about it for "dislikes", really.
 
 # The `DT` package
 
@@ -523,11 +552,15 @@ demo_plt + theme(text=element_text(family="Palatino"))
 demo_plt + theme(text=element_text(family="Zapfino"))
 ```
 
-Note that the specific _name_ that you must use to refer to the font is not exactly obvious. It is not the font name, but rather the font's "family name". Because of some under-the-hood details about the way that fonts work, this is a bit different from what you might see in e.g. a font selection menu in Word. You can see a list of all the fonts that R knows about by using the `fonttable()` command:
+Note that the specific _name_ that you must use to refer to the font is not exactly obvious. It is _not_ what we would "normally" think of as being the font name, but rather is the font's "family name". 
+Because of some under-the-hood details about the way that fonts work, this is a bit different from what you might see in e.g. a font selection menu in Word. 
+You can see a list of all the fonts that R knows about by using the `fonttable()` command, which returns a dataframe of all of your computer's installed fonts:
 
 ```{r}
 fonttable() %>% glimpse()
 ```
+
+Because it's a dataframe, we can work with it like any other dataframe:
 
 ```{r}
 fonttable() %>% head()
@@ -613,11 +646,12 @@ It is important to note that both `extrafont` and `showtext` work best for _rast
 The story of "making PDFs with non-standard fonts in R" is extremely long and tedious; if you are actually interested, set up a meeting and I will be happy to go over it with you.
 
 The upshot of it all is that if you want to make a PDF from `ggplot` using non-standard fonts or with non-BMP Unicode characters, your best bet is to use `showtext`, which _will_ produce a perfectly nice PDF file with whatever font and text you want... with one caveat: text selection (for search, copy-and-paste, etc.) will not be possible in the resulting PDFs. 
-The file will look fine for everybody, it will print fine for everybody, it will scale fine to any resolution, and will do all the things a PDF should do, _other_ than allow text extraction.
+The file will look fine for everybody, it will print fine for everybody and will look good on your poster, it will scale fine to any resolution, and will do all the things a PDF should do, _other_ than allow text extraction.
 
-If this is a dealbreaker for your particular situation, my honest advice is to find a different font to use- pick a TTF font (or figure out how to convert your OTF font to a TTF font), use `extrafont`, and move on with your life. 
+If this is a dealbreaker for your particular situation, my honest advice is to find a different font to use- pick a TTF font (or figure out how to convert your OTF font to a TTF font, I can point you in that direction), then use `extrafont`, and move on with your life. 
 Life is short and fleeting, the grave is cold and lonely, the climate is changing, and the full day that you will spend debugging this situation is a day of your life that you can never get back.
-Nobody, on their deathbed, has ever wished that they had spent more time debugging mysterious error messages involving multiple obscure pieces of thirty-five-year-old software in order to get a PDF file to behave slightly better. 
+
+Nobody, on their deathbed, has ever wished that they had spent more time debugging mysterious error messages involving _multiple_ obscure pieces of thirty-five-year-old software in order to get a PDF file to behave slightly better. 
 Please, spend that day with your family, or go enjoy the coastline while it's still there, or do literally anything else _other_ than try and get R to produce proper PDF output with OTF fonts.
 
 And note that this is advice coming from somebody who actually _enjoys_ dealing with bizarre font and Unicode issues, is a perfectionist when it comes to fonts and PDF files, and who eventually decided to acknowledge reality and just use `showtext`.
@@ -627,3 +661,4 @@ If you absolutely _must_ ignore my advice, here are two places to start:
 - [Section 14.6](https://r-graphics.org/recipe-output-fonts-pdf) of the [R Graphics Cookbook](https://r-graphics.org)
 - [My own page](https://www.bedrick.org/notes/fonts-and-ggplot-and-pdf/) on the subject, which includes some more detailed discussion and a workaround for what is going wrong with PDFs made using `extrafont` and non-standard TTF fonts
   - Note that this page will offer neither advice nor solace for those suffering from the OTF font situation
+- Kieran Healy himself has gone down this same rabbit hole, somewhat more recently than I have but [with similar conclusions](https://kieranhealy.org/blog/archives/2025/02/06/kerning-and-kerning-in-a-widening-gyre/). His writeup is very worth reading!
