@@ -5,7 +5,7 @@ date: "5/7/2025"
 output:
   html_document:
     theme: flatly
-    number_sections: TRUE
+    number_sections: FALSE
 ---
 
 This week, you will begin working on your academic portfolio site. The deliverable for the week is a URL (on Netlify, or wherever) for a simple personal site with the following criteria:
@@ -14,5 +14,19 @@ This week, you will begin working on your academic portfolio site. The deliverab
 2. A photo (not necessarily of you)
 3. At least one stylistic aspect changed from the original template (font, color, etc.)
 4. A sub-page containing one of the visualizations that you have created for an assignment/lab in this class, with an associated description.
-5. All boilerplate (example) content that came with the theme should be removed, config settings updated (e.g., the page title should not be "RMarkdown Demo" or anything like that), etc. 
+5. All boilerplate (example) content that came with the theme should be removed. I am talking about things like, for example:
+    1. The "resources" section
+    2. The randomly-titled "second page"
+    3. The config settings should also be updated (e.g., the page title should not be "RMarkdown Demo" or anything like that), etc. 
+    4. _Hint_: Make sure to look in the `_site.yml` file!
 
+
+
+#### Resources
+
+- [Chapter 3](https://bookdown.org/yihui/rmarkdown/html-document.html#appearance-and-style) of ["R Markdown: The Definitive Guide"](https://bookdown.org/yihui/rmarkdown/) by Xie et al. has a section on themes
+- [Chapter 10](https://bookdown.org/yihui/rmarkdown/websites.html) of the same book has a detailed discussion of the workflow for a simple website.
+- [Julia Lowndes's RMarkdown Tutorial](https://jules32.github.io/rmarkdown-website-tutorial/basic_workflow.html) is a good overview of a possible workflow
+- If you find yourself feeling stifled by how simplistic RMarkdown's functionality is, you may wish to check out:
+  - [Quarto](https://quarto.org/docs/websites/), which has support for more complex sites
+  - [Blogdown](https://bookdown.org/yihui/blogdown/), which is even more involved
