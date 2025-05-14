@@ -112,7 +112,7 @@ We'll see that Shiny includes a variety of other functions for controlling the H
 
 This is a complete application, but it doesn't do anything interesting. Let's make it a bit more interesting, and have it print the date and time that the page was loaded:
 
-```{r firstServerSide, eval=FALSE, echo=FALSE}
+```{r firstServerSide, eval=FALSE}
 library(shiny)
 
 ui <- fluidPage(
@@ -132,10 +132,10 @@ shinyApp(ui = ui, server = server)
 ```
 
 ```{r, echo=FALSE}
-decorate("firstServerSide", eval=FALSE) %>% 
-  flair("textOutput") %>% 
-  flair("renderText") #%>% 
-  # knit_print.with_flair()
+# decorate("firstServerSide", eval=FALSE) %>% 
+#   flair("textOutput") %>% 
+#   flair("renderText") #%>% 
+#   # knit_print.with_flair()
 ```
 
 There are a few new pieces here:
@@ -146,10 +146,10 @@ There are a few new pieces here:
 
 There are corresponding `*Output` elements (and `render*()` functions) for images, plots, tables, etc. We'll see examples of that as we move forward.
 
-The other important thing to notice in this example is that we are giving our UI element an _identifier_, "`timestamp`", which we then use later in the server function:
+The other important thing to notice in this example is that we are giving our UI element an _identifier_, "`timestamp`", which we then use later in the server function.
 
 ```{r, echo=FALSE}
-decorate("firstServerSide", eval=FALSE) %>% flair("timestamp") # %>% knit_print.with_flair()
+# decorate("firstServerSide", eval=FALSE) %>% flair("timestamp") # %>% knit_print.with_flair()
 ```
 
 This is a key pattern in Shiny. A way to think about it is that the element IDs are _links_ that let the front-end and back-end communicate with one another. When you run this application, you should see something like this:
@@ -217,7 +217,7 @@ You'll see that the _front-end_ of the site is working (it's a text field, you c
 How might we _access_ the value of our `name` field from the back-end? 
 We have already seen that to _set_ a value _in_ the UI from our back-end code, we used the `output` variable; to _get_ a value _from_  the UI, we use the `input` variable. We will use `stringr`'s `str_length()` function, and send its output back via `renderText()`:
 
-```{r firstInput, echo=FALSE, eval=FALSE}
+```{r firstInput, echo=TRUE, eval=FALSE}
 server <- function(input, output, session) {
   output$nameLength <- renderText(
       paste0("Your name is ", str_length(input$name), " letters long.")
@@ -225,7 +225,7 @@ server <- function(input, output, session) {
 }
 ```
 ```{r, echo=FALSE}
-decorate("firstInput", eval=FALSE) %>% flair("input") #  %>% knit_print.with_flair()
+# decorate("firstInput", eval=FALSE) %>% flair("input") #  %>% knit_print.with_flair()
 ```
 
 Try adding this line to your server function, and run the application. You should see something like this:
@@ -291,7 +291,7 @@ babynames %>%
 
 Nothing fancy, but that's fine- let's get it into our Shiny application. We will use the `plotOutput`/`renderPlot` function dyad:
 
-```{r firstPlot, eval=FALSE, echo=FALSE}
+```{r firstPlot, eval=FALSE, echo=TRUE}
 library(shiny)
 library(babynames)
 
@@ -315,7 +315,7 @@ shinyApp(ui = ui, server = server)
 ```
 
 ```{r, echo=FALSE}
-decorate("firstPlot", eval=FALSE) %>% flair("plotOutput") %>% flair("renderPlot") #%>% knit_print.with_flair()
+#decorate("firstPlot", eval=FALSE) %>% flair("plotOutput") %>% flair("renderPlot") #%>% knit_print.with_flair()
 ```
 
 `plotOutput` can take display figures made with either `plot()` or `ggplot()`.
@@ -339,7 +339,7 @@ babynames %>%
 
 As you might imagine, Shiny has an `tableOutput()`/`renderTable()` pair:
 
-```{r withTable, eval=F, echo=F}
+```{r withTable, eval=F, echo=T}
 library(shiny)
 library(babynames)
 
@@ -374,7 +374,7 @@ shinyApp(ui = ui, server = server)
 ```
 
 ```{r, echo=FALSE}
-decorate("withTable", eval=FALSE) %>% flair("tableOutput") %>% flair("renderTable") %>% flair("nameTable") #%>% knit_print.with_flair()
+#decorate("withTable", eval=FALSE) %>% flair("tableOutput") %>% flair("renderTable") %>% flair("nameTable") #%>% knit_print.with_flair()
 ```
 
 ```{r withTableToDisplay, eval=T, echo=F}
@@ -430,7 +430,7 @@ babynames %>%
 
 We can integrate that into our Shiny display using `gt`'s `render_gt()` and `gt_output()` functions:
 
-```{r withGtTable, eval=F, echo=F}
+```{r withGtTable, eval=F, echo=T}
 library(shiny)
 library(babynames)
 library(gt)
@@ -471,14 +471,14 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 ```
 ```{r, echo=FALSE}
-decorate("withGtTable", eval=FALSE) %>% flair("render_gt") %>% flair("gt_output") %>% flair("nameTable")#  %>% # knit_print.with_flair()
+#decorate("withGtTable", eval=FALSE) %>% flair("render_gt") %>% flair("gt_output") %>% flair("nameTable")#  %>% # knit_print.with_flair()
 ```
 
 # Organizing our app
 
 At this point, our `server` function is getting a bit unruly. A good practice is to _encapsulate_ various parts of the display into separate functions, like so:
 
-```{r encapsulatingFunctions, eval=F, echo=F}
+```{r encapsulatingFunctions, eval=F, echo=T}
 library(shiny)
 library(babynames)
 library(gt)
@@ -522,7 +522,7 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 ```
 ```{r, echo=FALSE}
-decorate("encapsulatingFunctions", eval=FALSE) %>% flair("makePlot") %>% flair("makeTable") # %>% knit_print.with_flair()
+#decorate("encapsulatingFunctions", eval=FALSE) %>% flair("makePlot") %>% flair("makeTable") # %>% knit_print.with_flair()
 ```
 
 Note that the functions that make the plot and the table do not directly reference the `input` variable provided by Shiny- they would work just fine "one their own", independent of whether we  were using Shiny or not. Similarly, the parts of the application  responsible for handling input and output via Shiny (i.e., `textInput`, `renderPlot`) do not need to concern themselves with the details of what might be involved in generating the plots.
@@ -533,7 +533,7 @@ This is an example of _decoupling_ the different parts of our application from o
 
 Visually, the layout of our page is starting to get a bit long; what if we wanted to arrange it so that the plot and the table were side-by-side? Shiny gives us many options for controlling the layout; the simplest is to arrange things in _rows_ and _columns_. Shiny uses the "Bootstrap" CSS library, which is built around a 12-column layout. We can use the `fluidRow()` and `column()` functions to set things up a bit differently:
 
-```{r origCols, eval=F, echo=F}
+```{r origCols, eval=F, echo=T}
 ui <- fluidPage(
   titlePanel("Name Measurement"),
   textInput("name", label="What is your name?", value="Steven"),
@@ -544,12 +544,12 @@ ui <- fluidPage(
 )
 ```
 ```{r, echo=FALSE}
-decorate("origCols", eval=FALSE) %>% flair("fluidRow") %>% flair("column") # %>% knit_print.with_flair()
+#decorate("origCols", eval=FALSE) %>% flair("fluidRow") %>% flair("column") # %>% knit_print.with_flair()
 ```
 
 Between `fluidRow()` and `column()`, you can put together pretty much any layout you might want, but a useful shortcut may be to use the `sidebarLayout()` function:
 
-```{r sidebarLayoutExample, eval=F, echo=F}
+```{r sidebarLayoutExample, eval=F, echo=T}
 ui <- fluidPage(
   titlePanel("Name Plot"),
   sidebarLayout(
@@ -564,7 +564,7 @@ ui <- fluidPage(
 )
 ```
 ```{r, echo=FALSE}
-decorate("sidebarLayoutExample", eval=FALSE) %>% flair("sidebarLayout") %>% flair("sidebarPanel") %>% flair("mainPanel") # %>% knit_print.with_flair()
+#decorate("sidebarLayoutExample", eval=FALSE) %>% flair("sidebarLayout") %>% flair("sidebarPanel") %>% flair("mainPanel") # %>% knit_print.with_flair()
 ```
 
 `sidebarLayout()` is one of several built-in layout helper functions in Shiny, and can be used to quickly build a more complex interface. Note that in the screenshot below, our "sidebar" is actually being placed _above_ the plot; in reality, pages using `sidebarLayout` will be _responsive_ to the window size in which they are viewed. In a narrower window (or on a phone) it will automatically reflow to a vertical layout.
@@ -627,7 +627,7 @@ shinyApp(ui = ui, server = server)
 
 What if, instead of letting the user type any name in, we wanted to restrict them to a pre-set list of names? 
 
-```{r selectInput, eval=F, echo=F}
+```{r selectInput, eval=F, echo=T}
 
 ui <- fluidPage(
     titlePanel("Name Measurement"),
@@ -639,7 +639,7 @@ ui <- fluidPage(
 )
 ```
 ```{r, echo=F}
-decorate("selectInput", eval=FALSE) %>% flair("selectInput") # %>% knit_print.with_flair()
+#decorate("selectInput", eval=FALSE) %>% flair("selectInput") # %>% knit_print.with_flair()
 ```
 
 
@@ -776,7 +776,7 @@ This is a very powerful pattern for creating dynamic tables and plots!
 
 Now let's make the system more powerful. In the above example, I have set the list of names to be the top 10 names from 2017. Let's allow the user to specify a year, using `numericInput`. This will involve a few new concepts, specifically around linking the value of one field to the value of another. First, let's look at the UI:
 
-```{r firstReactiveUI, eval=F, echo=F}
+```{r firstReactiveUI, eval=F, echo=T}
 ui <- fluidPage(
     titlePanel("Name Measurement"),
     numericInput("year", label="Year", min=1880, max=2017, value=2017),
@@ -788,12 +788,12 @@ ui <- fluidPage(
 )
 ```
 ```{r echo=F}
-decorate("firstReactiveUI") %>% flair("numericInput") %>% flair("c()") # %>% knit_print.with_flair()
+#decorate("firstReactiveUI") %>% flair("numericInput") %>% flair("c()") # %>% knit_print.with_flair()
 ```
 
 We've added a new input control, which will only allow numeric input that is within a certain range. We've also stopped manually specifying our select box options, since we want the list to be dynamic: it should contain the top ten names _for the selected year_. We need to somehow connect the `numericInput` box that we have created to the `selectInput`. We'll do this in the server function:
 
-```{r firstReactiveServer, eval=F, echo=F}
+```{r firstReactiveServer, eval=F, echo=T}
 server <- function(input, output, session) {
     
     namesToUse <- reactive({
@@ -816,7 +816,7 @@ server <- function(input, output, session) {
 }    
 ```
 ```{r echo=F}
-decorate("firstReactiveServer") %>% flair("reactive") %>% flair("observeEvent")#  %>% knit_print.with_flair()
+#decorate("firstReactiveServer") %>% flair("reactive") %>% flair("observeEvent")#  %>% knit_print.with_flair()
 ```
 
 There are two new things here. First is the use of the `reactive()` function, which sets up a new variable that Shiny will be in charge of. Any R variable that we want to either _use_ or _be used by_ a Shiny component must be wrapped in a `reactive()` call. In this case, our list of names depends on (i.e., is using) `input$year`, so we have to make it reactive.
