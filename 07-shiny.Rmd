@@ -17,9 +17,9 @@ knitr::opts_chunk$set(error = TRUE, comment = NA, warning = FALSE, errors = FALS
 ```
 
 ```{r,echo=FALSE,include=FALSE}
-# make sure to have "webshot" installed
+# make sure to have "webshot2" installed
 # install.packages("webshot2")
-# webshot::install_phantomjs() # might need this, too
+# webshot::install_phantomjs() # might need this, too?
 ```
 
 ```{r echo=FALSE}
