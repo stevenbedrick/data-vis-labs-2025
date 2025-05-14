@@ -16,6 +16,12 @@ output:
 knitr::opts_chunk$set(error = TRUE, comment = NA, warning = FALSE, errors = FALSE, message = FALSE, tidy = FALSE, cache = FALSE)
 ```
 
+```{r,echo=FALSE,include=FALSE}
+# make sure to have "webshot" installed
+# install.packages("webshot2")
+# webshot::install_phantomjs() # might need this, too
+```
+
 ```{r echo=FALSE}
 library(shiny)
 library(tidyverse)
