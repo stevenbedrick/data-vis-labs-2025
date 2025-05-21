@@ -45,13 +45,20 @@ The data sets we will be using today are:
 
 ## An aside: Vector vs. Raster data
 
-In GIS-speak, these data sets are all _vector_ data sets, meaning that their contents are sets of x-y coordinates that define a _feature_ of some kind: a point (e.g., a specific grocery store), a line or set of line segments (e.g., a road), or a polygon (e.g., the outline of a neighborhood, or the shape of the bank of a river). Each feature can have some number of _attributes_; what those attributes are will depend on the specific data set.
+In GIS-speak, these data sets are all _vector_ data sets, meaning that their contents are sets of x-y coordinates that define a _feature_ of some kind: a point (e.g., a specific grocery store), a line or set of line segments (e.g., a road), or a polygon (e.g., the outline of a neighborhood, the path of a road, or the shape of the bank of a river). 
+Each feature can have some number of _attributes_; what those attributes are will depend on the specific data set. 
+As an example, a feature representing the path of a road might have attributes such as the road's name, its number of traffic lanes, whether it is a neighborhood street or a major arterial, etc.
 
-In contrast to _vector_ formats are _raster_ formats (sometimes called _bitmap_ formats). Raster files consist of a uniform grid of numbers (pixels), whose value contain whatever information is being captured. One example of a raster image is a digital photograph (perhaps taken from an airplane or satellite), in which the pixel's value corresponds to the intensity of light captured at that exact point in the sensor's field of view. but that is only one form. Many kinds of remote sensing devices capture raster images, and in fact there is no requirement that the values of each pixel correspond to a sensor value at all- it can be a logical (categorical) value, as well. 
+In contrast to _vector_ formats are _raster_ formats (sometimes called _bitmap_ formats). 
+Raster files consist of a uniform grid of numbers (pixels), whose value contain whatever information is being captured. 
+One example of a raster image is a digital photograph (perhaps taken from an airplane or satellite), in which the pixel's value corresponds to the intensity of light captured at that exact point in the sensor's field of view. but that is only one form. 
+Many kinds of remote sensing devices capture raster images, and of course there is no requirement that the values of each pixel correspond to a sensor measurement at all. 
+Raster datasets may represent any continuous variable, and of course can also contain logical (categorical) values, as well. 
 
-Crucially, raster images often contain multiple _channels_ (sometimes called _bands_), representing different sets of spatially-aligned data. One example of this would be a visible-spectrum true-color image, consisting of three bands (one for red, green, and blue). Another example might be bands for sensors capturing at different infrared wavelengths, or for different layers of data. 
+Crucially, raster images often consist of multiple _channels_ (sometimes called _bands_), representing different sets of spatially-aligned data. One example of this would be a visible-spectrum true-color image, consisting of three bands (one for red, green, and blue). Another example might be bands for sensors capturing at different infrared wavelengths, or for different layers of data. 
 
-Like vector data, raster data files generally contain metadata situating the pixels in a specific geographic coordinate reference system. In other words, the raster file "knows" where its edges are in space, and also knows how much distance each pixel is meant to cover. One common raster file format is GeoTIFF, though there are certainly others.
+
+Like vector data, raster data files generally contain metadata situating the pixels in a specific geographic coordinate reference system. In other words, the raster file "knows" where its edges are in space, and --- crucially --- also knows how much distance each pixel is meant to cover (i.e., the spatial resolution of the data). One common raster file format is GeoTIFF, though there are certainly others.
 
 ![Source: Unknown; it's the image that the entire Internet uses to illustrate raster vs. vector data, and if somebody who sees this happens to know where this originated, please do let me know.](images/raster_vector_geo_data.png)
 
@@ -76,7 +83,9 @@ Let's look closely at the `X` and `Y` columns:
 trees_raw %>% select(X, Y) %>% head(5)
 ```
 
-These clearly refer to some sort of spatial coordinates, and by convention we can guess that they are in a projected (rather than geographic) format- but without additional information it is difficult to know how to interpret them. One major limitation of the CSV format is  that it does not make it easy to embed metadata like this in the file. This is particularly important when working with geospatial data! As such, we generally prefer to work with vector file formats such as ESRI's Shapefile format, which includes metadata.
+These clearly refer to some sort of spatial coordinates, and by convention we can _guess_ that they are in a projected (rather than geographic) format (since they are giant integers, and are in colummns named "X" and "Y")... but without additional information it is difficult to know how to interpret them. 
+One major limitation of the CSV format is that it does not make it easy to embed metadata like this in the file. This is _particularly_ important when working with geospatial data! 
+As such, we generally prefer to work with vector file formats such as ESRI's Shapefile format, which includes such metadata.
 
 ## A different format: Shapefiles
 
@@ -86,13 +95,19 @@ The Portland Maps Open Data site allows us to download data in ESRI's format; le
 trees_shape <- st_read("data/lab08/Parks_Tree_Inventory-shp")
 ```
 
-Shapefiles, among other things, contain information about the coordinate reference system (CRS) that they are using:
+Looking at the diagnostic output produced by `st_read()`, we can see a few useful things about the data we have just loaded: the number of features (rows), the number of attributes (columns), what kind of geometry we are working with (points, as opposed to polygons), and, best of all, some details about the geospatial context of the data. 
+Note that the numbers are the same as we saw in the CSV, but that now we have some metadata.
+
+The most important piece of this of metadata is about about the coordinate reference system (CRS) that the file is using. 
+We can query our file to get the full description.
 
 ```{r "querying an object's crs"}
 st_crs(trees_shape)
 ```
 
-There's a lot of information here, but looking through it we can see that the coordinates in this file are against the WGS 84 datum, and that the units are meters. Beyond that, the exact details are, for the moment, not that important. Just know that, taken all together, this is sufficient information for us to plot these points on a map and combine them with any other geospatial data we might encounter.
+There's a lot of information here, but looking through it we can see that the coordinates in this file are against the **WGS 84 datum**, and that the units are **meters**. 
+Beyond that, the exact details are, for the moment, not that important. 
+Just know that, taken all together, this is sufficient information for us to plot these points on a map and combine them with any other geospatial data we might encounter.
 
 In many ways, the object we get back is _like_ a data frame, in that there are columns, which have types, etc. In fact, most `dplyr` functions work just fine on these. One of the columns is called `geometry`, and is what store the actual coordinates of whatever objects are stored in the rows. In this case, each row is a tree, and the relevant `geometry` entry is a point. 
 
@@ -100,7 +115,9 @@ In many ways, the object we get back is _like_ a data frame, in that there are c
 trees_shape$geometry
 ```
 
-For more information about this kind of file, see [the documentation](https://r-spatial.github.io/sf/articles/sf1.html). A helpful deep-dive into the format of this object [can be found here](https://www.jessesadler.com/post/simple-feature-objects/), if you're _really_ interested in what's going on in that `$geometry` property. :-)
+For more information about this kind of file, see [the documentation](https://r-spatial.github.io/sf/articles/sf1.html). 
+A helpful deep-dive into the format of this object [can be found here](https://www.jessesadler.com/post/simple-feature-objects/), if you're _really_ interested in what's going on in that `$geometry` property. :-)
+In practice, it is relatively rare that we need to dig directly into that column; we will generally use other methods to indirectly work with its contents.
 
 # Our first map
 
@@ -109,8 +126,10 @@ Our first map will be a simple one, showing the various neighborhood boundaries 
 ```{r loading our spatial data, warning=FALSE, message=FALSE, results='hide'}
 pdx_boundaries <- st_read("data/lab08//Neighborhoods__Regions_-shp")
 ```
+Note that this file's geometry type is a "multipolyhgon".
+This is an extension of a polygon such that a single feature can consist of multiple polygons, which is important for things like administrative boundaries which sometimes have complicated shapes or are otherwise non-contiguous.
 
-While we're at it, we will also load a second shapefile, that includes the geography of the Willamette and Columbia rivers:
+Next, we will also load a second shapefile, that includes the geography of the Willamette and Columbia rivers:
 
 ```{r loading river, warning=FALSE, message=FALSE, results='hide'}
 river_boundaries <- st_read("data/lab08//Willamette_Columbia_River_Ordinary_High_Water-shp/")
@@ -131,7 +150,9 @@ glimpse(pdx_boundaries)
 We see that in addition to the geometry of the boundaries themselves, we also have other columns containing information about each neighborhood. Notably, one of these is called `MAPLABEL`- let's take that as a suggestion and try labeling our regions:
 
 ```{r labeling regions, eval=FALSE}
-pdx_boundaries %>% ggplot() + geom_sf() + geom_sf_label(aes(label=MAPLABEL))
+pdx_boundaries %>% ggplot() + 
+  geom_sf() + 
+  geom_sf_label(aes(label=MAPLABEL))
 ```
 
 Note what is happening, here: `geom_sf_label()` provides a new `ggplot` aesthetic to map (`label`), and we are mapping it to a data value just like we would in any other geom.
@@ -201,7 +222,7 @@ river_boundaries %>% ggplot() + geom_sf(fill="blue", size=0.0)
 Another option is to "simplify" the outline of the river, by smoothing out some of the very detailed parts of the polygon. Depending on the kind of map we are making, and the scale at which we are working, this may or may not be appropriate, but for our purposes today it's just fine:
 
 ```{r river_simplified}
-river_boundaries %>% st_simplify(dTolerance = 10) %>% 
+river_boundaries %>% st_simplify(dTolerance = 10) %>% # ten meters
   ggplot() + geom_sf(fill="blue", size=0.0)
 ```
 
@@ -330,7 +351,7 @@ Beginning with the farmer's market data set:
 glimpse(farmers_market)
 ```
 
-Just like we overlaid the river layer, we can do the same with the market. The coordinate systems are all aligned, so this will Just Work:
+Just like we overlaid the river layer, we can do the same with the market layer. The coordinate systems are all aligned, so this will Just Work:
 
 ```{r adding markets}
 pdx_boundaries %>% ggplot() +geom_sf() + 
@@ -340,7 +361,9 @@ pdx_boundaries %>% ggplot() +geom_sf() +
   theme_minimal()
 ```
 
-We use aesthetic mappings, like any other ggplot geom:
+Note that because our geospatial data's geometry type is "point", `geom_sf` uses `geom_point` to render it to the map.
+
+Given that, we can use all of our usual aesthetic mappings, just like any other ggplot geom:
 
 ```{r coloring by day}
 pdx_boundaries %>% ggplot() +geom_sf() + 
@@ -424,7 +447,9 @@ pdx_boundaries %>% ggplot() + geom_sf() + stat_density_2d(data=trees_raw, aes(X,
 What is going on, here? Well, let's zoom in a bit on Southwest portland:
 
 ```{r}
-pdx_boundaries %>% ggplot() + geom_sf() + geom_sf(data=river_boundaries, fill="blue", size=0.0) + geom_sf(data=trees_shape) + coord_sf(xlim=c(-13662000,-13658000), ylim=c(5693059, 5697583))
+pdx_boundaries %>% ggplot() + geom_sf() + 
+  geom_sf(data=trees_shape) + # add the tree layer
+  coord_sf(xlim=c(-13662000,-13658000), ylim=c(5693059, 5697583)) # zoom in on SW
 ```
 
 That large clump up in the upper left-hand corner is Gabriel Park, and we can see now that the individual points in this data set are crammed in close together because they represent trees that are literally next to one another in a park. Our contour map above is really just showing us what parts of town have a lot of tree-filled parks!
@@ -432,7 +457,7 @@ That large clump up in the upper left-hand corner is Gabriel Park, and we can se
 Let's explore the tree data a bit more by zooming in to Gabriel Park. We'll first subset our data to only include trees in that park, so let's eyeball a bounding box:
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
-pdx_boundaries %>% ggplot() + geom_sf() + geom_sf(data=river_boundaries, fill="blue", size=0.0) + geom_sf(data=trees_shape) + coord_sf(xlim=c(-13662000,-13658000), ylim=c(5693059, 5697583)) + 
+pdx_boundaries %>% ggplot() + geom_sf() + geom_sf(data=trees_shape) + coord_sf(xlim=c(-13662000,-13658000), ylim=c(5693059, 5697583)) + 
   geom_hline(yintercept = 5697089, linetype="dashed", color="red") + 
   geom_hline(yintercept = 5695423, linetype="dashed", color="red") +
   geom_vline(xintercept = -13661685, linetype="dashed", color="red") +
@@ -479,7 +504,7 @@ Follow this process (cropping the data set to a bounding box, etc.) for a park i
 
 #### Side-quest: Bounding Boxes
 
-"Eyeballing" bounding boxes is a little tedious and erorr prone, but is a good place to start. What are some other methods?
+"Eyeballing" bounding boxes is a little tedious and error prone, but is a good place to start. What are some other methods?
 
 ##### Using tools!
 
@@ -504,7 +529,7 @@ This method can be a little more work for you as a programmer, but will be more 
 #### Continuing on!
 
 
-Note that, besides the trees themselves, this map is kind of boring. We can start to see the layout of trees in the park, but it's hard to know how to contextualize it. At this zoom level, our neighborhood boundary data set is no longer especially useful. We might instead want other features: roads, etc. Or, we might want to base our map on other data entirely, like perhaps an aerial photo. One option would be for us to find that data (roads, for instance, are available from Portland Maps) and manually add it, the way we did with the rivers. There are easier options, however. Let's look at how we might use a richer, pre-built map using OpenStreetMap data and `ggmap`.
+Note that, besides the trees themselves, this map is kind of boring. We can start to see the layout of trees in the park, but it's hard to know how to contextualize it. At this zoom level, our neighborhood boundary data set is no longer especially useful. We might instead want other features: roads, etc. Or, we might want to base our map on other data entirely, like perhaps an aerial photo. One option would be for us to find that data (several datasets containing the geometry of the city's road network, for instance, are available from Portland Maps) and manually add it, the way we did with the rivers. There are easier options, however. Let's look at how we might use a richer, pre-built map using OpenStreetMap data and `ggmap`.
 
 ## `ggmap`
 
@@ -528,7 +553,7 @@ Once we've done that, we may begin using `ggmap`. We generate a basemap using `g
 park_base_map <- get_stadiamap(
   c(left=-122.725, bottom=45.4675, right=-122.7125, top=45.478), # note: in practice, we wouldn't enter these by hand, we would use st_bbox() or something similar!
   zoom=16,
-  maptype="stamen_terrain") # try experimenting with "toner", etc.  
+  maptype="stamen_terrain") # try experimenting with "stamen_toner", etc.  
 ggmap(park_base_map)
 ```
 
@@ -543,10 +568,10 @@ Now, we can use our re-projected trees and our basemap:
 
 ```{r, warning=FALSE, message=FALSE}
 ggmap(park_base_map) + 
-  geom_sf(data=trees_park_projected, inherit.aes = FALSE) # note - this is needed due to a slight quirk between ggmap, ggplot, and geom_sf
+  geom_sf(data=trees_park_projected, inherit.aes = FALSE) # note - the "inherit.aes" business is needed due to a slight quirk between ggmap, ggplot, and geom_sf
 ```
 
-`geom_sf` still work the way we've been using it; now that we have our points on a map, let's color by the type of tree:
+`geom_sf` still works the way we've been using it; now that we have our points on a map, let's color by the type of tree:
 
 ```{r}
 ggmap(park_base_map) + 
@@ -612,7 +637,7 @@ Again, it is _not_ for presentation-quality graphics, but more for data explorat
 
 [Leaflet](https://leafletjs.com) is a somewhat fancier and more powerful library for interactive maps that is widely used outside of the R ecosystem, but which has excellent R integration. We will also use the `leaflet.esri` extension, so we can use ESRI's aerial photos.
 
-```{r}
+```{r,warning=FALSE,message=FALSE}
 library(leaflet)
 library(leaflet.esri)
 ```
@@ -648,7 +673,8 @@ This data set includes a great deal of information about each neighborhood's dem
 
 We will need to _join_ our existing dataframe of neighborhood boundaries with this Census dataset; while both include neighborhood names, there is some variability in how the neighborhoods are referred to ("PEARL" vs. "PEARL DISTRICT") that we must deal with. 
 This issue is extremely common when working with this kind of data, especially at the level of neighborhoods. 
-Many administrative regions/districts have standardized numerical codes, maintained by the USGS and the Census Bureau, and you will likely have better luck using those to merge datasets rather than relying on names.
+Many administrative regions/districts have standardized numerical codes, maintained by the USGS and the Census Bureau, and in general you will likely have better luck using those to merge datasets, rather than relying on name matching.
+For this example, however, we will manually align the names between the two datasets
 
 ```{r}
 # pull data out of the Excel file, by cell range
