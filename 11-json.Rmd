@@ -1,0 +1,308 @@
+---
+title: "Bonus \"Lab 11\": JSON"
+author: "Steven Bedrick"
+date: "2025-06-04"
+output: html_document
+---
+
+# Introduction
+
+This walkthrough will illustrate a potential workflow for reproducing the data from the following paper:
+
+> Axtell B, Munteanu C. [Tea, Earl Grey, Hot: Designing Speech Interactions from the Imagined Ideal of Star Trek.](https://dl.acm.org/doi/abs/10.1145/3411764.3445640) In: Proceedings of the 2021 CHI Conference on Human Factors in Computing Systems. Yokohama Japan: ACM; 2021. p. 1–14.
+
+The associated data can be found [here](https://www.speechinteraction.org/TNG/) (and is on Posit.cloud).
+
+# Setup
+
+```{r,message=FALSE,error=FALSE}
+library(tidyverse)
+library(here)
+library(jsonlite)
+library(gt)
+```
+
+# Overall workflow:
+
+1. Know your data
+2. Think about desired final structure
+3. Read JSON into gnarly list
+4. Work from the outside inwards.
+
+# Know your data:
+
+Check in text editor (or JSON-viewer of your choice- Firefox will work as well)
+
+
+```json
+{
+	"102": {
+		"255": {
+			"char": "Tasha",
+			"line": "Battle bridge.",
+			"direction": "The doors snap closed and the lift moves. Riker looks Tasha over  waiting  then:",
+			"type": [
+				"Statement"
+			],
+			"pri_type": "Statement",
+			"domain": [
+				"IoT"
+			],
+			"sub-domain": [
+				"Turbolift"
+			],
+			"nv_resp": true,
+			"interaction": "Battle bridge.",
+			"char_type": "Person",
+			"is_fed": true,
+			"error": false
+		},
+		...
+```
+
+Outer-most part of the document is a dict; keys are episodes, values are dictionaries containing utterance IDs as keys and a dictionary as a value. Each of _these_ has the actual information about the utterance.
+
+# Thinking about desired final structure:
+
+Since we want a final tally of interaction type by speaker type, we'll want something like this:
+
+Each row should be an utterance, with columns for:
+
+1. Episode ID
+2. Utterance ID within that episode
+3. The category of speaker (person or computer)
+4. The type of interaction (command, wake word, etc.)
+
+Looking at the structure of our data, it looks like the important inner keys are going to be `type` and `char_type`.
+
+# Initial loading
+
+`jsonlite::read_json()` is a good place to start; note that for _some_ JSON files, it can automatically do a fair bit of the work that we are about to do by hand. If your JSON file is relatively simple, and does not have deeply-nested objects with varying dimensions, `as_tibble()` may be able to coerce the nested list into a dataframe... but not always, and not for _this_ JSON file, because of the amount of heterogeneity in the data. 
+So we will be doing this "by hand".
+
+```{r}
+j_path <- here("data/lab11/teaearlgreyhotdataset.json")
+j <- read_json(j_path)
+```
+
+Note what we get back from `read_json`: 
+
+```{r}
+typeof(j)
+length(j)
+```
+
+Why do we get a list and not a data frame? Because JSON allows for _arbitrarily complicated_ nested structures, and so we don't have any guarantee that what's in that file will be amenable to flattening without some very file-specific work. So `jsonlite` punts on the issue and makes a list-of-lists for us, so we can deal with it ourselves.
+
+Before we continue, note that this file is pretty big. To make it a little easier to work with while we're just getting started, I am going to make a small version that only has two episodes' worth of data. I'll do this "by hand" outside of R, in my text editor.
+
+```{r}
+j_path <- here("data/lab11/teaearlgreyhotdataset.small.json")
+j <- read_json(j_path)
+length(j)
+```
+
+This is a _named_ list, so we can access its elements by name:
+
+```{r}
+names(j)
+```
+
+
+```{r}
+length(j$"102")
+```
+
+And the sub-lists are themselves named:
+
+```{r}
+names(j$"102")
+```
+
+Look back at the JSON file itself; you'll see that these correspond to the dictionary keys in the file.
+
+It's turtles all the way down, to the final layer of the information objects themselves:
+
+```{r}
+names(j$"102"$"255")
+```
+
+```{r}
+j$"102"$"255"$"char"
+```
+
+
+# Work from the outside in
+
+Now, we are going to work our way through the document, flattening and filtering as we go, until we end up with a tidy data frame. 
+Step one: turn our list into a very simple DF, using `enframe()`:
+
+```{r}
+j2 <- j %>% enframe
+j2
+```
+
+See what happened here? We started with a named list, and ended up with a dataframe where one column is the names of the list and the second column is the values. 
+
+Next, we're going to go one more level down, but before we do, let's rename our columns- by default, `enframe` just gives the uninformative column names "name" and "value", which (as you will see) can quickly become confusing We can do this using `rename()`, or we can override those defaults when we call `enframe`. 
+
+```{r}
+j2 <- j2 %>% rename(episode.id=name, episode=value) 
+j2
+```
+
+Now that we've got useful names, let's go one level deeper (Inception-style) and turn our episodes into nested dataframes:
+
+```{r}
+j3 <- j2 %>% mutate(episode=map(episode,enframe))
+j3
+```
+
+Now, if we `unnest` the episode column...
+
+```{r}
+j3 <- j3 %>% unnest(episode)
+j3
+```
+
+Now, see what we've got? A tidy data frame, one row per utterance, with the default column names from `enframe`. Before we forget, let's rename our columns:
+
+```{r}
+j3 <- j3 %>% rename(utterance.id=name, utterance=value)
+j3
+```
+
+I bet you can guess what comes next: that's right, we are going to `enframe` our utterances, and unnest!
+
+```{r}
+j4 <- j3 %>% mutate(utterance=map(utterance,enframe))
+j4
+```
+
+When we unnest _this_ time, let's see what happens:
+
+```{r}
+j5 <- j4 %>% unnest(utterance)
+j5
+```
+
+Woah! Now we've got one line for each _key_ in the inner-most part of the JSON file, with a corresponding list value. A few things to note:
+
+1. The `value` column here is of type `list`, but note that the different rows have different types of lists in them - some have characters, some have logicals, some have lists, etc.
+2. Some of those lists have different numbers of entries- most are 1, but some are 0. 
+3. The actual data we want (the speaker, the interaction type, etc.) is still locked away in a list.
+
+Our next step will be to pivot this into a slightly wider dataframe:
+
+```{r}
+j6 <- j5 %>% pivot_wider(names_from=name, values_from=value)
+j6
+```
+
+This is starting to look like we're getting closer to a dataframe we can work with! 
+We still have a little bit of work to do, however.
+First, let's make our lives simpler by getting rid of some of the columns we don't need:
+
+```{r}
+j6 <- j6 %>% select(episode.id, utterance.id, char_type, type)
+j6
+```
+
+Note the length of some of the entries in the `type` column- utterance 363 in espisode 102 has length 3. Looking at the JSON file, we can see that this is because this utterance was assigned three types- "Wake word", "Conversation", and "Question".
+
+Because the "type" column is itself a container JSON element (a list), we actually will need to `unnest` it twice. This is the sort of thing that `jsonlite` has helpers to do, but for a simple file format like this one I personally usually just do it all by hand, so I can be sure about what's going on.
+
+```{r}
+j7 <- j6 %>% unnest(char_type) %>% unnest(type) %>% unnest(type)
+j7
+```
+At this point, we've got a nice, tidy data frame, and we are ready to use regular methods to compute our table:
+
+```{r}
+j7 %>% group_by(char_type, type) %>% 
+  summarise(n=n()) %>% 
+  mutate(denom=sum(n)) %>% 
+  mutate(prop=n/denom) %>% 
+  select(char_type,  type, prop) %>% 
+  pivot_wider(names_from=char_type, values_from=prop) %>% 
+  select(type, Person, Computer) %>% 
+  arrange(-Person) 
+```
+
+And we're all set! Now we just need to repeat the above workflow, pointed at the true file:
+
+```{r, echo=FALSE}
+full_json_path <- here("data/lab11/teaearlgreyhotdataset.json")
+full_j <- read_json(full_json_path)
+full_j %>% enframe %>% 
+  rename(episode.id=name, episode=value) %>% 
+  mutate(episode=map(episode,enframe)) %>% 
+  unnest(episode) %>% 
+  rename(utterance.id=name, utterance=value) %>% 
+  mutate(utterance=map(utterance,enframe)) %>% 
+  unnest(utterance) %>% 
+  pivot_wider(names_from=name, values_from=value) %>% 
+  select(episode.id, utterance.id, char_type, type) %>% 
+  unnest(char_type) %>% unnest(type) %>% unnest(type) %>% 
+   group_by(char_type, type) %>% 
+  summarise(n=n()) %>% 
+  mutate(denom=sum(n)) %>% 
+  mutate(prop=n/denom) %>% 
+  select(char_type,  type, prop) %>% 
+  pivot_wider(names_from=char_type, values_from=prop, values_fill=0.0) %>% 
+  select(type, Person, Computer) %>% 
+  arrange(-Person, -Computer) %>% 
+  gt %>% fmt_percent(columns=c(Person, Computer))
+  
+```
+
+Note that these numbers don't match what is in the paper; I suspect that what we could be seeing is that the authors may have used the `pri_type` field instead of the `type` field. Repeating our analysis, looking for that field, we see:
+
+```{r}
+full_j %>% enframe %>% 
+  rename(episode.id=name, episode=value) %>% 
+  mutate(episode=map(episode,enframe)) %>% 
+  unnest(episode) %>% 
+  rename(utterance.id=name, utterance=value) %>% 
+  mutate(utterance=map(utterance,enframe)) %>% 
+  unnest(utterance) %>% 
+  pivot_wider(names_from=name, values_from=value) %>% 
+  select(episode.id, utterance.id, char_type, pri_type) %>% 
+  unnest(c(char_type, pri_type)) %>% 
+   group_by(char_type, pri_type) %>% 
+  summarise(n=n()) %>% 
+  mutate(denom=sum(n)) %>% 
+  mutate(prop=n/denom) %>% 
+  select(char_type,  pri_type, prop) %>% 
+  pivot_wider(names_from=char_type, values_from=prop, values_fill=0.0) %>% 
+  select(pri_type, Person, Computer) %>% 
+  arrange(-Person, -Computer) %>% 
+  gt %>% fmt_percent(columns=c(Person, Computer))
+
+```
+
+
+This _still_ doesn't match what is in the paper, and I think it's because I was mistaken about the denominator. 
+
+```{r}
+full_j %>% enframe %>% 
+  rename(episode.id=name, episode=value) %>% 
+  mutate(episode=map(episode,enframe)) %>% 
+  unnest(episode) %>% 
+  rename(utterance.id=name, utterance=value) %>% 
+  mutate(utterance=map(utterance,enframe)) %>% 
+  unnest(utterance) %>% 
+  pivot_wider(names_from=name, values_from=value) %>% 
+  select(episode.id, utterance.id, char_type, type) %>%
+  unnest(c(char_type, type)) %>% unnest(type)  %>%
+
+  janitor::tabyl(type, char_type) %>% data.frame %>% 
+  mutate(Comp.prop=Computer/sum(Computer), Person.prop=Person/sum(Person)) %>% arrange(-Person.prop, -Comp.prop) %>% 
+  select(type,Person=Person.prop, Computer=Comp.prop) %>% 
+  gt
+```
+
+This _still_ isn't in alignment with what the paper reported, but at this point you get the idea. :-D
+
+
+

@@ -1,7 +1,7 @@
 ---
 title: 'Lab 10: High-Dimensional Data & Networks'
 output: html_document
-date: '2022-06-02'
+date: '2025-06-04'
 ---
 
 # Setup
@@ -59,7 +59,7 @@ penguins_working %>% select(-species, -island, -sex, -year) %>%
 
 ### Issues of scale
 
-Note that because our different variables are at different scales, the colors on the heatmap are not particularly useful at this point. For this reason, heatmaps usually normalize all of their data to be on a common scale (or get fancy with color scales for different rows/columns, though this does begin to defeat the purpose of using a heatmap in the first place). Let's re-scale our variables using `mutate()`, we use `across` here to tell `mutate()` to apply a function to multiple columns.
+Note that because our different variables are at different scales, the colors on the heatmap are not particularly useful at this point. For this reason, heatmaps usually normalize all of their data to be on a common scale (or get fancy with color scales for different rows/columns, though this does begin to defeat the purpose of using a heatmap in the first place). Let's re-scale our variables using `mutate()`, we use `across` here to tell `mutate()` to apply the same function to multiple columns.
 
 ```{r}
 penguins_working %>% select(-species, -island, -sex, -year) %>% 
@@ -75,8 +75,8 @@ penguins_working %>% select(-species, -island, -sex, -year) %>%
   mutate(across(-penguin_id, scale)) %>% 
   pivot_longer(-penguin_id, names_to="metric", values_to = "value") %>% 
   ggplot(aes(x=penguin_id, y=metric, fill=value)) +geom_tile() + scale_fill_gradient2()
-
 ```
+
 
 ### A non-ggplot option
 
@@ -134,7 +134,7 @@ penguins_working %>% select(-species, -island, -sex, -year) %>% column_to_rownam
 
 ```
 
-`pheatmap is, again, endlessly customizable; one handy thing is that we can tell it to "break up" the spacing of the map a little bit based on the cut points in the clustering:
+`pheatmap` is, again, endlessly customizable; one handy thing is that we can tell it to "break up" the spacing of the map a little bit based on the cut points in the clustering:
 
 ```{r}
 hm.annotation.df <- penguins_working %>% column_to_rownames("penguin_id") %>% select(species, sex) # annotation by species _and_ sex

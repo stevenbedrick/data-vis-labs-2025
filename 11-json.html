@@ -1,0 +1,2248 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Steven Bedrick" />
+
+<meta name="date" content="2025-06-04" />
+
+<title>Bonus “Lab 11”: JSON</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">BMI 5/625 Labs, Spring 2025</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="slides.html">Slides &amp; Reading</a>
+</li>
+<li>
+  <a href="data-vis-resources.html">Resources</a>
+</li>
+<li>
+  <a href="https://sakai.ohsu.edu/portal/site/BMI-525-1-AD-Sp25">Sakai</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Bonus “Lab 11”: JSON</h1>
+<h4 class="author">Steven Bedrick</h4>
+<h4 class="date">2025-06-04</h4>
+
+</div>
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This walkthrough will illustrate a potential workflow for reproducing
+the data from the following paper:</p>
+<blockquote>
+<p>Axtell B, Munteanu C. <a
+href="https://dl.acm.org/doi/abs/10.1145/3411764.3445640">Tea, Earl
+Grey, Hot: Designing Speech Interactions from the Imagined Ideal of Star
+Trek.</a> In: Proceedings of the 2021 CHI Conference on Human Factors in
+Computing Systems. Yokohama Japan: ACM; 2021. p. 1–14.</p>
+</blockquote>
+<p>The associated data can be found <a
+href="https://www.speechinteraction.org/TNG/">here</a> (and is on
+Posit.cloud).</p>
+</div>
+<div id="setup" class="section level1">
+<h1>Setup</h1>
+<pre class="r"><code>library(tidyverse)
+library(here)
+library(jsonlite)
+library(gt)</code></pre>
+</div>
+<div id="overall-workflow" class="section level1">
+<h1>Overall workflow:</h1>
+<ol style="list-style-type: decimal">
+<li>Know your data</li>
+<li>Think about desired final structure</li>
+<li>Read JSON into gnarly list</li>
+<li>Work from the outside inwards.</li>
+</ol>
+</div>
+<div id="know-your-data" class="section level1">
+<h1>Know your data:</h1>
+<p>Check in text editor (or JSON-viewer of your choice- Firefox will
+work as well)</p>
+<pre class="json"><code>{
+    &quot;102&quot;: {
+        &quot;255&quot;: {
+            &quot;char&quot;: &quot;Tasha&quot;,
+            &quot;line&quot;: &quot;Battle bridge.&quot;,
+            &quot;direction&quot;: &quot;The doors snap closed and the lift moves. Riker looks Tasha over  waiting  then:&quot;,
+            &quot;type&quot;: [
+                &quot;Statement&quot;
+            ],
+            &quot;pri_type&quot;: &quot;Statement&quot;,
+            &quot;domain&quot;: [
+                &quot;IoT&quot;
+            ],
+            &quot;sub-domain&quot;: [
+                &quot;Turbolift&quot;
+            ],
+            &quot;nv_resp&quot;: true,
+            &quot;interaction&quot;: &quot;Battle bridge.&quot;,
+            &quot;char_type&quot;: &quot;Person&quot;,
+            &quot;is_fed&quot;: true,
+            &quot;error&quot;: false
+        },
+        ...</code></pre>
+<p>Outer-most part of the document is a dict; keys are episodes, values
+are dictionaries containing utterance IDs as keys and a dictionary as a
+value. Each of <em>these</em> has the actual information about the
+utterance.</p>
+</div>
+<div id="thinking-about-desired-final-structure" class="section level1">
+<h1>Thinking about desired final structure:</h1>
+<p>Since we want a final tally of interaction type by speaker type,
+we’ll want something like this:</p>
+<p>Each row should be an utterance, with columns for:</p>
+<ol style="list-style-type: decimal">
+<li>Episode ID</li>
+<li>Utterance ID within that episode</li>
+<li>The category of speaker (person or computer)</li>
+<li>The type of interaction (command, wake word, etc.)</li>
+</ol>
+<p>Looking at the structure of our data, it looks like the important
+inner keys are going to be <code>type</code> and
+<code>char_type</code>.</p>
+</div>
+<div id="initial-loading" class="section level1">
+<h1>Initial loading</h1>
+<p><code>jsonlite::read_json()</code> is a good place to start; note
+that for <em>some</em> JSON files, it can automatically do a fair bit of
+the work that we are about to do by hand. If your JSON file is
+relatively simple, and does not have deeply-nested objects with varying
+dimensions, <code>as_tibble()</code> may be able to coerce the nested
+list into a dataframe… but not always, and not for <em>this</em> JSON
+file, because of the amount of heterogeneity in the data. So we will be
+doing this “by hand”.</p>
+<pre class="r"><code>j_path &lt;- here(&quot;data/lab11/teaearlgreyhotdataset.json&quot;)
+j &lt;- read_json(j_path)</code></pre>
+<p>Note what we get back from <code>read_json</code>:</p>
+<pre class="r"><code>typeof(j)</code></pre>
+<pre><code>## [1] &quot;list&quot;</code></pre>
+<pre class="r"><code>length(j)</code></pre>
+<pre><code>## [1] 137</code></pre>
+<p>Why do we get a list and not a data frame? Because JSON allows for
+<em>arbitrarily complicated</em> nested structures, and so we don’t have
+any guarantee that what’s in that file will be amenable to flattening
+without some very file-specific work. So <code>jsonlite</code> punts on
+the issue and makes a list-of-lists for us, so we can deal with it
+ourselves.</p>
+<p>Before we continue, note that this file is pretty big. To make it a
+little easier to work with while we’re just getting started, I am going
+to make a small version that only has two episodes’ worth of data. I’ll
+do this “by hand” outside of R, in my text editor.</p>
+<pre class="r"><code>j_path &lt;- here(&quot;data/lab11/teaearlgreyhotdataset.small.json&quot;)
+j &lt;- read_json(j_path)
+length(j)</code></pre>
+<pre><code>## [1] 2</code></pre>
+<p>This is a <em>named</em> list, so we can access its elements by
+name:</p>
+<pre class="r"><code>names(j)</code></pre>
+<pre><code>## [1] &quot;102&quot; &quot;104&quot;</code></pre>
+<pre class="r"><code>length(j$&quot;102&quot;)</code></pre>
+<pre><code>## [1] 11</code></pre>
+<p>And the sub-lists are themselves named:</p>
+<pre class="r"><code>names(j$&quot;102&quot;)</code></pre>
+<pre><code>##  [1] &quot;255&quot; &quot;345&quot; &quot;347&quot; &quot;363&quot; &quot;421&quot; &quot;422&quot; &quot;426&quot; &quot;427&quot; &quot;428&quot; &quot;429&quot; &quot;430&quot;</code></pre>
+<p>Look back at the JSON file itself; you’ll see that these correspond
+to the dictionary keys in the file.</p>
+<p>It’s turtles all the way down, to the final layer of the information
+objects themselves:</p>
+<pre class="r"><code>names(j$&quot;102&quot;$&quot;255&quot;)</code></pre>
+<pre><code>##  [1] &quot;char&quot;        &quot;line&quot;        &quot;direction&quot;   &quot;type&quot;        &quot;pri_type&quot;   
+##  [6] &quot;domain&quot;      &quot;sub-domain&quot;  &quot;nv_resp&quot;     &quot;interaction&quot; &quot;char_type&quot;  
+## [11] &quot;is_fed&quot;      &quot;error&quot;</code></pre>
+<pre class="r"><code>j$&quot;102&quot;$&quot;255&quot;$&quot;char&quot;</code></pre>
+<pre><code>## [1] &quot;Tasha&quot;</code></pre>
+</div>
+<div id="work-from-the-outside-in" class="section level1">
+<h1>Work from the outside in</h1>
+<p>Now, we are going to work our way through the document, flattening
+and filtering as we go, until we end up with a tidy data frame. Step
+one: turn our list into a very simple DF, using
+<code>enframe()</code>:</p>
+<pre class="r"><code>j2 &lt;- j %&gt;% enframe
+j2</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   name  value            
+##   &lt;chr&gt; &lt;list&gt;           
+## 1 102   &lt;named list [11]&gt;
+## 2 104   &lt;named list [3]&gt;</code></pre>
+<p>See what happened here? We started with a named list, and ended up
+with a dataframe where one column is the names of the list and the
+second column is the values.</p>
+<p>Next, we’re going to go one more level down, but before we do, let’s
+rename our columns- by default, <code>enframe</code> just gives the
+uninformative column names “name” and “value”, which (as you will see)
+can quickly become confusing We can do this using <code>rename()</code>,
+or we can override those defaults when we call <code>enframe</code>.</p>
+<pre class="r"><code>j2 &lt;- j2 %&gt;% rename(episode.id=name, episode=value) 
+j2</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   episode.id episode          
+##   &lt;chr&gt;      &lt;list&gt;           
+## 1 102        &lt;named list [11]&gt;
+## 2 104        &lt;named list [3]&gt;</code></pre>
+<p>Now that we’ve got useful names, let’s go one level deeper
+(Inception-style) and turn our episodes into nested dataframes:</p>
+<pre class="r"><code>j3 &lt;- j2 %&gt;% mutate(episode=map(episode,enframe))
+j3</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   episode.id episode          
+##   &lt;chr&gt;      &lt;list&gt;           
+## 1 102        &lt;tibble [11 × 2]&gt;
+## 2 104        &lt;tibble [3 × 2]&gt;</code></pre>
+<p>Now, if we <code>unnest</code> the episode column…</p>
+<pre class="r"><code>j3 &lt;- j3 %&gt;% unnest(episode)
+j3</code></pre>
+<pre><code>## # A tibble: 14 × 3
+##    episode.id name  value            
+##    &lt;chr&gt;      &lt;chr&gt; &lt;list&gt;           
+##  1 102        255   &lt;named list [12]&gt;
+##  2 102        345   &lt;named list [12]&gt;
+##  3 102        347   &lt;named list [12]&gt;
+##  4 102        363   &lt;named list [12]&gt;
+##  5 102        421   &lt;named list [12]&gt;
+##  6 102        422   &lt;named list [12]&gt;
+##  7 102        426   &lt;named list [12]&gt;
+##  8 102        427   &lt;named list [12]&gt;
+##  9 102        428   &lt;named list [12]&gt;
+## 10 102        429   &lt;named list [12]&gt;
+## 11 102        430   &lt;named list [12]&gt;
+## 12 104        4     &lt;named list [12]&gt;
+## 13 104        45    &lt;named list [12]&gt;
+## 14 104        54    &lt;named list [12]&gt;</code></pre>
+<p>Now, see what we’ve got? A tidy data frame, one row per utterance,
+with the default column names from <code>enframe</code>. Before we
+forget, let’s rename our columns:</p>
+<pre class="r"><code>j3 &lt;- j3 %&gt;% rename(utterance.id=name, utterance=value)
+j3</code></pre>
+<pre><code>## # A tibble: 14 × 3
+##    episode.id utterance.id utterance        
+##    &lt;chr&gt;      &lt;chr&gt;        &lt;list&gt;           
+##  1 102        255          &lt;named list [12]&gt;
+##  2 102        345          &lt;named list [12]&gt;
+##  3 102        347          &lt;named list [12]&gt;
+##  4 102        363          &lt;named list [12]&gt;
+##  5 102        421          &lt;named list [12]&gt;
+##  6 102        422          &lt;named list [12]&gt;
+##  7 102        426          &lt;named list [12]&gt;
+##  8 102        427          &lt;named list [12]&gt;
+##  9 102        428          &lt;named list [12]&gt;
+## 10 102        429          &lt;named list [12]&gt;
+## 11 102        430          &lt;named list [12]&gt;
+## 12 104        4            &lt;named list [12]&gt;
+## 13 104        45           &lt;named list [12]&gt;
+## 14 104        54           &lt;named list [12]&gt;</code></pre>
+<p>I bet you can guess what comes next: that’s right, we are going to
+<code>enframe</code> our utterances, and unnest!</p>
+<pre class="r"><code>j4 &lt;- j3 %&gt;% mutate(utterance=map(utterance,enframe))
+j4</code></pre>
+<pre><code>## # A tibble: 14 × 3
+##    episode.id utterance.id utterance        
+##    &lt;chr&gt;      &lt;chr&gt;        &lt;list&gt;           
+##  1 102        255          &lt;tibble [12 × 2]&gt;
+##  2 102        345          &lt;tibble [12 × 2]&gt;
+##  3 102        347          &lt;tibble [12 × 2]&gt;
+##  4 102        363          &lt;tibble [12 × 2]&gt;
+##  5 102        421          &lt;tibble [12 × 2]&gt;
+##  6 102        422          &lt;tibble [12 × 2]&gt;
+##  7 102        426          &lt;tibble [12 × 2]&gt;
+##  8 102        427          &lt;tibble [12 × 2]&gt;
+##  9 102        428          &lt;tibble [12 × 2]&gt;
+## 10 102        429          &lt;tibble [12 × 2]&gt;
+## 11 102        430          &lt;tibble [12 × 2]&gt;
+## 12 104        4            &lt;tibble [12 × 2]&gt;
+## 13 104        45           &lt;tibble [12 × 2]&gt;
+## 14 104        54           &lt;tibble [12 × 2]&gt;</code></pre>
+<p>When we unnest <em>this</em> time, let’s see what happens:</p>
+<pre class="r"><code>j5 &lt;- j4 %&gt;% unnest(utterance)
+j5</code></pre>
+<pre><code>## # A tibble: 168 × 4
+##    episode.id utterance.id name        value     
+##    &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;       &lt;list&gt;    
+##  1 102        255          char        &lt;chr [1]&gt; 
+##  2 102        255          line        &lt;chr [1]&gt; 
+##  3 102        255          direction   &lt;chr [1]&gt; 
+##  4 102        255          type        &lt;list [1]&gt;
+##  5 102        255          pri_type    &lt;chr [1]&gt; 
+##  6 102        255          domain      &lt;list [1]&gt;
+##  7 102        255          sub-domain  &lt;list [1]&gt;
+##  8 102        255          nv_resp     &lt;lgl [1]&gt; 
+##  9 102        255          interaction &lt;chr [1]&gt; 
+## 10 102        255          char_type   &lt;chr [1]&gt; 
+## # ℹ 158 more rows</code></pre>
+<p>Woah! Now we’ve got one line for each <em>key</em> in the inner-most
+part of the JSON file, with a corresponding list value. A few things to
+note:</p>
+<ol style="list-style-type: decimal">
+<li>The <code>value</code> column here is of type <code>list</code>, but
+note that the different rows have different types of lists in them -
+some have characters, some have logicals, some have lists, etc.</li>
+<li>Some of those lists have different numbers of entries- most are 1,
+but some are 0.</li>
+<li>The actual data we want (the speaker, the interaction type, etc.) is
+still locked away in a list.</li>
+</ol>
+<p>Our next step will be to pivot this into a slightly wider
+dataframe:</p>
+<pre class="r"><code>j6 &lt;- j5 %&gt;% pivot_wider(names_from=name, values_from=value)
+j6</code></pre>
+<pre><code>## # A tibble: 14 × 14
+##    episode.id utterance.id char      line      direction type   pri_type  domain
+##    &lt;chr&gt;      &lt;chr&gt;        &lt;list&gt;    &lt;list&gt;    &lt;list&gt;    &lt;list&gt; &lt;list&gt;    &lt;list&gt;
+##  1 102        255          &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;list&gt; &lt;chr [1]&gt; &lt;list&gt;
+##  2 102        345          &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;list&gt; &lt;chr [1]&gt; &lt;list&gt;
+##  3 102        347          &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;list&gt; &lt;chr [1]&gt; &lt;list&gt;
+##  4 102        363          &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;list&gt; &lt;chr [1]&gt; &lt;list&gt;
+##  5 102        421          &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;list&gt; &lt;chr [1]&gt; &lt;list&gt;
+##  6 102        422          &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;list&gt; &lt;chr [1]&gt; &lt;list&gt;
+##  7 102        426          &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;list&gt; &lt;chr [1]&gt; &lt;list&gt;
+##  8 102        427          &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;list&gt; &lt;chr [1]&gt; &lt;list&gt;
+##  9 102        428          &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;list&gt; &lt;chr [1]&gt; &lt;list&gt;
+## 10 102        429          &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;list&gt; &lt;chr [1]&gt; &lt;list&gt;
+## 11 102        430          &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;list&gt; &lt;chr [1]&gt; &lt;list&gt;
+## 12 104        4            &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;list&gt; &lt;chr [1]&gt; &lt;list&gt;
+## 13 104        45           &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;list&gt; &lt;chr [1]&gt; &lt;list&gt;
+## 14 104        54           &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;chr [1]&gt; &lt;list&gt; &lt;chr [1]&gt; &lt;list&gt;
+## # ℹ 6 more variables: `sub-domain` &lt;list&gt;, nv_resp &lt;list&gt;, interaction &lt;list&gt;,
+## #   char_type &lt;list&gt;, is_fed &lt;list&gt;, error &lt;list&gt;</code></pre>
+<p>This is starting to look like we’re getting closer to a dataframe we
+can work with! We still have a little bit of work to do, however. First,
+let’s make our lives simpler by getting rid of some of the columns we
+don’t need:</p>
+<pre class="r"><code>j6 &lt;- j6 %&gt;% select(episode.id, utterance.id, char_type, type)
+j6</code></pre>
+<pre><code>## # A tibble: 14 × 4
+##    episode.id utterance.id char_type type      
+##    &lt;chr&gt;      &lt;chr&gt;        &lt;list&gt;    &lt;list&gt;    
+##  1 102        255          &lt;chr [1]&gt; &lt;list [1]&gt;
+##  2 102        345          &lt;chr [1]&gt; &lt;list [1]&gt;
+##  3 102        347          &lt;chr [1]&gt; &lt;list [1]&gt;
+##  4 102        363          &lt;chr [1]&gt; &lt;list [3]&gt;
+##  5 102        421          &lt;chr [1]&gt; &lt;list [1]&gt;
+##  6 102        422          &lt;chr [1]&gt; &lt;list [1]&gt;
+##  7 102        426          &lt;chr [1]&gt; &lt;list [2]&gt;
+##  8 102        427          &lt;chr [1]&gt; &lt;list [2]&gt;
+##  9 102        428          &lt;chr [1]&gt; &lt;list [2]&gt;
+## 10 102        429          &lt;chr [1]&gt; &lt;list [2]&gt;
+## 11 102        430          &lt;chr [1]&gt; &lt;list [2]&gt;
+## 12 104        4            &lt;chr [1]&gt; &lt;list [1]&gt;
+## 13 104        45           &lt;chr [1]&gt; &lt;list [1]&gt;
+## 14 104        54           &lt;chr [1]&gt; &lt;list [1]&gt;</code></pre>
+<p>Note the length of some of the entries in the <code>type</code>
+column- utterance 363 in espisode 102 has length 3. Looking at the JSON
+file, we can see that this is because this utterance was assigned three
+types- “Wake word”, “Conversation”, and “Question”.</p>
+<p>Because the “type” column is itself a container JSON element (a
+list), we actually will need to <code>unnest</code> it twice. This is
+the sort of thing that <code>jsonlite</code> has helpers to do, but for
+a simple file format like this one I personally usually just do it all
+by hand, so I can be sure about what’s going on.</p>
+<pre class="r"><code>j7 &lt;- j6 %&gt;% unnest(char_type) %&gt;% unnest(type) %&gt;% unnest(type)
+j7</code></pre>
+<pre><code>## # A tibble: 21 × 4
+##    episode.id utterance.id char_type type        
+##    &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;     &lt;chr&gt;       
+##  1 102        255          Person    Statement   
+##  2 102        345          Person    Command     
+##  3 102        347          Person    Statement   
+##  4 102        363          Person    Wake Word   
+##  5 102        363          Person    Question    
+##  6 102        363          Person    Conversation
+##  7 102        421          Person    Command     
+##  8 102        422          Computer  Response    
+##  9 102        426          Computer  Info        
+## 10 102        426          Computer  Alert       
+## # ℹ 11 more rows</code></pre>
+<p>At this point, we’ve got a nice, tidy data frame, and we are ready to
+use regular methods to compute our table:</p>
+<pre class="r"><code>j7 %&gt;% group_by(char_type, type) %&gt;% 
+  summarise(n=n()) %&gt;% 
+  mutate(denom=sum(n)) %&gt;% 
+  mutate(prop=n/denom) %&gt;% 
+  select(char_type,  type, prop) %&gt;% 
+  pivot_wider(names_from=char_type, values_from=prop) %&gt;% 
+  select(type, Person, Computer) %&gt;% 
+  arrange(-Person) </code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;char_type&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 9 × 3
+##   type          Person Computer
+##   &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Statement     0.357    NA    
+## 2 Conversation  0.214     0.286
+## 3 Command       0.214    NA    
+## 4 Comment       0.0714   NA    
+## 5 Question      0.0714   NA    
+## 6 Wake Word     0.0714   NA    
+## 7 Alert        NA         0.286
+## 8 Info         NA         0.143
+## 9 Response     NA         0.286</code></pre>
+<p>And we’re all set! Now we just need to repeat the above workflow,
+pointed at the true file:</p>
+<pre><code>## `summarise()` has grouped output by &#39;char_type&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<div id="krgsomxknz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#krgsomxknz table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#krgsomxknz thead, #krgsomxknz tbody, #krgsomxknz tfoot, #krgsomxknz tr, #krgsomxknz td, #krgsomxknz th {
+  border-style: none;
+}
+
+#krgsomxknz p {
+  margin: 0;
+  padding: 0;
+}
+
+#krgsomxknz .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#krgsomxknz .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#krgsomxknz .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#krgsomxknz .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#krgsomxknz .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#krgsomxknz .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#krgsomxknz .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#krgsomxknz .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#krgsomxknz .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#krgsomxknz .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#krgsomxknz .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#krgsomxknz .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#krgsomxknz .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#krgsomxknz .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#krgsomxknz .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#krgsomxknz .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#krgsomxknz .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#krgsomxknz .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#krgsomxknz .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#krgsomxknz .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#krgsomxknz .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#krgsomxknz .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#krgsomxknz .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#krgsomxknz .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#krgsomxknz .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#krgsomxknz .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#krgsomxknz .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#krgsomxknz .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#krgsomxknz .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#krgsomxknz .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#krgsomxknz .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#krgsomxknz .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#krgsomxknz .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#krgsomxknz .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#krgsomxknz .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#krgsomxknz .gt_left {
+  text-align: left;
+}
+
+#krgsomxknz .gt_center {
+  text-align: center;
+}
+
+#krgsomxknz .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#krgsomxknz .gt_font_normal {
+  font-weight: normal;
+}
+
+#krgsomxknz .gt_font_bold {
+  font-weight: bold;
+}
+
+#krgsomxknz .gt_font_italic {
+  font-style: italic;
+}
+
+#krgsomxknz .gt_super {
+  font-size: 65%;
+}
+
+#krgsomxknz .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#krgsomxknz .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#krgsomxknz .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#krgsomxknz .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#krgsomxknz .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#krgsomxknz .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#krgsomxknz .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#krgsomxknz .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#krgsomxknz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="type">type</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Person">Person</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Computer">Computer</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="type" class="gt_row gt_left">Command</td>
+<td headers="Person" class="gt_row gt_right">33.99%</td>
+<td headers="Computer" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Wake Word</td>
+<td headers="Person" class="gt_row gt_right">31.51%</td>
+<td headers="Computer" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Statement</td>
+<td headers="Person" class="gt_row gt_right">13.23%</td>
+<td headers="Computer" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Question</td>
+<td headers="Person" class="gt_row gt_right">10.31%</td>
+<td headers="Computer" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Conversation</td>
+<td headers="Person" class="gt_row gt_right">5.70%</td>
+<td headers="Computer" class="gt_row gt_right">1.21%</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Password</td>
+<td headers="Person" class="gt_row gt_right">2.56%</td>
+<td headers="Computer" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Comment</td>
+<td headers="Person" class="gt_row gt_right">1.97%</td>
+<td headers="Computer" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">command</td>
+<td headers="Person" class="gt_row gt_right">0.66%</td>
+<td headers="Computer" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">question</td>
+<td headers="Person" class="gt_row gt_right">0.07%</td>
+<td headers="Computer" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Response</td>
+<td headers="Person" class="gt_row gt_right">0.00%</td>
+<td headers="Computer" class="gt_row gt_right">56.36%</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Alert</td>
+<td headers="Person" class="gt_row gt_right">0.00%</td>
+<td headers="Computer" class="gt_row gt_right">15.45%</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Info</td>
+<td headers="Person" class="gt_row gt_right">0.00%</td>
+<td headers="Computer" class="gt_row gt_right">8.48%</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Countdown</td>
+<td headers="Person" class="gt_row gt_right">0.00%</td>
+<td headers="Computer" class="gt_row gt_right">8.18%</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Clarification</td>
+<td headers="Person" class="gt_row gt_right">0.00%</td>
+<td headers="Computer" class="gt_row gt_right">6.36%</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Progress</td>
+<td headers="Person" class="gt_row gt_right">0.00%</td>
+<td headers="Computer" class="gt_row gt_right">3.94%</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+<p>Note that these numbers don’t match what is in the paper; I suspect
+that what we could be seeing is that the authors may have used the
+<code>pri_type</code> field instead of the <code>type</code> field.
+Repeating our analysis, looking for that field, we see:</p>
+<pre class="r"><code>full_j %&gt;% enframe %&gt;% 
+  rename(episode.id=name, episode=value) %&gt;% 
+  mutate(episode=map(episode,enframe)) %&gt;% 
+  unnest(episode) %&gt;% 
+  rename(utterance.id=name, utterance=value) %&gt;% 
+  mutate(utterance=map(utterance,enframe)) %&gt;% 
+  unnest(utterance) %&gt;% 
+  pivot_wider(names_from=name, values_from=value) %&gt;% 
+  select(episode.id, utterance.id, char_type, pri_type) %&gt;% 
+  unnest(c(char_type, pri_type)) %&gt;% 
+   group_by(char_type, pri_type) %&gt;% 
+  summarise(n=n()) %&gt;% 
+  mutate(denom=sum(n)) %&gt;% 
+  mutate(prop=n/denom) %&gt;% 
+  select(char_type,  pri_type, prop) %&gt;% 
+  pivot_wider(names_from=char_type, values_from=prop, values_fill=0.0) %&gt;% 
+  select(pri_type, Person, Computer) %&gt;% 
+  arrange(-Person, -Computer) %&gt;% 
+  gt %&gt;% fmt_percent(columns=c(Person, Computer))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;char_type&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<div id="xybaiqlnng" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xybaiqlnng table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#xybaiqlnng thead, #xybaiqlnng tbody, #xybaiqlnng tfoot, #xybaiqlnng tr, #xybaiqlnng td, #xybaiqlnng th {
+  border-style: none;
+}
+
+#xybaiqlnng p {
+  margin: 0;
+  padding: 0;
+}
+
+#xybaiqlnng .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#xybaiqlnng .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#xybaiqlnng .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#xybaiqlnng .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#xybaiqlnng .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#xybaiqlnng .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xybaiqlnng .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#xybaiqlnng .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#xybaiqlnng .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#xybaiqlnng .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#xybaiqlnng .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#xybaiqlnng .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#xybaiqlnng .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#xybaiqlnng .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#xybaiqlnng .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#xybaiqlnng .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#xybaiqlnng .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#xybaiqlnng .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#xybaiqlnng .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xybaiqlnng .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#xybaiqlnng .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#xybaiqlnng .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#xybaiqlnng .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xybaiqlnng .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#xybaiqlnng .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#xybaiqlnng .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xybaiqlnng .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xybaiqlnng .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#xybaiqlnng .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xybaiqlnng .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#xybaiqlnng .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xybaiqlnng .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#xybaiqlnng .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xybaiqlnng .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#xybaiqlnng .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xybaiqlnng .gt_left {
+  text-align: left;
+}
+
+#xybaiqlnng .gt_center {
+  text-align: center;
+}
+
+#xybaiqlnng .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#xybaiqlnng .gt_font_normal {
+  font-weight: normal;
+}
+
+#xybaiqlnng .gt_font_bold {
+  font-weight: bold;
+}
+
+#xybaiqlnng .gt_font_italic {
+  font-style: italic;
+}
+
+#xybaiqlnng .gt_super {
+  font-size: 65%;
+}
+
+#xybaiqlnng .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#xybaiqlnng .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#xybaiqlnng .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#xybaiqlnng .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#xybaiqlnng .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#xybaiqlnng .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#xybaiqlnng .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#xybaiqlnng .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#xybaiqlnng div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="pri_type">pri_type</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Person">Person</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Computer">Computer</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="pri_type" class="gt_row gt_left">Command</td>
+<td headers="Person" class="gt_row gt_right">59.42%</td>
+<td headers="Computer" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="pri_type" class="gt_row gt_left">Statement</td>
+<td headers="Person" class="gt_row gt_right">21.23%</td>
+<td headers="Computer" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="pri_type" class="gt_row gt_left">Question</td>
+<td headers="Person" class="gt_row gt_right">17.09%</td>
+<td headers="Computer" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="pri_type" class="gt_row gt_left">Password</td>
+<td headers="Person" class="gt_row gt_right">0.75%</td>
+<td headers="Computer" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="pri_type" class="gt_row gt_left">Wake Word</td>
+<td headers="Person" class="gt_row gt_right">0.75%</td>
+<td headers="Computer" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="pri_type" class="gt_row gt_left">Comment</td>
+<td headers="Person" class="gt_row gt_right">0.63%</td>
+<td headers="Computer" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="pri_type" class="gt_row gt_left">Conversation</td>
+<td headers="Person" class="gt_row gt_right">0.13%</td>
+<td headers="Computer" class="gt_row gt_right">0.20%</td></tr>
+    <tr><td headers="pri_type" class="gt_row gt_left">Response</td>
+<td headers="Person" class="gt_row gt_right">0.00%</td>
+<td headers="Computer" class="gt_row gt_right">66.27%</td></tr>
+    <tr><td headers="pri_type" class="gt_row gt_left">Alert</td>
+<td headers="Person" class="gt_row gt_right">0.00%</td>
+<td headers="Computer" class="gt_row gt_right">19.25%</td></tr>
+    <tr><td headers="pri_type" class="gt_row gt_left">Clarification</td>
+<td headers="Person" class="gt_row gt_right">0.00%</td>
+<td headers="Computer" class="gt_row gt_right">8.33%</td></tr>
+    <tr><td headers="pri_type" class="gt_row gt_left">Info</td>
+<td headers="Person" class="gt_row gt_right">0.00%</td>
+<td headers="Computer" class="gt_row gt_right">2.78%</td></tr>
+    <tr><td headers="pri_type" class="gt_row gt_left">Countdown</td>
+<td headers="Person" class="gt_row gt_right">0.00%</td>
+<td headers="Computer" class="gt_row gt_right">1.79%</td></tr>
+    <tr><td headers="pri_type" class="gt_row gt_left">Progress</td>
+<td headers="Person" class="gt_row gt_right">0.00%</td>
+<td headers="Computer" class="gt_row gt_right">1.39%</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+<p>This <em>still</em> doesn’t match what is in the paper, and I think
+it’s because I was mistaken about the denominator.</p>
+<pre class="r"><code>full_j %&gt;% enframe %&gt;% 
+  rename(episode.id=name, episode=value) %&gt;% 
+  mutate(episode=map(episode,enframe)) %&gt;% 
+  unnest(episode) %&gt;% 
+  rename(utterance.id=name, utterance=value) %&gt;% 
+  mutate(utterance=map(utterance,enframe)) %&gt;% 
+  unnest(utterance) %&gt;% 
+  pivot_wider(names_from=name, values_from=value) %&gt;% 
+  select(episode.id, utterance.id, char_type, type) %&gt;%
+  unnest(c(char_type, type)) %&gt;% unnest(type)  %&gt;%
+
+  janitor::tabyl(type, char_type) %&gt;% data.frame %&gt;% 
+  mutate(Comp.prop=Computer/sum(Computer), Person.prop=Person/sum(Person)) %&gt;% arrange(-Person.prop, -Comp.prop) %&gt;% 
+  select(type,Person=Person.prop, Computer=Comp.prop) %&gt;% 
+  gt</code></pre>
+<div id="easnjtcohl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#easnjtcohl table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#easnjtcohl thead, #easnjtcohl tbody, #easnjtcohl tfoot, #easnjtcohl tr, #easnjtcohl td, #easnjtcohl th {
+  border-style: none;
+}
+
+#easnjtcohl p {
+  margin: 0;
+  padding: 0;
+}
+
+#easnjtcohl .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#easnjtcohl .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#easnjtcohl .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#easnjtcohl .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#easnjtcohl .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#easnjtcohl .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#easnjtcohl .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#easnjtcohl .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#easnjtcohl .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#easnjtcohl .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#easnjtcohl .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#easnjtcohl .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#easnjtcohl .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#easnjtcohl .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#easnjtcohl .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#easnjtcohl .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#easnjtcohl .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#easnjtcohl .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#easnjtcohl .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#easnjtcohl .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#easnjtcohl .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#easnjtcohl .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#easnjtcohl .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#easnjtcohl .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#easnjtcohl .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#easnjtcohl .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#easnjtcohl .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#easnjtcohl .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#easnjtcohl .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#easnjtcohl .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#easnjtcohl .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#easnjtcohl .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#easnjtcohl .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#easnjtcohl .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#easnjtcohl .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#easnjtcohl .gt_left {
+  text-align: left;
+}
+
+#easnjtcohl .gt_center {
+  text-align: center;
+}
+
+#easnjtcohl .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#easnjtcohl .gt_font_normal {
+  font-weight: normal;
+}
+
+#easnjtcohl .gt_font_bold {
+  font-weight: bold;
+}
+
+#easnjtcohl .gt_font_italic {
+  font-style: italic;
+}
+
+#easnjtcohl .gt_super {
+  font-size: 65%;
+}
+
+#easnjtcohl .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#easnjtcohl .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#easnjtcohl .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#easnjtcohl .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#easnjtcohl .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#easnjtcohl .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#easnjtcohl .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#easnjtcohl .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#easnjtcohl div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="type">type</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Person">Person</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Computer">Computer</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="type" class="gt_row gt_left">Command</td>
+<td headers="Person" class="gt_row gt_right">0.3399122807</td>
+<td headers="Computer" class="gt_row gt_right">0.00000000</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Wake Word</td>
+<td headers="Person" class="gt_row gt_right">0.3150584795</td>
+<td headers="Computer" class="gt_row gt_right">0.00000000</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Statement</td>
+<td headers="Person" class="gt_row gt_right">0.1323099415</td>
+<td headers="Computer" class="gt_row gt_right">0.00000000</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Question</td>
+<td headers="Person" class="gt_row gt_right">0.1030701754</td>
+<td headers="Computer" class="gt_row gt_right">0.00000000</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Conversation</td>
+<td headers="Person" class="gt_row gt_right">0.0570175439</td>
+<td headers="Computer" class="gt_row gt_right">0.01212121</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Password</td>
+<td headers="Person" class="gt_row gt_right">0.0255847953</td>
+<td headers="Computer" class="gt_row gt_right">0.00000000</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Comment</td>
+<td headers="Person" class="gt_row gt_right">0.0197368421</td>
+<td headers="Computer" class="gt_row gt_right">0.00000000</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">command</td>
+<td headers="Person" class="gt_row gt_right">0.0065789474</td>
+<td headers="Computer" class="gt_row gt_right">0.00000000</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">question</td>
+<td headers="Person" class="gt_row gt_right">0.0007309942</td>
+<td headers="Computer" class="gt_row gt_right">0.00000000</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Response</td>
+<td headers="Person" class="gt_row gt_right">0.0000000000</td>
+<td headers="Computer" class="gt_row gt_right">0.56363636</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Alert</td>
+<td headers="Person" class="gt_row gt_right">0.0000000000</td>
+<td headers="Computer" class="gt_row gt_right">0.15454545</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Info</td>
+<td headers="Person" class="gt_row gt_right">0.0000000000</td>
+<td headers="Computer" class="gt_row gt_right">0.08484848</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Countdown</td>
+<td headers="Person" class="gt_row gt_right">0.0000000000</td>
+<td headers="Computer" class="gt_row gt_right">0.08181818</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Clarification</td>
+<td headers="Person" class="gt_row gt_right">0.0000000000</td>
+<td headers="Computer" class="gt_row gt_right">0.06363636</td></tr>
+    <tr><td headers="type" class="gt_row gt_left">Progress</td>
+<td headers="Person" class="gt_row gt_right">0.0000000000</td>
+<td headers="Computer" class="gt_row gt_right">0.03939394</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+<p>This <em>still</em> isn’t in alignment with what the paper reported,
+but at this point you get the idea. :-D</p>
+</div>
+
+<p>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="by-nc.png" width="133" height="25"/></a>
+</p>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

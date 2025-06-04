@@ -1,0 +1,277 @@
+{
+	"102": {
+		"255": {
+			"char": "Tasha",
+			"line": "Battle bridge.",
+			"direction": "The doors snap closed and the lift moves. Riker looks Tasha over  waiting  then:",
+			"type": [
+				"Statement"
+			],
+			"pri_type": "Statement",
+			"domain": [
+				"IoT"
+			],
+			"sub-domain": [
+				"Turbolift"
+			],
+			"nv_resp": true,
+			"interaction": "Battle bridge.",
+			"char_type": "Person",
+			"is_fed": true,
+			"error": false
+		},
+		"345": {
+			"char": "Beverly",
+			"line": "Show me the results of Captain Picard's most recent physical examination.",
+			"direction": "The screen promptly BEGINS TO FLASH UP PRINTED INFORMATION  followed by X-Ray type shots  etc. Beverly studies it for awhile.",
+			"type": [
+				"Command"
+			],
+			"pri_type": "Command",
+			"domain": [
+				"InfoSeek"
+			],
+			"sub-domain": [],
+			"nv_resp": true,
+			"interaction": "Show me the results of Captain Picard's most recent physical examination.",
+			"char_type": "Person",
+			"is_fed": true,
+			"error": false
+		},
+		"347": {
+			"char": "Beverly",
+			"line": "Yes  on a subject that's very important to this mission  Captain. (unhurriedly to computer) Screen off.",
+			"direction": "The screen GOES DARK.",
+			"type": [
+				"Statement"
+			],
+			"pri_type": "Statement",
+			"domain": [
+				"IoT"
+			],
+			"sub-domain": [],
+			"nv_resp": true,
+			"interaction": "Screen off.",
+			"char_type": "Person",
+			"is_fed": true,
+			"error": false
+		},
+		"363": {
+			"char": "Picard",
+			"line": "And what was my answer  computer?",
+			"direction": "MAIN VIEWER FLICKERS  then startles us with an ugly FLASH OF LIGHT that becomes an IMAGE OF 'Q' (JUDGE) who is in LIMBO  but looking directly at Picard. His VOICE BOOMS LOUDLY  annoyed in tone:",
+			"type": [
+				"Wake Word",
+				"Question",
+				"Conversation"
+			],
+			"pri_type": "Question",
+			"domain": [
+				"InfoSeek"
+			],
+			"sub-domain": [],
+			"nv_resp": false,
+			"interaction": "And what was my answer  computer?",
+			"char_type": "Person",
+			"is_fed": true,
+			"error": false
+		},
+		"421": {
+			"char": "Young Ensign",
+			"line": "You must be new to these galaxy class starships  sir. (puts hand on the black surface  saying) Tell me the location of Commander Data.",
+			"direction": "At the touch and the words 'Tell me' the black surface comes alive with light patterns showing appropriate information.",
+			"type": [
+				"Command"
+			],
+			"pri_type": "Command",
+			"domain": [
+				"InfoSeek"
+			],
+			"sub-domain": [
+				"Locate"
+			],
+			"nv_resp": false,
+			"interaction": "Tell me the location of Commander Data.",
+			"char_type": "Person",
+			"is_fed": true,
+			"error": false
+		},
+		"422": {
+			"char": "Computer Voice",
+			"line": "Lieutenant Commander Data... now located in Holodeck area 4-J.",
+			"direction": "",
+			"type": [
+				"Response"
+			],
+			"pri_type": "Response",
+			"domain": [
+				"InfoSeek"
+			],
+			"sub-domain": [
+				"Locate"
+			],
+			"nv_resp": false,
+			"interaction": "Lieutenant Commander Data... now located in Holodeck area 4-J.",
+			"char_type": "Computer",
+			"is_fed": true,
+			"error": false
+		},
+		"426": {
+			"char": "Computer Voice",
+			"line": "This way  please. The next hatchway on your right.",
+			"direction": "",
+			"type": [
+				"Info",
+				"Alert"
+			],
+			"pri_type": "Alert",
+			"domain": [
+				"InfoSeek"
+			],
+			"sub-domain": [],
+			"nv_resp": false,
+			"interaction": "This way  please. The next hatchway on your right.",
+			"char_type": "Computer",
+			"is_fed": true,
+			"error": false
+		},
+		"427": {
+			"char": "Riker",
+			"line": "(responding automatically) Thank you...",
+			"direction": "",
+			"type": [
+				"Conversation",
+				"Comment"
+			],
+			"pri_type": "Comment",
+			"domain": [],
+			"sub-domain": [],
+			"nv_resp": false,
+			"interaction": "Thank you...",
+			"char_type": "Person",
+			"is_fed": true,
+			"error": false
+		},
+		"428": {
+			"char": "Computer Voice",
+			"line": "You're more than welcome  Commander Riker.",
+			"direction": "Which startles him a bit but he walks on and turns right at a sophisticated looking Holodeck Hatchway. The Parkland hidden at this moment by a WILD SECTION OF CORRIDOR WALL AND HATCHWAY which  when the hatch is opened  will REVEAL PARKLAND.",
+			"type": [
+				"Response",
+				"Conversation"
+			],
+			"pri_type": "Response",
+			"domain": [],
+			"sub-domain": [],
+			"nv_resp": false,
+			"interaction": "You're more than welcome  Commander Riker.",
+			"char_type": "Computer",
+			"is_fed": true,
+			"error": false
+		},
+		"429": {
+			"char": "Computer Voice",
+			"line": "(continuing without delay) And if you care to enter  Commander...",
+			"direction": "",
+			"type": [
+				"Alert",
+				"Conversation"
+			],
+			"pri_type": "Alert",
+			"domain": [
+				"Entertainment"
+			],
+			"sub-domain": [
+				"Holodeck"
+			],
+			"nv_resp": false,
+			"interaction": "And if you care to enter  Commander...",
+			"char_type": "Computer",
+			"is_fed": true,
+			"error": false
+		},
+		"430": {
+			"char": "Riker",
+			"line": "(snaps; interrupting) I do.",
+			"direction": "Immediately  the hatch slides open and we SEE THE PARKLAND (LOCATION). It looks (and is) real  including land contours  trees  and even a small stream nearby. Beyond that the Parkland stretches off for what appears to be miles and miles away to the horizon. As Riker ENTERS through it and stands inspecting the Parkland scene with genuine appreciation and then HEARS SOMEONE WHISTLING A MELODY  but doing it rather badly and laboriously. As he MOVES AWAY  seeking the source of the WHISTLING which will begin to grow LOUDER now. As Riker crosses  stepping from rock to rock. He makes a misstep  almost falls  then recovers and gets across. He looks back at the stone which caused it. As he walks  the WHISTLING is nearby now. He stops  calls:",
+			"type": [
+				"Conversation",
+				"Statement"
+			],
+			"pri_type": "Statement",
+			"domain": [
+				"Entertainment"
+			],
+			"sub-domain": [
+				"Holodeck"
+			],
+			"nv_resp": true,
+			"interaction": "I do.",
+			"char_type": "Person",
+			"is_fed": true,
+			"error": false
+		}
+	},
+	"104": {
+		"4": {
+			"char": "Picard",
+			"line": "(continuing; toward controls) Cargo One. (to Riker and Troi) Should be an interesting experience.",
+			"direction": "",
+			"type": [
+				"Statement"
+			],
+			"pri_type": "Statement",
+			"domain": [
+				"IoT"
+			],
+			"sub-domain": [
+				"Turbolift"
+			],
+			"nv_resp": true,
+			"interaction": "Cargo One.",
+			"char_type": "Person",
+			"is_fed": true,
+			"error": false
+		},
+		"45": {
+			"char": "Tasha",
+			"line": "This way  please. Aikido. One.",
+			"direction": "An Aikido Opponent MATERIALIZES (DISSOLVES IN) ON A MAT. The IMAGE remains rigid  immobile. The visitors are much impressed.",
+			"type": [
+				"Statement"
+			],
+			"pri_type": "Statement",
+			"domain": [
+				"Entertainment"
+			],
+			"sub-domain": [
+				"Holodeck"
+			],
+			"nv_resp": true,
+			"interaction": "Aikido. One.",
+			"char_type": "Person",
+			"is_fed": true,
+			"error": false
+		},
+		"54": {
+			"char": "Tasha",
+			"line": "(into the air) Aikido  vanish. I could create two -- even three  but one is really enough. As you fight with it  it learns  and before long it knows exactly how to defeat you.",
+			"direction": "The IMAGE DISSOLVES. Tasha goes to the panel  shuts down the controls  takes a towel from the wall  wipes off  and removes her jacket.",
+			"type": [
+				"Command"
+			],
+			"pri_type": "Command",
+			"domain": [
+				"Entertainment"
+			],
+			"sub-domain": [
+				"Holodeck"
+			],
+			"nv_resp": true,
+			"interaction": "Aikido  vanish.",
+			"char_type": "Person",
+			"is_fed": true,
+			"error": false
+		}
+	}
+}
